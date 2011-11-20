@@ -1,0 +1,17 @@
+icosahedron(3)
+
+color(crayola.rgb("Purple"))
+translate({-3, 3, 0})
+tetrahedron(3)
+
+color(crayola.rgb("Cerulean"))
+translate({0, -6, 0})
+cube(3)
+
+color(crayola.rgb("Cranberry"))
+translate({6, 0, 0})
+octahedron(3)
+
+color(crayola.rgb("Inchworm"))
+translate({0, 6, 0})
+dodecahedron(3)

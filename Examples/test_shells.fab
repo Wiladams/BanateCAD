@@ -1,0 +1,56 @@
+function LSpiral(A, Beta, Theta, alpha)
+	return A*math.sin(Beta)*math.exp(Theta*1/math.tan(alpha))
+end
+
+function RDistance(A, Theta, alpha)
+	return A*math.exp(Theta*1/tan(alpha))
+end
+
+-- s - parameter
+-- a - major axis
+-- b - minor axis
+-- mu - rotate around major axis
+-- omega - rotate around vertical axis
+-- phi - rotate around vector normal to plane
+function paramEllipse(s, a, b, mu, omega, phi)
+end
+
+-- bump parameters
+-- P - angle measuring position of the bump along the ellipse
+-- L - height of each bump
+-- W1 - width of each bump along the ellipse
+-- W2 - width of each bump along the logarithmic spiral
+-- N - number of bumps encountered as the angle theta is rotated by 2pi
+
+Natalina = {}
+Natalina.D = 1
+Natalina.alpha = math.rad(80)
+Natalina.beta = math.rad(40)
+Natalina.phi = math.rad(55)
+Natalina.mu = math.rad(10)
+Natalina.Omega = math.rad(30)
+Natalina.smM = {math.rad(-270), math.rad(80)}
+Natalina.A = 25
+Natalina.a = 12
+Natalina.b = 16
+Natalina.P = 0
+Natalina.L = 0
+
+
+local srange = 2*math.pi
+local steps = 180
+local A = 25
+local Beta = math.pi/180*3
+local alpha = math.pi/180*60
+local maxD = 100
+
+for step =0,steps do
+	local s = step/steps
+	local Theta = step/steps*srange
+	rho = LSpiral(A, Beta, Theta, alpha)
+
+	pos = sph_to_cart(sph(Theta, s*math.pi/2, s*maxD))
+print(rho)
+	translate(pos)
+	tetrahedron(1)
+end

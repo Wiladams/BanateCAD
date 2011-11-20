@@ -1,0 +1,6 @@
+for row = 0, 9 do
+	for column = 0, 10 do
+		translate({column*5, row*5, 0})
+		sphere(3)
+	end
+end

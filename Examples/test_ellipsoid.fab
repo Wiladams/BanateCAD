@@ -1,0 +1,7 @@
+color({1, 0, 0,1})
+ellipsoid(1,1)
+color({0.75, 0.75, 0.75, 0.5})
+ellipsoid(2,3)
+
+color({0.75, 1, 0.75, 0.5})
+ellipsoid(6,4)

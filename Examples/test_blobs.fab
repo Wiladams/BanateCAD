@@ -1,0 +1,79 @@
+--someballs  = {{-10, -13, 0, 5},{10, -13, 0, 5}, {-2, 11, 0, 5},{-2, 11, 5, 3}}
+--someballs  = {{-10, -13, 0, 5},{10, -13, 0, 5}, {-2, 11, 0, 5},{-2, 11, 5, 3},{-2, 18, 7, 2}}
+--someballs  = {{-8, -13, 0, 5}, {10, -13, 0, 5}}
+someballs = {{-10, -13, 0, 5}, {10, -13, 0, 5}, {-2, 11, 0, 5}}
+
+function balls()
+	color(crayola.rgba("Yellow", 1))
+	blobs(someballs, 100, 18, 18)
+end
+
+function fingers()
+
+-- Some 'fingers'
+-- finger1
+seg1 = {{0, -10, 0, 3}, {0, 0, 0, 3}}
+seg2 = {{0, 0, 0, 3}, {0, 12, 3, 3}}
+
+-- Show the influencing balls
+color(crayola.rgb("Purple"))
+for _,v in ipairs(seg1) do
+	translate(v)
+	sphere(2)
+end
+
+color(crayola.rgb("Purple"))
+for _,v in ipairs(seg2) do
+	translate(v)
+	sphere(2)
+end
+
+local radius = 100
+local beamsteps = 300
+color(crayola.rgba("Flesh", 0.65))
+blobs(seg1, radius, 90, 90, beamsteps)
+
+--color(crayola.rgba("Yellow", 0.65))
+blobs(seg2, radius, 90, 90, beamsteps)
+end
+
+	local triballs = {
+		{-10,-5,12,5},		-- eye
+		{10,-5,12,5},		-- eye
+
+		--{0,10,0,5},
+		{0,-30,0,5},		-- snout
+
+		{0,0,5,5}
+		}
+
+function tripod()
+	local radius = 30
+	local beamsteps = 300
+
+
+color(crayola.rgb("Purple"))
+for _,v in ipairs(triballs) do
+	translate(v)
+	sphere(v[4])
+end
+
+	color(crayola.rgba("Yellow", 0.65))
+	blobs(triballs, radius, 30, 30, beamsteps)
+end
+
+function deciballs(theballs)
+	color("Yellow")
+	for v in IterateMetaballs(theballs, {60,80,60}, {3,3,3}) do
+		color({v[1]/30,v[2]/10,v[3]/20,1})
+		translate(v)
+		--tetrahedron(0.33)
+		hexahedron(0.33)
+	end
+end
+
+
+--fingers()
+--balls()
+--tripod()
+deciballs(triballs)

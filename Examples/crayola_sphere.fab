@@ -1,0 +1,18 @@
+row = 1
+column = 1
+size = 5
+width = 10
+
+for v in pairs(crayola) do
+	if type(v) == "string"  and type(crayola[v]) == "table" then
+		--print(v)
+		color(crayola.rgb(v))
+		translate({column*size, row*size, 0})
+		sphere(3)
+		column = column + 1
+		if column > width then
+			column = 1
+			row = row + 1
+		end
+	end
+end
