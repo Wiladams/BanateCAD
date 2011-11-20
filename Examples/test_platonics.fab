@@ -6,7 +6,7 @@ tetrahedron(3)
 
 color(crayola.rgb("Cerulean"))
 translate({0, -6, 0})
-cube(3)
+hexahedron(3)
 
 color(crayola.rgb("Cranberry"))
 translate({6, 0, 0})
