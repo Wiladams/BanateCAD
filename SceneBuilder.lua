@@ -24,7 +24,7 @@ require ("shape_torus")
 require ("Platonics")
 require ("crayola")
 require ("metaball")
-require ("noise")
+
 
 SceneBuilder = {}
 function SceneBuilder:new(o)
