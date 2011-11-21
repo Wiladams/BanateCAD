@@ -58,8 +58,8 @@ color(crayola.rgb("Jazzberry Jam"))
 supershape({
 		shape1 = {m = 7, n1 = 0.2, n2 = 1.7, n3 = 1.7, a = 1, b = 1},
 		shape2 = {m = 7, n1 = 0.2, n2 = 1.7, n3 = 1.7, a = 1, b = 1},
-		phisteps = 720,
-		thetasteps = 720
+		phisteps = 180,
+		thetasteps = 180
 		})
 
 

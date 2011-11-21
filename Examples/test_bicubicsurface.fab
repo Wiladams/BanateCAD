@@ -18,13 +18,14 @@ for row = 1, numrows do
 		local b = row/numrows
 		local g = r*b
 
-		color({r, g, b, g})
+		color({r, g, b, 1})
 		translate({(column-1)*columnsize, (row-1)*rowsize, 0})
 		bicubicsurface({gcp1, gcp2, gcp3, gcp4}, 1, usteps, wsteps)
 
-		color("Yellow")
-		translate({(column-1)*columnsize+columnsize/2, (row-1)*rowsize+rowsize/2, -10})
-		icosahedron(10)
+		-- Do these Icosahedrons just for kicks
+		--color("Yellow")
+		--translate({(column-1)*columnsize+columnsize/2, (row-1)*rowsize+rowsize/2, -10})
+		--icosahedron(10)
 	end
 end
 end

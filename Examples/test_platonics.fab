@@ -1,17 +1,23 @@
-icosahedron(3)
+size = 10
 
 color(crayola.rgb("Purple"))
-translate({-3, 3, 0})
-tetrahedron(3)
+tetrahedron(size)
 
-color(crayola.rgb("Cerulean"))
-translate({0, -6, 0})
-hexahedron(3)
-
-color(crayola.rgb("Cranberry"))
-translate({6, 0, 0})
-octahedron(3)
+color("Caribbean Green")
+translate({-size*2, size*2, 0})
+icosahedron(size)
 
 color(crayola.rgb("Inchworm"))
-translate({0, 6, 0})
-dodecahedron(3)
+translate({size*2, -size*2, 0})
+dodecahedron(size)
+
+
+
+color(crayola.rgb("Cerulean"))
+translate({-size*2, -size*2, 0})
+hexahedron(size)
+
+color(crayola.rgb("Cranberry"))
+translate({size*2, size*2, 0})
+octahedron(size)
+

@@ -72,13 +72,18 @@ function bicubicsurface(mesh, usteps, wsteps)
 end
 
 function test_bicubic_vertices()
+	resolution = {48, 48}	-- Determines how many "columns" and "rows" 
+						-- will be used to sample the curve
 
+	-- This curve actually shows a flaw with respect to the normals
+	-- When you try to print it as a solid, you will get a wrong result
+	-- Notice how the green crosses the red in certain positions
 	local gcp4 = {{0,30,0,1}, {10,40,0,1}, {20,40,0,1}, {30,30,0,1}};
 	local gcp3 = {{5,20,10,1}, {10,20,20,1}, {15,25,15,1}, {20,20,5,1}};
 	local gcp2 = {{5,10,10,1}, {10,10,20,1}, {15,5,15,1}, {20,10,5,1}};
 	local gcp1 = {{0,0,0,1}, {10,-10,0,1}, {20,-10,0,1}, {30,0,0,1}};
 
-	bicubicsurface({gcp1, gcp2, gcp3, gcp4}, 24, 24)
+	bicubicsurface({gcp1, gcp2, gcp3, gcp4}, resolution[1], resolution[2])
 end
 
 function test_heel()
@@ -94,5 +99,5 @@ function test_heel()
 end
 
 -- Running Tests
---test_bicubic_vertices();
-test_heel();
+test_bicubic_vertices();
+--test_heel();

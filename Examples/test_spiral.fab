@@ -1,6 +1,6 @@
 funangle = math.rad(137.5)
 radius = 30
-anglesteps = 360*8
+anglesteps = 360*3
 lathigh = math.pi * .75
 latlow = math.pi - lathigh
 latrange = lathigh-latlow

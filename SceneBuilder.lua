@@ -57,18 +57,21 @@ end
 -- Platonic Solids
 --===========================
 function tetrahedron(radius)
+	radius = radius or 1
 	local lshape = shape_tetrahedron:new({radius=radius});
 
 	defaultscene:appendCommand(CADVM.mesh(lshape:GetMesh()))
 end
 
 function hexahedron(radius)
+	radius = radius or 1
 	local lshape = shape_hexahedron:new({radius=radius});
 
 	defaultscene:appendCommand(CADVM.mesh(lshape:GetMesh()))
 end
 
 function octahedron(radius)
+	radius = radius or 1
 	local lshape = shape_octahedron:new({radius = radius})
 
 
@@ -76,6 +79,7 @@ function octahedron(radius)
 end
 
 function dodecahedron(radius)
+	radius = radius or 1
 	local lshape = shape_dodecahedron:new({radius = radius})
 
 
@@ -83,10 +87,21 @@ function dodecahedron(radius)
 end
 
 function icosahedron(radius)
+	radius = radius or 1
 	local lshape = shape_icosahedron:new({radius = radius})
 	defaultscene:appendCommand(CADVM.mesh(lshape:GetMesh()))
 end
 
+--===========================
+--	LINES
+--===========================
+function line(ep1, ep2, thickness)
+	thickness = thickness or 1
+	defaultscene:appendCommand(CADVM.line(ep1, ep2, thickness))
+end
+
+--===========================
+--	MESHES
 --===========================
 function polyhedron(vertices, faces)
 	local opolyhedron = shape_polyhedron:new({
@@ -99,6 +114,8 @@ function polyhedron(vertices, faces)
 end
 
 function bicubicsurface(mesh, thickness, usteps, wsteps)
+	usteps = usteps or 10
+	wsteps = wsteps or 10
 	local lshape = shape_bicubicsurface:new({
 		M=cubic_bezier_M(),
 		umult=1,
@@ -110,11 +127,17 @@ function bicubicsurface(mesh, thickness, usteps, wsteps)
 	defaultscene:appendCommand(CADVM.mesh(lshape:GetMesh()))
 end
 
+--===========================
+--	Standard Shapes
+--===========================
 function sphere(radius)
+	radius = radius or 1
 	ellipsoid(radius, radius);
 end
 
 function ellipsoid(xradius, yradius)
+xradius = xradius or 1
+yradius = yradius or 1
 local aellipsoid = shape_ellipsoid:new({
 	xradius=xradius,
 	yradius=yradius,
@@ -137,13 +160,18 @@ function torus(params)
 	defaultscene:appendCommand(CADVM.mesh(lshape:GetMesh()))
 end
 
-function cone(baseradius, topradius, height)
-local ocone = shape_cone:new({
-	baseradius=baseradius,
-	topradius=topradius,
-	height=height,
-	anglesteps=26,
-	stacksteps=10
+function cone(baseradius, topradius, height, resolution)
+	baseradius = baseradius or 1
+	topradius = topradius or 1
+	height = height or 1
+	resolution = resolution or {26,10}
+
+	local ocone = shape_cone:new({
+		baseradius=baseradius,
+		topradius=topradius,
+		height=height,
+		anglesteps=resolution[1],
+		stacksteps=resolution[2]
 	})
 
 	defaultscene:appendCommand(CADVM.mesh(ocone:GetMesh()))

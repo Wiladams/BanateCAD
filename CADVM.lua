@@ -25,6 +25,9 @@ CADVM =
 	COLOR = 19,
 
 	MESH = 128,
+	LINE = 129,
+	TRIANGLE = 130,
+	ELLIPSE = 131
 }
 
 -- The Rendering System
@@ -59,3 +62,6 @@ function CADVM.mesh(amesh)
 	return {command = CADVM.MESH, value = amesh}
 end
 
+function CADVM.line(ep1, ep2, thickness)
+	return {command = CADVM.LINE, value = {ep1, ep2, thickness}}
+end

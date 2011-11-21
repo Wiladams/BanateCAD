@@ -20,11 +20,10 @@ color(crayola.rgb("Inchworm"))
 translate({3, -3, 0})
 dodecahedron(pradius)
 
---[[
+
 color(crayola.rgb("Blue Bell"))
 translate({0, 0, pradius})
 torus({offset={0,3.5},
 	size={1.5, 0.75},
 	anglesteps = 90,
 	stacksteps = 180})
---]]

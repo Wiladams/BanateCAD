@@ -24,6 +24,20 @@ function Renderer:new(o)
 	return o
 end
 
+function Renderer.ClearCachedObjects(self, ascene)
+	for i, cmd in ipairs(ascene.commands) do
+		if (cmd.command == CADVM.MESH) then
+			-- delete the display list item
+			if cmd.value.displaylist ~= nil then
+				gl.DeleteLists(cmd.value.displaylist, 1)
+			end
+
+			-- set display list to nil
+			cmd.value.displaylist = nil;
+		end
+	end
+end
+
 function Renderer.vertex(self, vert)
 	gl.Vertex (vert)
 end
@@ -94,18 +108,12 @@ function Renderer.DisplayMesh(self, omesh)
 
 end
 
-function Renderer.ClearCachedObjects(self, ascene)
-	for i, cmd in ipairs(ascene.commands) do
-		if (cmd.command == CADVM.MESH) then
-			-- delete the display list item
-			if cmd.value.displaylist ~= nil then
-				gl.DeleteLists(cmd.value.displaylist, 1)
-			end
-
-			-- set display list to nil
-			cmd.value.displaylist = nil;
-		end
-	end
+function Renderer.DisplayLine(self, line)
+	gl.LineWidth(line[3])
+	gl.Begin(gl.LINES)
+		gl.Vertex(line[1])
+		gl.Vertex(line[2])
+	gl.End()
 end
 
 function Renderer.DisplayScene(self, ascene)
@@ -137,6 +145,8 @@ function Renderer.DisplayScene(self, ascene)
 
 			-- pop modelview Matrix
 			gl.PopMatrix();
+		elseif cmd.command == CADVM.LINE then
+			self:DisplayLine(cmd.value)
 		elseif cmd.command == CADVM.TRANSLATION then
 			self.transform['translate'] = cmd.value;
 		elseif cmd.command == CADVM.ROTATION then

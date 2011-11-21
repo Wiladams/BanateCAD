@@ -37,38 +37,40 @@ blobs(seg1, radius, 90, 90, beamsteps)
 blobs(seg2, radius, 90, 90, beamsteps)
 end
 
-	local triballs = {
-		{-10,-5,12,5},		-- eye
-		{10,-5,12,5},		-- eye
+local triballs = {
+	{-10,-5,12,5},		-- eye
+	{10,-5,12,5},		-- eye
 
-		--{0,10,0,5},
-		{0,-30,0,5},		-- snout
+	--{0,10,0,5},
+	{0,-30,0,5},		-- snout
 
-		{0,0,5,5}
-		}
+	{0,0,5,5}
+	}
 
 function tripod()
 	local radius = 30
 	local beamsteps = 300
 
-
-color(crayola.rgb("Purple"))
-for _,v in ipairs(triballs) do
-	translate(v)
-	sphere(v[4])
-end
+	color(crayola.rgb("Purple"))
+	for _,v in ipairs(triballs) do
+		translate(v)
+		sphere(v[4])
+	end
 
 	color(crayola.rgba("Yellow", 0.65))
 	blobs(triballs, radius, 30, 30, beamsteps)
 end
 
 function deciballs(theballs)
-	color("Yellow")
-	for v in IterateMetaballs(theballs, {60,80,60}, {3,3,3}) do
-		color({v[1]/30,v[2]/10,v[3]/20,1})
+	searchvolume = {60,80,60}	-- Describes the search volume.  
+	resolution = {2,2,2}			-- How many blocks per unit of measure
+	dotradius = 1/resolution[1]	-- The size of each of the blocks
+
+	for v in IterateMetaballs(theballs, searchvolume, resolution) do
+		color({v[1]/30,v[2]/10,v[3]/20,1})	-- Create some interesting color
 		translate(v)
-		--tetrahedron(0.33)
-		hexahedron(0.33)
+		--tetrahedron(dotradius)
+		hexahedron(dotradius)	-- This sould be 1/resolution for a water tight print
 	end
 end
 
