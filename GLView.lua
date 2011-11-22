@@ -27,6 +27,7 @@ function GLView:new(o)
 	return o
 end
 
+--[[
 function GLView.Canvas.action(self)
 	iup.GLMakeCurrent(self);
 
@@ -77,7 +78,7 @@ end
 function GLView.Canvas.motion_cb(self, x, y, status)
 	defaultviewer:MouseMove(x, y, status);
 end
-
+--]]
 
 
 
