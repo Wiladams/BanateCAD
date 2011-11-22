@@ -25,6 +25,8 @@ function Renderer:new(o)
 end
 
 function Renderer.ClearCachedObjects(self, ascene)
+	if ascene == nil then return end
+
 	for i, cmd in ipairs(ascene.commands) do
 		if (cmd.command == CADVM.MESH) then
 			-- delete the display list item

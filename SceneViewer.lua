@@ -10,6 +10,8 @@ require ("iupluagl")
 require ("luagl")
 require ("luaglu")
 
+require ("BLight")
+require ("BLighting")
 require ("colorschemes")
 require ("maths")
 
@@ -23,11 +25,6 @@ FARAWAY = 100000;
 
 -- Lighting
 light = true
-LightAmbient = {0.5, 0.5, 0.5, 1}    -- Ambient Light Values ( NEW )
-LightDiffuse = {1, 1, 1, 1}          -- Diffuse Light Values ( NEW )
-
-LightPosition0 = {-2, -2, 2, 0}         -- Light Position 0
-LightPosition1 = {1, 1, -1, 0}         -- Light Position 1
 
 SceneViewer = {}
 function SceneViewer:new(o)
@@ -35,22 +32,31 @@ function SceneViewer:new(o)
 	setmetatable(o, self)
 	self.__index = self
 
+	o.Lighting = o.Lighting or BLighting:new({
+		Lights = {
+			BLight:new({
+				ID = gl.LIGHT0,
+				Diffuse = {1,1,1,1},
+				Position = {-2,-2,2,0},
+				Enabled = true
+			}),
+			BLight:new({
+				ID = gl.LIGHT1,
+				Diffuse = {1,1,1,1},
+				Position = {1,1,-1,0},
+				Enabled = true
+			})
+		}
+		})
+
 	return o
 end
 
 
-function debugvar(funcname, varname, value)
-	if (not value) then
-		print(funcname.." - "..varname.." NULL")
-	else
-		print(funcname.." - "..varname.." NOT NULL")
-	end
-end
-
 function SceneViewer.SetCanvas(self, canvas)
 	glcanvas = canvas;
 
-	 iup.GLMakeCurrent(glcanvas)
+	iup.GLMakeCurrent(glcanvas)
 
 	gl.Enable(gl.BLEND);
 	gl.BlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
@@ -58,18 +64,7 @@ function SceneViewer.SetCanvas(self, canvas)
 	gl.Enable(gl.DEPTH_TEST);            -- Enables Depth Testing
 	gl.DepthRange(-FARAWAY, FARAWAY);
 
-	--gl.Light('LIGHT0', 'AMBIENT', LightAmbient);        -- Setup The Ambient Light
-	gl.Light('LIGHT0', 'DIFFUSE', LightDiffuse);        -- Setup The Diffuse Light
-	gl.Light('LIGHT0', 'POSITION', LightPosition0);      -- Position The Light
-	gl.Enable('LIGHT0');
 
-	--gl.Light('LIGHT1', 'AMBIENT', LightAmbient);        -- Setup The Ambient Light
-	gl.Light('LIGHT1', 'DIFFUSE', LightDiffuse);        -- Setup The Diffuse Light
-	gl.Light('LIGHT1', 'POSITION', LightPosition1);      -- Position The Light
-	gl.Enable('LIGHT1');
-
-	gl.Enable(gl.LIGHTING);
-	gl.Enable(gl.NORMALIZE);
 
 	gl.ColorMaterial(gl.FRONT_AND_BACK, gl.AMBIENT_AND_DIFFUSE)
 	gl.Enable(gl.COLOR_MATERIAL)
@@ -194,7 +189,9 @@ end
 
 function SceneViewer.DisplayScene(self, scene)
 
-	gl.Enable(gl.LIGHTING)
+	self.Lighting:Render()
+
+
 
 	self:PositionCamera();
 

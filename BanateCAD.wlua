@@ -5,9 +5,19 @@
 -- Copyright (c) 2011  William Adams
 --
 
-require("FabuWindow")
+require("BApplication")
+require("BWindow")
 
-mainwin = FabuWindow:new();
 
-mainwin:Run()
+-- Create the main window we will be using
+local AppName = "Banate CAD";
 
+-- Construct the application object
+Application = BApplication:new({
+	Name=AppName,
+	Window = BWindow:new({Name=AppName})
+	});
+
+
+-- Run the application
+Application:Run();

@@ -63,7 +63,7 @@ function MenuController.do_file_open(self)
 	-- close the file
 	f:close()
 
-	mainwin:SetTitle("FabuCAD - "..defaultfilemanager.NAME);
+	Application.Window:SetFilename(defaultfilemanager.NAME);
 end
 
 function MenuController.do_import_stl(self)
@@ -104,7 +104,7 @@ function MenuController.do_update_file(self)
 
 	f:close();
 
-	mainwin:SetTitle("FabuCAD - "..defaultfilemanager.NAME);
+	Application.Window:SetFilename(defaultfilemanager.NAME);
 end
 
 function MenuController.do_save_file(self)
@@ -121,14 +121,14 @@ function MenuController.do_save_file(self)
 
 	f:close();
 
-	mainwin:SetTitle("FabuCAD - "..defaultfilemanager.NAME);
+	Application.Window:SetFilename(defaultfilemanager.NAME);
 end
 
 function MenuController.do_new_file(self)
 	intext.value = ''
 	defaultfilemanager:SetFileName("NewDesign.fab");
 
-	mainwin:SetTitle("FabuCAD - "..defaultfilemanager.NAME);
+	Application.Window:SetFilename(defaultfilemanager.NAME);
 end
 
 function MenuController.do_exit (self)
