@@ -17,6 +17,7 @@ require ("CADVM")
 require ("supershape")
 require ("cone")
 require ("shape_bicubicsurface")
+require ("shape_disk")
 require ("shape_ellipsoid")
 require ("shape_polyhedron")
 require ("shape_metaball")
@@ -24,6 +25,7 @@ require ("shape_torus")
 require ("Platonics")
 require ("crayola")
 require ("metaball")
+require ("GAABBox")
 
 
 SceneBuilder = {}
@@ -100,6 +102,19 @@ function line(ep1, ep2, thickness)
 	defaultscene:appendCommand(CADVM.line(ep1, ep2, thickness))
 end
 
+function triangle(v1, v2, v3)
+	defaultscene:appendCommand(CADVM.triangle(v1, v2, v3))
+end
+
+--===========================
+--	SHAPES
+--===========================
+function aabbox(v1, v2)
+	local bbox = GAABBox.new({v1,v2})
+print("SceneBuilder::aabbox - ", bbox:ToString())
+	defaultscene:appendCommand(CADVM.shape(bbox))
+end
+
 --===========================
 --	MESHES
 --===========================
@@ -128,7 +143,7 @@ function bicubicsurface(mesh, thickness, usteps, wsteps)
 end
 
 --===========================
---	Standard Shapes
+--	Quadrics
 --===========================
 function sphere(radius)
 	radius = radius or 1
@@ -148,18 +163,6 @@ local aellipsoid = shape_ellipsoid:new({
 	defaultscene:appendCommand(CADVM.mesh(aellipsoid:GetMesh()))
 end
 
---[[
-{offset={0,1},
-	size={0.5,0.5},
-	anglesteps = 12,
-	stacksteps = 12}
---]]
-function torus(params)
-	local lshape = shape_torus:new(params)
-
-	defaultscene:appendCommand(CADVM.mesh(lshape:GetMesh()))
-end
-
 function cone(baseradius, topradius, height, resolution)
 	baseradius = baseradius or 1
 	topradius = topradius or 1
@@ -176,6 +179,38 @@ function cone(baseradius, topradius, height, resolution)
 
 	defaultscene:appendCommand(CADVM.mesh(ocone:GetMesh()))
 end
+
+function disk(radius, iradius, maxangle, resolution, offset)
+	radius = radius or 1
+	iradius = iradius or 0
+	maxangle = maxangle or 360
+	resolution = resolution or 36
+	offset = offset or 0
+
+	local lshape = shape_disk:new({
+		Offset=offset,
+		Radius=radius,
+		InnerRadius=iradius,
+		PhiMax=math.rad(maxangle),
+		Resolution={resolution,2}
+	})
+
+	defaultscene:appendCommand(CADVM.mesh(lshape:GetMesh()))
+end
+
+--[[
+{offset={0,1},
+	size={0.5,0.5},
+	anglesteps = 12,
+	stacksteps = 12}
+--]]
+function torus(params)
+	local lshape = shape_torus:new(params)
+
+	defaultscene:appendCommand(CADVM.mesh(lshape:GetMesh()))
+end
+
+
 
 function supershape(params)
 	local lshape = shape_supershape:new({

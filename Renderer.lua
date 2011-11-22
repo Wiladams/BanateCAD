@@ -13,6 +13,14 @@ require ("CADVM")
 --
 -- Display the Scene
 --
+
+RenderMode = {
+	POINT=1,
+	SEQUENCE=2,
+	LOOP=3,
+	SOLID=4,
+	}
+
 Renderer = {}
 function Renderer:new(o)
 	o = o or {}		-- create object if user does not provide one
@@ -28,7 +36,7 @@ function Renderer.ClearCachedObjects(self, ascene)
 	if ascene == nil then return end
 
 	for i, cmd in ipairs(ascene.commands) do
-		if (cmd.command == CADVM.MESH) then
+		if (cmd.command == CADVM.TRIMESH) then
 			-- delete the display list item
 			if cmd.value.displaylist ~= nil then
 				gl.DeleteLists(cmd.value.displaylist, 1)
@@ -40,16 +48,44 @@ function Renderer.ClearCachedObjects(self, ascene)
 	end
 end
 
+--=========================================
+--	DRAWING PRIMITIVES
+--=========================================
 function Renderer.vertex(self, vert)
 	gl.Vertex (vert)
 end
 
-function Renderer.DisplayTriangle(self, tri, normal)
-	gl.Normal(normal[1], normal[2], normal[3]);
+function Renderer.DrawLine(self, line)
+--print("Renderer.DrawLine")
+	gl.LineWidth(line[3])
+	gl.Begin(gl.LINES)
+		gl.Vertex(line[1])
+		gl.Vertex(line[2])
+	gl.End()
+end
 
-	self:vertex(tri[1]);
-	self:vertex(tri[2]);
-	self:vertex(tri[3]);
+function Renderer.DrawTriangle(self, tri, mode)
+	mode = mode or RenderMode.SOLID
+
+-- tri.Vertices
+-- tri.Normals
+-- tri.Colors
+
+	if #tri.Normals == 1 then
+		gl.Normal(normal[1], normal[2], normal[3]);
+	end
+
+	if mode == RenderMode.LOOP then
+		gl.Begin(gl.LINE_LOOP)
+	elseif mode == RenderMode.SOLID then
+		gl.Begin(gl.TRIANGLES)
+	end
+
+	for _,vert in ipairs(tri.Vertices) do
+		gl.Vertex(vert);
+	end
+
+	gl.End()
 end
 
 function Renderer.DisplayMeshFace(self, omesh, facenumber)
@@ -63,7 +99,6 @@ function Renderer.DisplayMeshFace(self, omesh, facenumber)
 	for i,vindex in ipairs(face) do
 		self:vertex(omesh.vertices[vindex])
 	end
-
 end
 
 function Renderer.DisplayMesh(self, omesh)
@@ -85,19 +120,13 @@ function Renderer.DisplayMesh(self, omesh)
 	gl.NewList(omesh.displaylist, gl.COMPILE)
 
 	if (self.wireframe) then
-			gl.Begin("LINE_LOOP")
+			gl.Begin(gl.LINE_LOOP)
 	else
-			gl.Begin("TRIANGLES")
+			gl.Begin(gl.TRIANGLES)
 	end
 
 	gl.Enable(gl.CULL_FACE);
 	gl.CullFace(gl.BACK);
---[[
-		renderCSGChain(this->root_chain, false, false, showedges, false);
-		glCullFace(GL_FRONT);
-		glColor3ub(255, 0, 255);
-		renderCSGChain(this->root_chain, false, false, showedges, true);
---]]
 	gl.Disable(gl.CULL_FACE);
 
 	for i=1, faceslen do
@@ -110,13 +139,7 @@ function Renderer.DisplayMesh(self, omesh)
 
 end
 
-function Renderer.DisplayLine(self, line)
-	gl.LineWidth(line[3])
-	gl.Begin(gl.LINES)
-		gl.Vertex(line[1])
-		gl.Vertex(line[2])
-	gl.End()
-end
+
 
 function Renderer.DisplayScene(self, ascene)
 	if (ascene.commands == nil or #defaultscene.commands == 0) then
@@ -127,7 +150,7 @@ function Renderer.DisplayScene(self, ascene)
 	for i, cmd in ipairs(ascene.commands) do
 		if (cmd.command == CADVM.FLUSHCACHE) then
 			self:ClearCachedObjects();
-		elseif (cmd.command == CADVM.MESH) then
+		elseif (cmd.command == CADVM.TRIMESH) then
 			-- modelview push Matrix
 			-- Perform transforms
 			gl.PushMatrix();
@@ -147,8 +170,10 @@ function Renderer.DisplayScene(self, ascene)
 
 			-- pop modelview Matrix
 			gl.PopMatrix();
+		elseif cmd.command == CADVM.SHAPE then
+			cmd.value:Render(self);
 		elseif cmd.command == CADVM.LINE then
-			self:DisplayLine(cmd.value)
+			self:DrawLine(cmd.value)
 		elseif cmd.command == CADVM.TRANSLATION then
 			self.transform['translate'] = cmd.value;
 		elseif cmd.command == CADVM.ROTATION then

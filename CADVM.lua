@@ -24,10 +24,14 @@ CADVM =
 	SCALE = 18,
 	COLOR = 19,
 
-	MESH = 128,
-	LINE = 129,
-	TRIANGLE = 130,
-	ELLIPSE = 131
+	SHAPE = 128,
+	POINT = 129,
+	LINE = 130,
+	TRIANGLE = 131,
+	QUAD = 132,
+	ELLIPSE = 133,
+	TRIMESH = 134,
+	MESH = 135,
 }
 
 -- The Rendering System
@@ -57,11 +61,21 @@ function CADVM.color(aColor)
 end
 
 
+
+
 -- Shapes
+function CADVM.shape(ashape)
+	return {command = CADVM.SHAPE, value = ashape}
+end
+
 function CADVM.mesh(amesh)
-	return {command = CADVM.MESH, value = amesh}
+	return {command = CADVM.TRIMESH, value = amesh}
 end
 
 function CADVM.line(ep1, ep2, thickness)
 	return {command = CADVM.LINE, value = {ep1, ep2, thickness}}
+end
+
+function CADVM.triangle(v1, v2, v3)
+	return {command = CADVM.TRIANGLE, value = {v1, v2, v3}}
 end
