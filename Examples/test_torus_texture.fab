@@ -12,7 +12,7 @@ usteps = 8	-- The is the resolution around the cross section
 wsteps = 8	-- The resolution around the great ring
 
 local colorSampler2 = ImageSampler.new({Filename='profile_1024_768.png'})
-local colorSampler1 = checkerboard:new({Columns=usteps, Rows=wsteps})
+local colorSampler1 = ImageSampler.new({Filename='profile_80_60.png'})
 
 torus({Offset=offset,
 	Size=size,
@@ -27,15 +27,13 @@ torus({Offset=offset,
 	Size=size,
 	USteps = usteps*10,
 	WSteps = wsteps*10,
-	ColorSampler = ImageSampler.new({Filename='profile_1024_768.png'})
-	})
-
-local lshape = shape_torus.new({Offset=offset,
-	Size=size,
-	USteps = usteps*8,
-	WSteps = wsteps*6,
 	ColorSampler = colorSampler1
 	})
 
 translate({offset[2], offset[2], 0})
-addshape(lshape)
+torus({Offset=offset,
+	Size=size,
+	USteps = usteps*10,
+	WSteps = wsteps*10,
+	ColorSampler = colorSampler2
+	})

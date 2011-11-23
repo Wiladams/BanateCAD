@@ -26,6 +26,8 @@ require ("Platonics")
 require ("crayola")
 require ("metaball")
 require ("GAABBox")
+require ("RubberSheet")
+require ("ImageSampler")
 
 
 SceneBuilder = {}
@@ -56,42 +58,52 @@ function SceneBuilder.clearcachedobjects()
 end
 
 --===========================
+--	SHAPES
+--===========================
+function addshape(lshape)
+	defaultscene:appendCommand(CADVM.shape(lshape))
+end
+
+function addmesh(lmesh)
+	defaultscene:appendCommand(CADVM.mesh(lmesh))
+end
+
+--===========================
 -- Platonic Solids
 --===========================
 function tetrahedron(radius)
 	radius = radius or 1
 	local lshape = shape_tetrahedron:new({radius=radius});
 
-	defaultscene:appendCommand(CADVM.mesh(lshape:GetMesh()))
+	addmesh(lshape:GetMesh())
 end
 
 function hexahedron(radius)
 	radius = radius or 1
 	local lshape = shape_hexahedron:new({radius=radius});
 
-	defaultscene:appendCommand(CADVM.mesh(lshape:GetMesh()))
+	addmesh(lshape:GetMesh())
 end
 
 function octahedron(radius)
 	radius = radius or 1
 	local lshape = shape_octahedron:new({radius = radius})
 
-
-	defaultscene:appendCommand(CADVM.mesh(lshape:GetMesh()))
+	addmesh(lshape:GetMesh())
 end
 
 function dodecahedron(radius)
 	radius = radius or 1
 	local lshape = shape_dodecahedron:new({radius = radius})
 
-
-	defaultscene:appendCommand(CADVM.mesh(lshape:GetMesh()))
+	addmesh(lshape:GetMesh())
 end
 
 function icosahedron(radius)
 	radius = radius or 1
 	local lshape = shape_icosahedron:new({radius = radius})
-	defaultscene:appendCommand(CADVM.mesh(lshape:GetMesh()))
+
+	addmesh(lshape:GetMesh())
 end
 
 --===========================
@@ -106,26 +118,27 @@ function triangle(v1, v2, v3)
 	defaultscene:appendCommand(CADVM.triangle(v1, v2, v3))
 end
 
+
 --===========================
---	SHAPES
+--	GRAPHICS
 --===========================
 function aabbox(v1, v2)
-	local bbox = GAABBox.new({v1,v2})
-print("SceneBuilder::aabbox - ", bbox:ToString())
-	defaultscene:appendCommand(CADVM.shape(bbox))
+	local lshape = GAABBox.new({v1,v2})
+
+	addshape(lshape)
 end
 
 --===========================
 --	MESHES
 --===========================
+
 function polyhedron(vertices, faces)
-	local opolyhedron = shape_polyhedron:new({
+	local lshape = shape_polyhedron:new({
 		vertices = vertices,
 		faces = faces
 		})
 
-	defaultscene:appendCommand(CADVM.mesh(opolyhedron:GetMesh()))
-
+	addmesh(lshape:GetMesh())
 end
 
 function bicubicsurface(mesh, thickness, usteps, wsteps)
@@ -139,8 +152,16 @@ function bicubicsurface(mesh, thickness, usteps, wsteps)
 		USteps = usteps,
 		WSteps = wsteps})
 
-	defaultscene:appendCommand(CADVM.shape(lshape))
+	addshape(lshape)
 end
+
+function rubbersheet(params)
+	local lshape = RubberSheet.new(params)
+
+	addshape(lshape)
+end
+
+
 
 --===========================
 --	Quadrics
@@ -160,7 +181,7 @@ local lshape = shape_ellipsoid.new({
 	WSteps=360/8
 	})
 
-	defaultscene:appendCommand(CADVM.shape(lshape))
+	addshape(lshape)
 end
 
 function cone(baseradius, topradius, height, resolution)
@@ -169,7 +190,7 @@ function cone(baseradius, topradius, height, resolution)
 	height = height or 1
 	resolution = resolution or {26,10}
 
-	local ocone = shape_cone:new({
+	local lshape = shape_cone:new({
 		baseradius=baseradius,
 		topradius=topradius,
 		height=height,
@@ -177,7 +198,7 @@ function cone(baseradius, topradius, height, resolution)
 		stacksteps=resolution[2]
 	})
 
-	defaultscene:appendCommand(CADVM.mesh(ocone:GetMesh()))
+	addmesh(lshape:GetMesh())
 end
 
 function disk(radius, iradius, maxangle, resolution, offset)
@@ -193,15 +214,15 @@ function disk(radius, iradius, maxangle, resolution, offset)
 		InnerRadius=iradius,
 		PhiMax=math.rad(maxangle),
 		Resolution={resolution,2}
-	})
+		})
 
-	defaultscene:appendCommand(CADVM.mesh(lshape:GetMesh()))
+	addmesh(lshape:GetMesh())
 end
 
 function torus(params)
 	local lshape = shape_torus.new(params)
 
-	defaultscene:appendCommand(CADVM.shape(lshape))
+	addshape(lshape)
 end
 
 
@@ -224,7 +245,7 @@ function supershape(params)
 		thetasteps = params.thetasteps,
 		phisteps = params.phisteps})
 
-	defaultscene:appendCommand(CADVM.mesh(lshape:GetMesh()))
+	addmesh(lshape:GetMesh())
 end
 
 --===========================
@@ -238,7 +259,7 @@ function blobs(balls, radius, stacksteps, anglesteps)
 		anglesteps = anglesteps,
 		});
 
-	defaultscene:appendCommand(CADVM.mesh(lshape:GetMesh()))
+	addmesh(lshape:GetMesh())
 end
 
 --===========================

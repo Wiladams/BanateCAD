@@ -1,0 +1,9 @@
+TODO
+
+Change shape_disk to be subclass of BiParametric
+Change cone.lua to be subclass of BiParametric
+
+Create RubberSheet
+Create DisplacementSampler	- GetOffset
+Create Image Sampler - For image mapping (GetColor)
+

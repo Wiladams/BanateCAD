@@ -1,0 +1,10 @@
+local size = {80,60}
+local res = {4,4}
+local colorSampler = ImageSampler.new({Filename='profile_1024_768.png'})
+--local colorSampler	= ImageSampler.new({Filename='profile_80_60.png'}),
+
+rubbersheet({
+	Size=size,
+	Resolution=res,
+	ColorSampler = colorSampler	
+	})

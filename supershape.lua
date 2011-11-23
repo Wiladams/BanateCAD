@@ -71,7 +71,7 @@ end
 		http://paulbourke.net/geometry/supershape3d/
 --]]
 
-texture = checkerboard:new({columns=32, rows=32})
+--texture = checkerboard:new({columns=32, rows=32})
 
 shape_supershape={}
 function shape_supershape:new(o)
@@ -144,7 +144,7 @@ function shape_supershape.GetMesh(self)
 			if nozeros(r0,r1) then
 				vert = pocart(1/r0,1/r1,theta,phi)
 				vert.texcoord = {thetafrac, phifrac}
-				vert.color = texture:getcolor(phifrac, thetafrac)
+				--vert.color = texture:GetColor(phifrac, thetafrac)
 
 				local pa = mesh:addvertex(vert)
 			end

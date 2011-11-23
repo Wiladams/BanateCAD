@@ -6,7 +6,7 @@
 
 require ("trimesh")
 require ("BiParametric")
-
+require ("checkerboard")
 
 shape_torus = inheritsFrom(BiParametric)
 function shape_torus.new(params)
@@ -25,17 +25,18 @@ end
 function shape_torus.Init(self, params)
 	params = params or {}
 
-	self.USteps = params.USteps or 10
-	self.WSteps = params.WSteps or 10
+	self:superClass():Init(params)
+
 	self.Offset = params.Offset or {0,0}
 	self.Size = params.Size or {1,1}
 
 	self.ParamFunction = self
+	self.ColorSampler = params.ColorSampler
 
 	return self
 end
 
-function shape_torus.GetValue(self, u, v)
+function shape_torus.GetVertex(self, u, v)
 	local theta = u * 2*math.pi;
 	local phi = v * 2*math.pi;
 

@@ -91,9 +91,14 @@ end
 function Renderer.DisplayMeshFace(self, omesh, facenumber)
 	local face = omesh.faces[facenumber];
 	local norm = face.normal;
+	local facecolor = face.Color;
 
 	if norm ~= nil then
 		gl.Normal(norm[1], norm[2], norm[3]);
+	end
+
+	if facecolor ~= nil then
+		gl.Color(facecolor[1], facecolor[2], facecolor[3], facecolor[4]);
 	end
 
 	for i,vindex in ipairs(face) do

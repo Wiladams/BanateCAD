@@ -1,11 +1,13 @@
 require ("Class")
 require ("trimesh")
+require ("checkerboard")
 
 BiParametric = inheritsFrom(Shape)
 
 -- Every BiParametric needs:
 --	USteps
 --	WSteps
+--	ColorSampler
 --	ParamFunction
 function BiParametric.new(params)
 	params = params or {}		-- create object if user does not provide one
@@ -19,6 +21,7 @@ end
 function BiParametric.Init(self, params)
 	self.USteps = params.USteps or 10
 	self.WSteps = params.WSteps or 10
+	self.ColorSampler = params.ColorSampler or nil
 	self.ParamFunction = params.ParamFunction or nil
 
 	return self
@@ -43,6 +46,12 @@ function BiParametric.GetFaces(self)
 			local tri1 = {v1, v2, v3}
 			local tri2 = {v1, v3, v4}
 
+			if self.ColorSampler ~= nil then
+				aValue = self.ColorSampler:GetColor(u/self.USteps, w/self.WSteps)
+				tri1.Color = aValue
+				tri2.Color = aValue
+			end
+
 			table.insert(faces, tri1)
 			table.insert(faces, tri2)
 		end
@@ -51,10 +60,18 @@ function BiParametric.GetFaces(self)
 	return faces;
 end
 
+function BiParametric.GetVertex(self, u, w)
+	if self.ParamFunction ~= nil then
+		return self.ParamFunction:GetVertex(u/self.USteps, w/self.WSteps)
+	end
+
+	return nil
+end
+
 function BiParametric.GetVertices(self)
 	-- If we don't have a function to calculate the values
 	-- then just return
-	if self.ParamFunction == nil then return end
+	--if self.ParamFunction == nil then return end
 
 
 	local vertices = {};
@@ -62,7 +79,7 @@ function BiParametric.GetVertices(self)
 
 	for w=0, self.WSteps do
 		for u=0, self.USteps do
-			local svert, normal = self.ParamFunction:GetValue(u/self.USteps, w/self.WSteps)
+			local svert, normal = self:GetVertex(u/self.USteps, w/self.WSteps)
 			table.insert(vertices, svert);
 			table.insert(normals, normal);
 		end
