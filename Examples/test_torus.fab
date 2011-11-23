@@ -12,7 +12,7 @@ anglesteps = 30	-- The is the resolution around the cross section
 stacksteps = 60	-- The resolution around the great ring
 
 color(crayola.rgb("Blue Bell"))
-torus({offset=offset,
-	size=size,
-	anglesteps = anglesteps,
-	stacksteps = stacksteps})
+torus({Offset=offset,
+	Size=size,
+	USteps = anglesteps,
+	WSteps = stacksteps})

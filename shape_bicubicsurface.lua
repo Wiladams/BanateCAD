@@ -4,67 +4,67 @@
 -- Copyright (c) 2011  William Adams
 --
 require ("trimesh")
+require ("BiParametric")
+require ("maths")
 
-shape_bicubicsurface = {}
+-- Create a subclass of BiParametric
+shape_bicubicsurface = inheritsFrom(BiParametric)
 
-function shape_bicubicsurface:new(o)
-	o = o or {}		-- create object if user does not provide one
-	setmetatable(o, self)
-	self.__index = self
 
-	return o
+function shape_bicubicsurface.new(params)
+	local new_inst = shape_bicubicsurface.create()
+	new_inst:Init(params)
+
+	return new_inst
 end
 
-function shape_bicubicsurface.getindex(self, row, column)
-	return row*(self.usteps+1) + column + 1
+-- USteps
+-- WSteps
+-- Mesh
+-- M
+-- UMult
+function shape_bicubicsurface.Init(self, params)
+	params = params or {}
+
+	self.Thickness = params.Thickness or 1
+	self.USteps = params.USteps or 10
+	self.WSteps = params.WSteps or 10
+	self.M = params.M or cubic_bezier_M()
+	self.UMult = params.UMult or 1
+	self.Mesh = params.Mesh or {
+		{{0,0,0,1},{0.33, 0,0},{0.66,0,0,1},{1,1,0,1}},
+		{{0,0.33,0,1},{0.33, 0.33,0,1},{0.66,0.33,0,1},{1,0.33,0,1}},
+		{{0,0.66,0,1},{0.33, 0.66,0,1},{0.66,0.66,0,1},{1,0.66,0,1}},
+		{{0,1,0,1},{0.33, 1,0,1},{0.66,0,0,1},{1,1,0,1}},
+		}
+	self.ParamFunction = self
+
+	return self
 end
 
-function shape_bicubicsurface.getfaces(self, width, height)
-	local faces = {};
-
-	for w=0, self.wsteps-1 do
-		for u=0, self.usteps-1 do
-			local v1 = self:getindex(w, u)
-			local v2 = self:getindex(w, u+1)
-			local v3 = self:getindex(w+1, u+1)
-			local v4 = self:getindex(w+1, u)
-
-			local tri1 = {v1, v2, v3}
-			local tri2 = {v1, v3, v4}
-
-			table.insert(faces, tri1)
-			table.insert(faces, tri2)
-		end
-	end
-
-	return faces;
+function shape_bicubicsurface.GetValue(self, u,w)
+	local svert, normal = bicerp(u, w, self.Mesh, self.M, self.UMult);
+	return svert, normal;
 end
 
+
+--[[
 function shape_bicubicsurface.GetMesh(self)
---(M, umult, mesh, usteps, wsteps)
-
 	local mesh = trimesh:new();
 
-	local vertices = {};
-	--local innerverts = {};
-	--local normals = {};
+	local vertices, normals = self:GetVertices()
 
-	for w=0, self.wsteps do
-		for u=0, self.usteps do
-			local svert, normal = bicerp(u/self.usteps, w/self.wsteps, self.mesh, self.M, self.umult);
-			svert.normal = normal
-
-			mesh:addvertex(svert)
-		end
+	for _,vert in ipairs(vertices) do
+		mesh:addvertex(vert)
 	end
 
-	local faces = self:getfaces()
+	local faces = self:GetFaces()
 	for _,f in ipairs(faces) do
 		mesh:addface(f)
 	end
 
 	return mesh
 end
-
+--]]
 
 

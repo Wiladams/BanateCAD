@@ -135,10 +135,10 @@ end
 function show_torus()
 	color(crayola.rgba("Blue Bell", 0.25))
 	translate({0, 0, 0})
-	torus({offset={0,100},
-		size={20, 5},
-		anglesteps = 90,
-		stacksteps = 180})
+	torus({Offset={0,100},
+		Size={20, 5},
+		USteps = 90,
+		WSteps = 180})
 end
 
 show_spiralring()

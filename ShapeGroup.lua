@@ -12,14 +12,19 @@ function ShapeGroup.new(params)
 end
 
 function shapeGroup.Init(self, params)
-	self.Children = params.Children or {}
+	self.Members = params.Members or {}
 end
 
-function ShapeGroup.RenderChildren(self, renderer)
-	if self.Children == nil then return end
+function ShapeGroup.AddMember(self, newmember)
+	table.insert(self.Members, newmember)
+end
 
-	for i=1,#self.Children do
-		self.Children[i].Render()
+
+function ShapeGroup.RenderMembers(self, renderer)
+	if self.Members == nil then return end
+
+	for i=1,#self.Members do
+		self.Members[i].Render()
 	end
 end
 
@@ -29,7 +34,7 @@ end
 
 function ShapeGroup.Render(self, renderer)
 	self:RenderSelf(renderer)
-	self:RenderChildren(renderer)
+	self:RenderMembers(renderer)
 end
 
 function ShapeGroup.ToString(self)

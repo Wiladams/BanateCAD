@@ -8,8 +8,8 @@ local wsteps = 30
 
 local columnsize = 30
 local rowsize = 45
-local numrows = 3
-local numcolumns = 3
+local numrows = 2
+local numcolumns = 2
 
 function test_surfaces()
 for row = 1, numrows do
@@ -42,5 +42,6 @@ function test_heel()
 	bicubicsurface({fcp1, fcp2, fcp3, fcp4}, 1, usteps, wsteps)
 end
 
---test_heel()
-test_surfaces()
+translate({10,10,10})
+test_heel()
+--test_surfaces()

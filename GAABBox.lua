@@ -34,7 +34,7 @@ GAABBox = inheritsFrom(Shape)
 -- If we're setting any instance variables, we use 'self.'
 -- At the end we return 'self' to retain the metatable
 -- That was set when we subclassed Shape.
----[[
+
 function GAABBox.new(o)
 	o = o or {}		-- create object if user does not provide one
 	o[1] = o[1] or {0,0,0}
@@ -45,7 +45,6 @@ function GAABBox.new(o)
 
 	return new_inst
 end
---]]
 
 function GAABBox.Init(self, v1,v2)
 	v1 = v1 or {0,0,0}
@@ -87,9 +86,7 @@ function GAABBox.Init(self, v1,v2)
 	return self
 end
 
-function GAABBox.RenderSelf(self, renderer)
-print("GAABBox.RenderSelf: ", self:ToString())
-
+function GAABBox.Render(self, renderer)
 	for _,e in ipairs(self.Edges) do
 		renderer:DrawLine({self.Vertices[e[1]], self.Vertices[e[2]], 1})
 	end
@@ -99,7 +96,3 @@ function GAABBox.ToString(self)
 	return "<Dimensions>"..self.Dimensions[1]..','..self.Dimensions[2]..','..self.Dimensions[3]
 end
 
---[[	Testing
-local bbox = GAABBox.new({{3,2,-3},{10,10,10}})
-print(bbox:ToString())
---]]

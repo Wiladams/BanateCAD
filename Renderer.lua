@@ -171,7 +171,26 @@ function Renderer.DisplayScene(self, ascene)
 			-- pop modelview Matrix
 			gl.PopMatrix();
 		elseif cmd.command == CADVM.SHAPE then
+			-- modelview push Matrix
+			-- Perform transforms
+			gl.PushMatrix();
+			local tfm = self.transform;
+			if tfm.translate ~= nil then
+				gl.Translate(tfm.translate[1], tfm.translate[2], tfm.translate[3]);
+				tfm.translate = nil;
+			end
+
+			if tfm.scale ~= nil then
+				gl.Scale(tfm.scale[1], tfm.scale[2], tfm.scale[3]);
+				tfm.scale = nil;
+			end
+--			gl.Rotate(cmd.value.angle, cmd.value.axis);
+
+
 			cmd.value:Render(self);
+
+			-- pop modelview Matrix
+			gl.PopMatrix();
 		elseif cmd.command == CADVM.LINE then
 			self:DrawLine(cmd.value)
 		elseif cmd.command == CADVM.TRANSLATION then
