@@ -38,14 +38,14 @@ function shape_bicubicsurface.Init(self, params)
 	self.ParamFunction = params.ParamFunction or nil
 
 	-- Now set what we want explicitly
-	self.Thickness = params.Thickness or 1
+	self.Thickness = params.Thickness or -1
 	self.M = params.M or cubic_bezier_M()
 	self.UMult = params.UMult or 1
 	self.Mesh = params.Mesh or {
-		{{0,0,0,1},{0.33, 0,0},{0.66,0,0,1},{1,1,0,1}},
+		{{0,0,0,1},{0.33, 0,0,1},{0.66,0,0,1},{1,0,0,1}},
 		{{0,0.33,0,1},{0.33, 0.33,0,1},{0.66,0.33,0,1},{1,0.33,0,1}},
 		{{0,0.66,0,1},{0.33, 0.66,0,1},{0.66,0.66,0,1},{1,0.66,0,1}},
-		{{0,1,0,1},{0.33, 1,0,1},{0.66,0,0,1},{1,1,0,1}},
+		{{0,1,0,1},{0.33, 1,0,1},{0.66,1,0,1},{1,1,0,1}},
 		}
 
 	return self

@@ -90,6 +90,43 @@ function MenuController.do_import_stl(self)
 	iup.Update(glcanvas)
 end
 
+--	filehandle = io.open(filename, "w+")
+--    writer = STLASCIIWriter:new({file = filehandle})
+--    writer.WriteMesh(trimesh)
+function MenuController.do_export_stl(self)
+	-- get a filename
+	local filename = "file.stl"
+--[[
+	local filename,err = defaultfilemanager:GetSaveFileName();
+
+	if filename == nil then
+		return iup.DEFAULT
+	end
+--]]
+
+	-- open up the file
+	local f= io.open(filename, 'w+')
+
+print(f)
+
+	local writer = STLASCIIWriter.new({file = f})
+
+	-- Roll through the scene
+	-- write out any meshes found in there
+	for i, cmd in ipairs(defaultscene.commands) do
+		if (cmd.command == CADVM.TRIMESH) then
+			writer:WriteMesh(cmd.value, "BanateCAD")
+		elseif cmd.command == CADVM.SHAPE then
+			local amesh = cmd.value:GetMesh()
+			writer:WriteMesh(amesh, "BanateCAD")
+
+		end
+	end
+
+	-- close the file
+	f:close()
+end
+
 function MenuController.do_update_file(self)
 	local filename, err = defaultfilemanager:GetSaveFileName();
 
@@ -216,7 +253,7 @@ local menudef = {
 		"Save", self.do_update_file,
 		"Save As...", self.do_save_file,
 		"Export",{
-			"Export STL", self.default,
+			"Export STL", self.do_export_stl,
 		},
 		"Import",{
 			"Import STL", self.do_import_stl,

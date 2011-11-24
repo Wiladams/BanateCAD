@@ -8,32 +8,38 @@
 
 require ("trimesh")
 require ("test_lpeg")
+require ("Class")
 
 --
 -- Construct like this
 --	filehandle = io.open(filename, "w+")
 --    writer = STLASCIIWriter:new({file = filehandle})
---    writer.WriteMesh(trimesh)
-STLASCIIWriter={}
-function STLASCIIWriter:new(o)
-	o = o or {}		-- create object if user does not provide one
-	setmetatable(o, self)
-	self.__index = self
+--    writer.WriteMesh(trimesh, solidname)
+STLASCIIWriter = inheritsFrom(nil);
+function STLASCIIWriter.new(params)
+	params = params or {}		-- create object if user does not provide one
 
-	return o
+	local new_inst = STLASCIIWriter.create()
+
+	--new_inst:Init(params)
+	new_inst.file = params.file
+
+	return new_inst
 end
 
+
+
 function STLASCIIWriter.WriteMesh(self, mesh, solidname)
-	file:write(string.format('solid %s\n',solidname));
+	self.file:write(string.format('solid %s\n',solidname));
 
 	for i=1,#mesh.faces  do
 		local face = mesh.faces[i]
 		local tri = {mesh.vertices[face[1]], mesh.vertices[face[2]], mesh.vertices[face[3]]}
 
-		self.WriteFace(tri, face.normal);
+		self:WriteFace(tri, face.normal);
 	end
 
-	io.write(string.format("endsolid %s\n", name));
+	self.file:write(string.format("endsolid %s\n", solidname));
 end
 
 function STLASCIIWriter.WriteFace(self, facet, normal)
@@ -41,21 +47,21 @@ function STLASCIIWriter.WriteFace(self, facet, normal)
 	local fnormal = {0,0,0};
 
 	-- header
-	io.write('facet normal  0 0\n');
-	io.write('outer loop\n');
+	self.file:write('facet normal  0 0 0\n');
+	self.file:write('outer loop\n');
 
 	-- print vertices
-	writeASCIISTLVertex(facet[1]);
-	writeASCIISTLVertex(facet[2]);
-	writeASCIISTLVertex(facet[3]);
+	self:WriteSTLVertex(facet[1]);
+	self:WriteSTLVertex(facet[2]);
+	self:WriteSTLVertex(facet[3]);
 
 	-- footer
-	io.write('endloop\n');
-	io.write('endfacet\n');
+	self.file:write('endloop\n');
+	self.file:write('endfacet\n');
 end
 
-function STLASCIIWriter.writeSTLVertex(self, v)
-	io.write(string.format("vertex %5.4f %5.4f %5.4f\n", v[1],v[2],v[3]));
+function STLASCIIWriter.WriteSTLVertex(self, v)
+	self.file:write(string.format("vertex %5.4f %5.4f %5.4f\n", v[1],v[2],v[3]));
 end
 
 
@@ -80,7 +86,7 @@ end
 
 function STLASCIIReader.Read(self)
 
-amesh = parsestl(self.file);
+local amesh = parsestl(self.file);
 
 	--[[
 	-- Process the text one line at a time
@@ -91,26 +97,4 @@ amesh = parsestl(self.file);
 	end
 --]]
 	return amesh
-end
-
-function STLASCIIWriter.WriteFace(self, facet, normal)
-	-- calculate the facet normal
-	local fnormal = {0,0,0};
-
-	-- header
-	io.write('facet normal  0 0\n');
-	io.write('outer loop\n');
-
-	-- print vertices
-	writeASCIISTLVertex(facet[1]);
-	writeASCIISTLVertex(facet[2]);
-	writeASCIISTLVertex(facet[3]);
-
-	-- footer
-	io.write('endloop\n');
-	io.write('endfacet\n');
-end
-
-function STLASCIIWriter.writeSTLVertex(self, v)
-	io.write(string.format("vertex %5.4f %5.4f %5.4f\n", v[1],v[2],v[3]));
 end
