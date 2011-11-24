@@ -1,0 +1,10 @@
+usteps = 36
+wsteps = 24
+scale({10,10,10})
+hyperboloid({
+	USteps = usteps,
+	WSteps = wsteps,
+	StartPoint = {1,0,0},
+	EndPoint = {0, 1, 1},
+	ColorSampler = checkerboard:new({Columns=usteps, Rows=wsteps})
+	})

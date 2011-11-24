@@ -19,8 +19,10 @@ require ("cone")
 require ("shape_bicubicsurface")
 require ("shape_disk")
 require ("shape_ellipsoid")
-require ("shape_polyhedron")
+require ("shape_hyperboloid")
 require ("shape_metaball")
+require ("shape_paraboloid")
+require ("shape_polyhedron")
 require ("shape_torus")
 require ("Platonics")
 require ("crayola")
@@ -217,6 +219,18 @@ function disk(radius, iradius, maxangle, resolution, offset)
 		})
 
 	addmesh(lshape:GetMesh())
+end
+
+function hyperboloid(params)
+	local lshape = shape_hyperboloid.new(params)
+
+	addshape(lshape)
+end
+
+function paraboloid(params)
+	local lshape = shape_paraboloid.new(params)
+
+	addshape(lshape)
 end
 
 function torus(params)

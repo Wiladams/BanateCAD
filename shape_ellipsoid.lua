@@ -29,7 +29,10 @@ function shape_ellipsoid.Init(self, params)
 	params = params or {}
 
 	-- Allow the base class to pull out what it wants
-	self:superClass():Init(params)
+	--self:superClass():Init(params)
+	self.USteps = params.USteps or 10
+	self.WSteps = params.WSteps or 10
+	self.ColorSampler = params.ColorSampler or nil
 
 	-- Get our specifics out of the parameters
 	self.XRadius = params.XRadius or 1
