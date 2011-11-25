@@ -23,7 +23,7 @@ function BiParametric.Init(self, params)
 	self.USteps = params.USteps or 10
 	self.WSteps = params.WSteps or 10
 	self.ColorSampler = params.ColorSampler or nil
-	self.ParamFunction = params.ParamFunction or nil
+	self.VertexFunction = params.VertexFunction or nil
 
 	return self
 end
@@ -170,19 +170,14 @@ function BiParametric.GetFaces(self)
 end
 
 function BiParametric.GetVertex(self, u, w)
-	if self.ParamFunction ~= nil then
-		return self.ParamFunction:GetVertex(u/self.USteps, w/self.WSteps)
+	if self.VertexFunction ~= nil then
+		return self.VertexFunction:GetVertex(u/self.USteps, w/self.WSteps)
 	end
 
 	return nil
 end
 
 function BiParametric.GetVertices(self)
-	-- If we don't have a function to calculate the values
-	-- then just return
-	--if self.ParamFunction == nil then return end
-
-
 	local vertices = {};
 	local normals = {};
 
@@ -208,10 +203,6 @@ function BiParametric.GetVertices(self)
 			local norm = normals[i]
 			local vert = vertices[i]
 			local nvert = vec3_add(vec3_mults(norm, self.Thickness), vert)
---io.write("Vert: "); vec3_print_tuple(vert)
---io.write("Norm: "); vec3_print_tuple(norm)
---io.write("NVert: "); vec3_print_tuple(nvert)
---io.write("\n");
 
 			table.insert(vertices, nvert)
 		end

@@ -35,7 +35,7 @@ function shape_bicubicsurface.Init(self, params)
 	self.USteps = params.USteps or 10
 	self.WSteps = params.WSteps or 10
 	self.ColorSampler = params.ColorSampler or nil
-	self.ParamFunction = params.ParamFunction or nil
+	--self.ParamFunction = params.ParamFunction or nil
 
 	-- Now set what we want explicitly
 	self.Thickness = params.Thickness or -1

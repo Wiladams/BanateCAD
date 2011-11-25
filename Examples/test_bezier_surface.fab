@@ -57,6 +57,7 @@ local lshape4 = shape_bicubicsurface.new({
 		Thickness = -3,
 		USteps = 8,
 		WSteps = 8,
+		ColorSampler = colorSampler2,
 		})
 
 --addshape(lshape4)

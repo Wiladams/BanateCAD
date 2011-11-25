@@ -3,6 +3,7 @@
 -- Copyright (c) 2011  William Adams
 --
 require ("iuplua")
+require ("lfs")
 
 FileManager = {}
 function FileManager:new(o)
@@ -18,7 +19,7 @@ function FileManager:new(o)
 		}
 	o.filesaver = iup.filedlg{
 		DIALOGTYPE="SAVE",
-		FILTER="*.fab",
+		EXTFILTER="FabuCAD Files|*.fab|Lua Files|*.lua|STL Files|*.stl|",
 		TITLE="FabuCAD Files",
 		}
 
@@ -28,10 +29,14 @@ end
 function FileManager.GetOpenFileName(self)
 	iup.Popup(self.fileopener);
 
-	print(self.fileopener.VALUE);
+--	print(self.fileopener.VALUE);
 
 	if self.fileopener.VALUE ~= nil then
 		self.NAME = self.fileopener.VALUE
+			-- Set the current directory to that of the file
+		local success = lfs.chdir(self.fileopener.DIRECTORY)
+print("do_file_open, success: ", success)
+
 	end
 
 	return self.fileopener.VALUE, self.fileopener.STATUS;
