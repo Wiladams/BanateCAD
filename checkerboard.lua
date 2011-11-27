@@ -48,3 +48,12 @@ local colrow = map_array(self.Columns,u) + map_array(self.Rows,v)
 	return self.HighColor
 end
 
+function checkerboard.GetHeight(self, u,v)
+local colrow = map_array(self.Columns,u) + map_array(self.Rows,v)
+
+	if iseven(colrow) then
+		return 0
+	end
+
+	return 1
+end

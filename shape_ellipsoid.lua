@@ -8,7 +8,7 @@ require ("Shape")
 require ("BiParametric")
 
 -- xradius
--- yradius
+-- zradius
 -- WSteps
 -- USteps
 -- name
@@ -33,10 +33,13 @@ function shape_ellipsoid.Init(self, params)
 	self.USteps = params.USteps or 10
 	self.WSteps = params.WSteps or 10
 	self.ColorSampler = params.ColorSampler or nil
+	self.Thickness = params.Thickness
 
 	-- Get our specifics out of the parameters
 	self.XRadius = params.XRadius or 1
-	self.YRadius = params.YRadius or 1
+	self.ZRadius = params.ZRadius or 1
+	self.MaxTheta = params.MaxTheta or 2*math.pi
+	self.MaxPhi = params.MaxPhi or math.pi
 
 	return self
 end
@@ -45,13 +48,18 @@ end
 -- Given parametric u, and v, return coordinates
 -- on the surface of the ellipsoid
 function shape_ellipsoid.GetVertex(self, u, w)
-	theta = u * 2*math.pi
-	phi = w * math.pi
+	theta = u * self.MaxTheta
+	phi = math.pi - w * self.MaxPhi
 
-	return {
-		self.XRadius*math.cos(theta),
-		self.YRadius*math.sin(theta)*math.cos(phi),
-		self.YRadius*math.sin(theta)*math.sin(phi)};
+	local xr = self.XRadius*math.sin(phi)* math.cos(theta)
+	local yr = self.XRadius*math.sin(phi)*math.sin(theta)
+	local zr = self.ZRadius*math.cos(phi)
+
+	local vert =  {xr, yr, zr}
+
+	local normal = vec3_norm(vert)
+
+	return vert, normal
 end
 
 

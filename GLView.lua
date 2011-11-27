@@ -10,6 +10,8 @@ require ("iuplua")
 require ("iupluagl")
 require ("luagl")
 require ("luaglu")
+require ("Scene")
+require ("Class")
 
 GLView = {}
 function GLView:new(o)

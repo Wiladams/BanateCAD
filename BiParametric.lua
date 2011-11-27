@@ -24,6 +24,7 @@ function BiParametric.Init(self, params)
 	self.WSteps = params.WSteps or 10
 	self.ColorSampler = params.ColorSampler or nil
 	self.VertexFunction = params.VertexFunction or nil
+	self.Thickness = params.Thickness or nil
 
 	return self
 end
@@ -48,7 +49,7 @@ function BiParametric.GetFaces(self)
 			local tri2 = {v1, v3, v4}
 
 			if self.ColorSampler ~= nil then
-				aValue = self.ColorSampler:GetColor(u/self.USteps, w/self.WSteps)
+				local aValue = self.ColorSampler:GetColor(u/self.USteps, w/self.WSteps)
 				tri1.Color = aValue
 				tri2.Color = aValue
 			end
@@ -171,7 +172,7 @@ end
 
 function BiParametric.GetVertex(self, u, w)
 	if self.VertexFunction ~= nil then
-		return self.VertexFunction:GetVertex(u/self.USteps, w/self.WSteps)
+		return self.VertexFunction:GetVertex(u, w)
 	end
 
 	return nil
@@ -194,6 +195,8 @@ function BiParametric.GetVertices(self)
 	if self.Thickness == nil then
 		return vertices
 	end
+
+print("Extra Vertices")
 
 	-- If we have a thickness, then use the normals to calculate
 	-- the set of vertices for the 'inside'

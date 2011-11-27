@@ -1,0 +1,77 @@
+function test_embedded_font()
+local size = {80,80}
+local res = {4,4}
+local im = gd.create(size[1], size[2])
+local white = im:colorAllocate(255, 255, 255)
+local black = im:colorAllocate(0, 0, 0)
+
+im:filledRectangle(0,0,size[1]-1,size[2]-1, black)
+
+-- Write some stuff on the image using
+-- white lettering
+im:string(gd.FONT_TINY, 10, 20, "TINY", white)
+im:string(gd.FONT_SMALL, 10, 30, "SMALL", white)
+im:string(gd.FONT_MEDIUM, 10, 45, "MEDIUM", white)
+im:string(gd.FONT_LARGE, 10, 58, "LARGE", white)
+--im:string(gd.FONT_GIANT, 10, 75, "GIANT", white)
+
+
+	local width, height = im:sizeXY()
+	local imsize = {width, height}
+	local imSampler = ImageSampler.new({
+		Image = im,
+		Size = imsize,
+		Resolution = res,
+		MaxHeight=4,
+		})
+
+	rubbersheet({
+		Size=imsize,
+		Resolution=res,
+		ColorSampler = imSampler,
+		VertexSampler = imSampler,	
+		Thickness = -1,
+		})
+end
+
+
+
+function test_ttfont()
+	local size = {80,80}
+	local res = {1,1}
+
+	-- Create a true color image
+	local tcim = gd.createTrueColor(size[1], size[2])
+	local tcblack = tcim:colorAllocate(0, 0, 0)
+	local tcwhite = tcim:colorAllocate(255, 255, 255)
+	local tcblue  = tcim:colorAllocate(0, 0, 240)
+
+	-- Start with a black background
+	tcim:filledRectangle(0,0,size[1]-1,size[2]-1, tcblue)
+		
+	local llx, lly, lrx, lry, urx, ury, ulx, uly = tcim:stringFT(tcwhite, "Times-12", 20, 0, 20, 90, "Lua-GD")
+print(llx,lly,lrx,lry,urx,ury,ulx,uly)
+	--im:polygon({ {llx, lly}, {lrx, lry}, {urx, ury}, {ulx, uly} }, blue)
+
+	local width, height = tcim:sizeXY()
+	local imsize = {width, height}
+
+	local imSampler = ImageSampler.new({
+		Image = tcim,
+		Size = size,
+		Resolution = res,
+		MaxHeight=4,
+		})
+
+	rubbersheet({
+		Size=size,
+		Resolution=res,
+		ColorSampler = imSampler,
+--		VertexSampler = imSampler,	
+--		Thickness = -1,
+		})
+end
+
+
+--test_embedded_font()
+test_ttfont()

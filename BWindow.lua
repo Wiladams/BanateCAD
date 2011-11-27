@@ -59,4 +59,3 @@ function BWindow.SetFilename(self,filename)
 
 	self.window.TITLE = self.Name..' - '..name;
 end
-

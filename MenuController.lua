@@ -12,7 +12,7 @@ require ("STLCodec")
 require ("test_lpeg")
 require ("CADVM")
 require ("SceneBuilder")
-
+require ("AnimationTimer")
 
 MenuController = {}
 function MenuController:new(o)
@@ -241,6 +241,17 @@ function MenuController.do_toggle_axes_display(self)
 	defaultviewer:ToggleAxesDisplay();
 end
 
+--===================================
+-- ANIMATION
+--===================================
+function MenuController.do_start_animation(self)
+	AnimationTimer:Start()
+end
+
+function MenuController.do_stop_animation(self)
+	AnimationTimer:Stop()
+end
+
 --==============================================
 --	MENU DEFINITION
 --==============================================
@@ -277,6 +288,10 @@ local menudef = {
     },
 	"Compile", {
 		"Compile and Render\tF6", self.do_compile_and_render
+    },
+	"Animation", {
+		"Start", self.do_start_animation,
+		"Stop", self.do_stop_animation,
     },
 	"View",{
 		"Show Axes", self.do_toggle_axes_display,

@@ -6,7 +6,6 @@
 --require ("trimesh")
 require ("BiParametric")
 require ("Class")
---require ("maths")
 require ("ImageSampler")
 
 -- Create a subclass of BiParametric

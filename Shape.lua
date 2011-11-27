@@ -9,6 +9,10 @@ Shape = inheritsFrom(nil);
 function Shape.Render(self, renderer)
 end
 
+function Shape.Update(self, toTime)
+	print("Shape.Update: ", toTime)
+end
+
 function Shape.ToString(self)
 	return "Shape"
 end

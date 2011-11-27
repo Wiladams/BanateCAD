@@ -13,9 +13,11 @@ Multiples of:
 	rotation
 
 --]]
+
 require ("CADVM")
 require ("supershape")
 require ("cone")
+require ("Scene")
 require ("shape_bicubicsurface")
 require ("shape_disk")
 require ("shape_ellipsoid")
@@ -30,7 +32,7 @@ require ("metaball")
 require ("GAABBox")
 require ("RubberSheet")
 require ("ImageSampler")
-
+require ("DisplacementSampler")
 
 SceneBuilder = {}
 function SceneBuilder:new(o)
@@ -41,8 +43,7 @@ function SceneBuilder:new(o)
 	return o
 end
 
-defaultscene = SceneBuilder:new()
-
+--[[
 function SceneBuilder.clear(self)
 	self.commands = {}
 end
@@ -58,7 +59,7 @@ end
 function SceneBuilder.clearcachedobjects()
 	defaultscene:appendCommand(CADVM.clearcachedobjects())
 end
-
+--]]
 --===========================
 --	SHAPES
 --===========================
@@ -173,12 +174,12 @@ function sphere(radius)
 	ellipsoid(radius, radius);
 end
 
-function ellipsoid(xradius, yradius)
+function ellipsoid(xradius, zradius)
 xradius = xradius or 1
-yradius = yradius or 1
+zradius = zradius or 1
 local lshape = shape_ellipsoid.new({
 	XRadius=xradius,
-	YRadius=yradius,
+	ZRadius=zradius,
 	USteps=360/8,
 	WSteps=360/8
 	})
