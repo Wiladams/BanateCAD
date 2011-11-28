@@ -34,6 +34,9 @@ require ("RubberSheet")
 require ("ImageSampler")
 require ("DisplacementSampler")
 require ("param_superellipse")
+require ("STLCodec")
+
+
 
 SceneBuilder = {}
 function SceneBuilder:new(o)
@@ -165,7 +168,11 @@ function rubbersheet(params)
 	addshape(lshape)
 end
 
+function import_stl(filename)
+	local amesh = import_stl_mesh(filename)
 
+	addmesh(amesh)
+end
 
 --===========================
 --	Quadrics

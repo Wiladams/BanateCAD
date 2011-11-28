@@ -1,0 +1,24 @@
+function test_independent()
+
+import_stl("bowl_12.stl")
+
+translate({100, 0, 0})
+import_stl("bowl_12.stl")
+end
+
+function test_instancing()
+	local amesh = import_stl_mesh("bowl_12.stl")
+
+	addmesh(amesh)
+
+	translate({100,0,0})
+	addmesh(amesh)
+
+	translate({0,100,0})
+	addmesh(amesh)
+
+	translate({100,100,0})
+	addmesh(amesh)
+end
+
+test_instancing()

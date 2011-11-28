@@ -98,3 +98,16 @@ local amesh = parsestl(self.file);
 --]]
 	return amesh
 end
+
+function import_stl_mesh(filename)
+	local filehandle = io.open(filename, 'r')
+
+	local reader = STLASCIIReader:new({file = filehandle});
+	local tmesh = reader:Read();
+
+	-- close the file
+	filehandle:close()
+
+	return tmesh
+
+end
