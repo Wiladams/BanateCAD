@@ -29,15 +29,14 @@ function shape_bicubicsurface.Init(self, params)
 	params = params or {}
 
 	-- Allow the base class to pull out what it wants
-	self:superClass():Init(params)
-
+	--self:superClass():Init(params)
+	self.Thickness = params.Thickness
 	self.USteps = params.USteps or 10
 	self.WSteps = params.WSteps or 10
 	self.ColorSampler = params.ColorSampler or nil
-	--self.ParamFunction = params.ParamFunction or nil
+	self.VertexFunction = params.VertexFunction or nil
 
 	-- Now set what we want explicitly
-	self.Thickness = params.Thickness or -1
 	self.M = params.M or cubic_bezier_M()
 	self.UMult = params.UMult or 1
 	self.Mesh = params.Mesh or {
@@ -56,17 +55,3 @@ function shape_bicubicsurface.GetVertex(self, u,w)
 end
 
 
---[[
-local colorSampler = ImageSampler.new({Filename='profile_1024_768.png'})
-
-
-local lshape = shape_bicubicsurface.new({
-		M=cubic_bezier_M(),
-		UMult=1,
-		Mesh = mesh,
-		Thickness = thickness,
-		USteps = usteps,
-		WSteps = wsteps,
-		ColorSampler = colorSampler,
-		})
---]]

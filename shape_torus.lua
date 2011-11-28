@@ -30,7 +30,12 @@ end
 function shape_torus.Init(self, params)
 	params = params or {}
 
-	self:superClass():Init(params)
+	--self:superClass():Init(params)
+	self.USteps = params.USteps or 10
+	self.WSteps = params.WSteps or 10
+	self.ColorSampler = params.ColorSampler or nil
+	self.VertexFunction = params.VertexFunction or nil
+	self.Thickness = params.Thickness or nil
 
 	self.HoleRadius = params.HoleRadius or 1
 	self.ProfileRadius = params.ProfileRadius or 1

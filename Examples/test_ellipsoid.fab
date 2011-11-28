@@ -42,14 +42,6 @@ function bumpy_ellipse()
 
 	local checksampler = checkerboard:new({Columns=(size[1]/2)+1, Rows=size[2]/2, LowColor={0,0,0,1}, HighColor={1,1,1,1}})
 
-	local heightsampler = ImageSampler.new({
-	--	Filename='firstheightmap.png',
-	--	Filename='profile_80_60.png',
-		Filename='moonbumpmap2_720_360.png',
-		Size = size,
-		Resolution = res,
-		MaxHeight=16,
-	})
 
 	local vertsampler = shape_ellipsoid.new({
 		XRadius=30, 
@@ -60,8 +52,7 @@ function bumpy_ellipse()
 
 	local dispSampler = DisplacementSampler.new({
 			VertexSampler = vertsampler,
-			HeightSampler = heightsampler,
---			HeightSampler = checksampler,
+			HeightSampler = checksampler,
 			MaxHeight = 1,
 		})
 

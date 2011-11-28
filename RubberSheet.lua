@@ -25,9 +25,6 @@ end
 function RubberSheet.Init(self, params)
 	params = params or {}
 
-	-- Allow the base class to pull out what it wants
-	--self:superClass():Init(params)
-
 	self.Thickness = params.Thickness
 
 	-- Get our specifics out of the parameters

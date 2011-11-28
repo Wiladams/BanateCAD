@@ -135,8 +135,9 @@ end
 function show_torus()
 	color(crayola.rgba("Blue Bell", 0.25))
 	translate({0, 0, 0})
-	torus({Offset={0,100},
-		Size={20, 5},
+	torus({
+		HoleRadius=100,
+		ProfileRadius=15,	-- 20,5
 		USteps = 90,
 		WSteps = 180})
 end

@@ -1,9 +1,7 @@
 TODO
 
-Change shape_disk to be subclass of BiParametric
-Change cone.lua to be subclass of BiParametric
-
-Create RubberSheet
-Create DisplacementSampler	- GetOffset
-Create Image Sampler - For image mapping (GetColor)
+Change Render to be on the camera, rather than the Viewer
+Implement some Animations
+Implement UI overlays
+Implement Command Distribution (Renderer)
 

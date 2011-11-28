@@ -23,7 +23,8 @@ dodecahedron(pradius)
 
 color(crayola.rgb("Blue Bell"))
 translate({0, 0, pradius})
-torus({Offset={0,3.5},
-	Size={1.5, 0.75},
+torus({
+	HoleRadius=3.5,
+	ProfileRadius=1.5,
 	USteps = 90,
 	WSteps = 180})
