@@ -7,6 +7,7 @@
 require ("trimesh")
 require ("BiParametric")
 require ("checkerboard")
+require ("maths")
 
 shape_torus = inheritsFrom(BiParametric)
 function shape_torus.new(params)
@@ -22,29 +23,68 @@ end
 -- WSteps
 -- Offset
 -- Size
+function alerp( a1, a2, u)
+	return a1 + u*(a2-a1)
+end
+
 function shape_torus.Init(self, params)
 	params = params or {}
 
 	self:superClass():Init(params)
 
-	self.Offset = params.Offset or {0,0}
-	self.Size = params.Size or {1,1}
+	self.HoleRadius = params.HoleRadius or 1
+	self.ProfileRadius = params.ProfileRadius or 1
 
-	self.ParamFunction = self
-	self.ColorSampler = params.ColorSampler
+	self.ColorSampler = params.ColorSampler or nil
+	self.ProfileSampler = params.ProfileSampler or nil
+
+	self.MinTheta = params.MinTheta or 0
+	self.MaxTheta = params.MaxTheta or 2*math.pi
+	self.MinPhi = params.MinPhi or 0
+	self.MaxPhi = params.MaxPhi or 2*math.pi
 
 	return self
 end
 
-function shape_torus.GetVertex(self, u, v)
-	local theta = u * 2*math.pi;
-	local phi = v * 2*math.pi;
+-- Should be an x,z value
+function shape_torus.GetProfileVertex(self, u)
 
-	local pt = {
-		(self.Offset[2]+self.Size[2]*math.sin(theta))*math.sin(phi),
-		(self.Offset[2]+self.Size[2]*math.sin(theta))*math.cos(phi),
-		self.Offset[1]+self.Size[1]*math.cos(theta),
-		};
+	local thetaangle = alerp(self.MinTheta, self.MaxTheta, u)
+	u = thetaangle/self.MaxTheta
+
+	if self.ProfileSampler ~= nil then
+		-- Get the profile
+		local profilept = self.ProfileSampler:GetProfileVertex(u)
+
+		-- Add the appropriate offset
+		local x = self.HoleRadius+profilept[1]
+		local y = self.HoleRadius+profilept[2]
+		local z = profilept[3]
+
+		return {x,y,z}
+	end
+
+	-- If we don't have a profile generator
+	-- Assume the profile should be a sphere
+	local angle = alerp(self.MinTheta, self.MaxTheta, u)
+	local x = (self.HoleRadius+self.ProfileRadius*math.sin(angle))
+	local y = (self.HoleRadius+self.ProfileRadius*math.sin(angle))
+	local z = self.ProfileRadius*math.cos(angle)
+
+	return {x,y,z}
+end
+
+function shape_torus.GetVertex(self, u, v)
+	local phi = alerp(self.MinPhi, self.MaxPhi, v)
+
+
+	local profilept, normal = self:GetProfileVertex(u)
+
+	local x = profilept[1]*math.cos(phi)
+	local y = profilept[2]*math.sin(phi)
+	local z = profilept[3]
+
+	local pt = {x,y,z}
 
 	return pt;
 end

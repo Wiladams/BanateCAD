@@ -6,7 +6,6 @@
 
 require ("CADVM")
 require ("trimesh")
-require ("checkerboard")
 
 -- Helpful math routines
 -- Calculate length of a vector
@@ -23,11 +22,11 @@ function nozeros(v1,v2,v3,v4)
 	return v1 ~=0 and v2~=0 and v3~=0 and v3~=0
 end
 
---[[
-=========================================
- SuperFormula evaluation
-=========================================
---]]
+
+--=========================================
+-- SuperFormula evaluation
+--=========================================
+
 -- Create an instance of the supershape data structure
 --[[
 function supershape(m,n1,n2, n3, a, b)
@@ -71,7 +70,6 @@ end
 		http://paulbourke.net/geometry/supershape3d/
 --]]
 
---texture = checkerboard:new({columns=32, rows=32})
 
 shape_supershape={}
 function shape_supershape:new(o)

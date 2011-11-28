@@ -1,4 +1,4 @@
-local size = {120,160}
+local size = {256,256}
 local res = {1,1}
 
 local checkem = checkerboard:new({Columns=size[1], Rows=size[2], LowColor={0,0,0,1}, HighColor={1,1,1,1}})
@@ -8,10 +8,10 @@ local checkem = checkerboard:new({Columns=size[1], Rows=size[2], LowColor={0,0,0
 local colorSampler = ImageSampler.new({
 --	Filename='firstheightmap.png',
 --	Filename='profile_80_60.png',
-	Filename='Mubeen.png',
+	Filename='Gandhi.png',
 	Size = size,
 	Resolution = res,
-	MaxHeight=20,
+	MaxHeight=8,
 })
 
 
@@ -22,7 +22,7 @@ local lshape = RubberSheet.new({
 	Size=size,
 	Resolution=res,
 --	ColorSampler = checkem,
---	ColorSampler = colorSampler,
+	ColorSampler = colorSampler,
 	VertexSampler = colorSampler,	
 --	Thickness = -10,
 	})

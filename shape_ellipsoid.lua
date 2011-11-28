@@ -44,6 +44,15 @@ function shape_ellipsoid.Init(self, params)
 	return self
 end
 
+function shape_ellipsoid.GetProfileVertex(self, u)
+
+	local angle = u*self.MaxTheta
+	local x = self.XRadius*math.sin(angle)
+	local y = self.XRadius*math.sin(angle)
+	local z = self.ZRadius*math.cos(angle)
+
+	return {x,y,z}
+end
 
 -- Given parametric u, and v, return coordinates
 -- on the surface of the ellipsoid

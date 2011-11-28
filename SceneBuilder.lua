@@ -33,6 +33,7 @@ require ("GAABBox")
 require ("RubberSheet")
 require ("ImageSampler")
 require ("DisplacementSampler")
+require ("param_superellipse")
 
 SceneBuilder = {}
 function SceneBuilder:new(o)

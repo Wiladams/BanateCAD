@@ -45,7 +45,7 @@ function bumpy_ellipse()
 	local heightsampler = ImageSampler.new({
 	--	Filename='firstheightmap.png',
 	--	Filename='profile_80_60.png',
-		Filename='Mubeen.png',
+		Filename='moonbumpmap2_720_360.png',
 		Size = size,
 		Resolution = res,
 		MaxHeight=16,
@@ -53,21 +53,21 @@ function bumpy_ellipse()
 
 	local vertsampler = shape_ellipsoid.new({
 		XRadius=30, 
-		ZRadius = 15,
+		ZRadius = 30,
 		MaxTheta = math.rad(360),
-		MaxPhi = math.rad(120),
+		MaxPhi = math.rad(360),
 	})
 
 	local dispSampler = DisplacementSampler.new({
 			VertexSampler = vertsampler,
---			HeightSampler = heightsampler,
-			HeightSampler = checksampler,
+			HeightSampler = heightsampler,
+--			HeightSampler = checksampler,
 			MaxHeight = 1,
 		})
 
 	local lshape =  BiParametric.new({
-		USteps = 180,
-		WSteps = 180,
+		USteps = 720,
+		WSteps = 360,
 		VertexFunction=dispSampler,
 		Thickness = -2,
 		})
