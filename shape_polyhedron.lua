@@ -4,7 +4,7 @@
 -- Copyright (c) 2011  William Adams
 --
 require ("CADVM")
-require ("trimesh")
+--require ("trimesh")
 
 -- Create the prototypical cone
 --

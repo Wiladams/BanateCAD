@@ -1,4 +1,4 @@
-require ("Class")
+--require ("Class")
 
 ParamTransformer = inheritsFrom(nil)
 function ParamTransformer.new(params)

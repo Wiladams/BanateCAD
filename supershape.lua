@@ -5,7 +5,7 @@
 --
 
 require ("CADVM")
-require ("trimesh")
+--require ("trimesh")
 
 -- Helpful math routines
 -- Calculate length of a vector

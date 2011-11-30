@@ -6,7 +6,7 @@
 -- This should be a part of the STLCodec
 --
 local m=require("lpeg")
-require ("trimesh")
+--require ("trimesh")
 
 P = m.P
 R = m.R

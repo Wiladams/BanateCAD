@@ -1,5 +1,5 @@
-require ("Class")
-require ("trimesh")
+--require ("Class")
+--require ("trimesh")
 require ("checkerboard")
 require ("openscad_print")
 

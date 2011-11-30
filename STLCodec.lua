@@ -6,9 +6,9 @@
 -- STL Coder and Decoder
 --
 
-require ("trimesh")
+--require ("trimesh")
 require ("test_lpeg")
-require ("Class")
+--require ("Class")
 
 --
 -- Construct like this

@@ -1,5 +1,5 @@
 require ("iuplua")
-require ("Class")
+--require ("Class")
 
 -- Create a base class, AnimationTimer
 --[[

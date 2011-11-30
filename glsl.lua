@@ -6,6 +6,7 @@
 -- Implement a language skin that makes
 -- gives a GLSL feel to the coding
 --=====================================
+--require ("LinearAlgebra")
 
 pi = math.pi;
 
@@ -548,18 +549,18 @@ function length(x)
 	return res
 end
 
---[[
+
 function distance(p0, p1)
 	if type(p0) == 'number' then
 		local f = p0-p1
 		return f
 	end
 
-	local res = lengthfunc(vec_sub(p0-p1))
+	local res = lengthfunc(p0-p1)
 
 	return res
 end
---]]
+
 
 function dot(v1,v2)
 	if type(p0) == 'number' then
@@ -593,3 +594,57 @@ function normalize(x)
 		return f
 	end
 end
+
+
+--=====================================
+--	Vector Relational (5.4)
+--=====================================
+function isnumtrue(x)
+	return x ~= nil and x ~= 0
+end
+
+function any(x)
+	for i=1,#x do
+		local f = isnumtrue(x[i])
+		if f then return true end
+	end
+
+	return false
+end
+
+function all(x)
+	for i=1,#x do
+		local f = isnumtrue(x[i])
+		if not f then return false end
+	end
+
+	return true
+end
+
+--=====================================
+--	Vector Constructors
+--=====================================
+function vec2(x, y)
+	return vec.new({x, y})
+end
+
+function vec3(x, y, z)
+	return vec.new({x, y, z})
+end
+
+function vec4(x,y,z,w)
+	return vec.new({x, y, z, w})
+end
+
+--[[
+v1 = vec.new{1, 0, 1, 0}
+v2 = vec3(1, 1, 1)
+v3 = vec3(0, 0, 0)
+
+print(any(v1))
+print(any(v3))
+
+print(all(v1))
+print(all(v2))
+
+--]]

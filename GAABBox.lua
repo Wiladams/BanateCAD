@@ -5,7 +5,7 @@
 -- Copyright (c) 2011  William Adams
 --
 
-require ("Class")
+--require ("Class")
 require ("Shape")
 require ("openscad_print")
 

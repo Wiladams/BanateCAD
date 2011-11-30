@@ -1,7 +1,7 @@
 require("gd")
 require ("openscad_print")
-require ("Class")
-require ("maths")
+--require ("Class")
+--require ("maths")
 
 ImageSampler = inheritsFrom(nil);
 

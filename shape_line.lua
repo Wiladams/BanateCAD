@@ -1,4 +1,4 @@
-require ("Class")
+--require ("Class")
 require ("Shape")
 require ("glsl")
 

@@ -5,8 +5,8 @@
 --
 
 
-require ("trimesh")
-require ("maths")
+--require ("trimesh")
+--require ("maths")
 require ("openscad_print")
 
 local MIN_THRESHOLD = 0.98;

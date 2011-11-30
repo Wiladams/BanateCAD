@@ -1,4 +1,4 @@
-require ("Class")
+--require ("Class")
 
 
 -- Create a base class, Shape

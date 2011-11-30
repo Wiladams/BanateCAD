@@ -13,7 +13,7 @@ require ("luaglu")
 require ("BLight")
 require ("BLighting")
 require ("colorschemes")
-require ("maths")
+--require ("maths")
 
 require ("Renderer")
 require ("PrimaryAxes")

@@ -13,7 +13,12 @@ require("BWindow")
 local AppName = "Banate CAD";
 
 -- Construct the application object
+local appctx = BAppContext:new({
+	Modules={"core"}
+	})
+
 Application = BApplication:new({
+	AppContext = appctx,
 	Name=AppName,
 	Window = BWindow:new({Name=AppName})
 	});
