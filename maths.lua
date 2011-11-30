@@ -291,27 +291,24 @@ end
 --	Linear Interpolation Routines
 --
 --=======================================
-function lerp1( p0, p1, u)
+function lerpfunc( p0, p1, u)
 	return (1-u)*p0 + u*p1
 end
 
-function vec3_lerp(v1, v2, u)
-	return {
-	lerp1(v1[1], v2[1],u),
-	lerp1(v1[2], v2[2],u),
-	lerp1(v1[3], v2[3],u)
-	}
-end
+---[[
+function lerp(p0, p1, u)
+	if type(x) == 'number' then
+		return  lerpfunc(p0, p1, u)
+	end
 
-function vec4_lerp(v1, v2, u)
-	return {
-	lerp1(v1[1], v2[1],u),
-	lerp1(v1[2], v2[2],u),
-	lerp1(v1[3], v2[3],u),
-	lerp1(v1[4], v2[4],u)
-	}
-end
+	local res={}
+	for i=1,#p0 do
+		table.insert(res, lerpfunc(p0[i], p1[i], u))
+	end
 
+	return res
+end
+--]]
 
 
 --=======================================

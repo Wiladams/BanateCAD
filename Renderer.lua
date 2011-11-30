@@ -1,7 +1,7 @@
 --
 -- Renderer.wlua
 --
--- The renderer for FabuCAD
+-- The renderer for Banate CAD
 --
 -- Copyright (c) 2011  William Adams
 --
@@ -45,6 +45,73 @@ function Renderer.ClearCachedObjects(self, ascene)
 			-- set display list to nil
 			cmd.value.displaylist = nil;
 		end
+	end
+end
+
+--=========================================
+--	TRANSFORM PRIMITIVES
+--=========================================
+function Renderer.SaveTransform(self)
+	gl.PushMatrix()
+end
+
+function Renderer.RestoreTransform(self)
+	gl.PopMatrix()
+end
+
+function Renderer.Translate(self, atrans)
+	if atrans == nil then return end
+
+	gl.Translate(
+		atrans[1],
+		atrans[2],
+		atrans[3]
+		);
+end
+
+function Renderer.Scale(self, atrans)
+	gl.Scale(
+		atrans[1],
+		atrans[2],
+		atrans[3]
+		);
+end
+--=========================================
+--	MATERIAL PRIMITIVES
+--=========================================
+--[[
+	Ambient
+	Diffuse
+	Specular
+	Shininess
+	Emission
+
+	Face
+--]]
+function Renderer.ApplyMaterial(self, mat)
+	gl.ColorMaterial(gl.FRONT_AND_BACK, gl.AMBIENT_AND_DIFFUSE)
+	gl.Enable(gl.COLOR_MATERIAL)
+
+	local face=gl.FRONT
+
+	if mat.Ambient ~= nil then
+		gl.Material(face, gl.AMBIENT, mat.Ambient)
+	end
+
+	if mat.Diffuse ~= nil then
+		gl.Material(face, gl.DIFFUSE, mat.Diffuse)
+	end
+
+	if mat.Specular ~= nil then
+		gl.Material(face, gl.SPECULAR, mat.Specular)
+	end
+
+	if mat.Shininess ~= nil then
+		gl.Material(face, gl.SHININESS, mat.Shininess)
+	end
+
+	if mat.Emission ~= nil then
+		gl.Material(face, gl.EMISSION, mat.Emission)
 	end
 end
 
@@ -146,6 +213,8 @@ end
 
 
 
+
+
 function Renderer.DisplayScene(self, ascene)
 	if (ascene.commands == nil or #defaultscene.commands == 0) then
 		--print("no commands")
@@ -211,4 +280,14 @@ function Renderer.DisplayScene(self, ascene)
 	end
 end
 
+function Renderer.ClearCanvas(self, acolor)
+	-- Set the background color
+	-- And clear the background and depth buffers
+	gl.ClearColor(
+		acolor[1],
+		acolor[2],
+		acolor[3],
+		acolor[4])
+	gl.Clear("COLOR_BUFFER_BIT,DEPTH_BUFFER_BIT,STENCIL_BUFFER_BIT")
 
+end

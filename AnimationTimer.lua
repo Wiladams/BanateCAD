@@ -27,24 +27,41 @@ function createTimer(frequency)
 	return aTimer
 end
 
-defaultTimer = createTimer(2)
+defaultFrequency = 30
+defaultTimer = createTimer(defaultFrequency)
 
 AnimationTimer = {TickCount=0, Frequency=2}
 function AnimationTimer.Start(self)
 print("Start Timer")
 	defaultTimer.run = "YES"
+	self.IsRunning = true
 end
 
 function AnimationTimer.Stop(self)
 print("Stop Timer")
 	defaultTimer.run = "NO"
+	self.IsRunning = false
 	self:Reset()
 end
 
+function AnimationTimer.SetFrequency(self, frequency)
+	-- Stop the current Timers
+	self:Stop()
+	self.Frequency = frequency
+
+	-- create a new timer with the given frequency
+	defaultTimer = createTimer(frequency)
+
+	if self.IsRunning then
+		self:Start()
+	end
+end
+
 function AnimationTimer.Tick(self)
-print("AnimationTimer.Tick")
+--print("AnimationTimer.Tick")
 	self.TickCount = self.TickCount + 1
 	defaultscene:Update(self.TickCount)
+	iup.Update(glcanvas);
 end
 
 function AnimationTimer.Reset(self)

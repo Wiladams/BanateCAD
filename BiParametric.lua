@@ -196,7 +196,7 @@ function BiParametric.GetVertices(self)
 		return vertices
 	end
 
-print("Extra Vertices")
+--print("Extra Vertices")
 
 	-- If we have a thickness, then use the normals to calculate
 	-- the set of vertices for the 'inside'
@@ -231,7 +231,7 @@ function BiParametric.GetMesh(self)
 	return amesh
 end
 
-function BiParametric.Render(self, renderer)
+function BiParametric.RenderSelf(self, renderer)
 	if self.ShapeMesh == nil then
 		self.ShapeMesh = self:GetMesh()
 	end

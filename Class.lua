@@ -55,3 +55,10 @@ function inheritsFrom( baseClass )
     return new_class
 end
 
+function functor(objstate, func)
+	return {objstate, func}
+end
+
+function functorcall(func, params)
+	return func[2](func[1], params)
+end

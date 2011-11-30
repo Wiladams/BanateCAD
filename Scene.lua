@@ -31,7 +31,6 @@ end
 	Update methods.
 --]]
 function Scene.Update(self, count)
-print("Scene.Update: ", count)
 	for i, cmd in ipairs(self.commands) do
 		if cmd.command == CADVM.SHAPE then
 			if (cmd.value.Update ~= nil) then

@@ -63,11 +63,6 @@ function SceneViewer.SetCanvas(self, canvas)
 
 	gl.Enable(gl.DEPTH_TEST);            -- Enables Depth Testing
 	gl.DepthRange(-FARAWAY, FARAWAY);
-
-
-
-	gl.ColorMaterial(gl.FRONT_AND_BACK, gl.AMBIENT_AND_DIFFUSE)
-	gl.Enable(gl.COLOR_MATERIAL)
 end
 
 --
@@ -172,34 +167,23 @@ function SceneViewer.ClearCachedObjects(self)
 	self.Renderer:ClearCachedObjects();
 end
 
-function SceneViewer.ClearDepthBuffer(self)
-	gl.Clear("DEPTH_BUFFER_BIT,STENCIL_BUFFER_BIT")
-end
-
-function SceneViewer.DisplayBackground(self)
-	-- Set the background color
-	-- And clear the background and depth buffers
-	gl.ClearColor(
-		self.colorscheme.BACKGROUND_COLOR[1],
-		self.colorscheme.BACKGROUND_COLOR[2],
-		self.colorscheme.BACKGROUND_COLOR[3],
-		self.colorscheme.BACKGROUND_COLOR[4])
-	gl.Clear("COLOR_BUFFER_BIT,STENCIL_BUFFER_BIT")
+function SceneViewer.DisplayBackground(self, renderer)
+	self.Renderer:ClearCanvas(self.colorscheme.BACKGROUND_COLOR)
 end
 
 function SceneViewer.DisplayScene(self, scene)
+	gl.ColorMaterial(gl.FRONT_AND_BACK, gl.AMBIENT_AND_DIFFUSE)
+	gl.Enable(gl.COLOR_MATERIAL)
 
 	self.Lighting:Render()
-
-
-
 	self:PositionCamera();
+
 
 	gl.DepthFunc(gl.LESS);
 	gl.CullFace(gl.BACK);
 	--gl.Disable(gl.CULL_FACE);
 
-	self:ClearDepthBuffer(self)
+	self.Renderer:ClearCanvas(self.colorscheme.BACKGROUND_COLOR)
 	self:DisplayBackground()
 
 	if (self.showaxes) then

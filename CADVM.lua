@@ -4,18 +4,6 @@
 -- Copyright (c) 2011  William Adams
 --
 
-function lerp1(u, p0, p1)
-	return (1-u)*p0 + u*p1
-end
-
-function lerp(u, v1, v2)
-	return {
-		lerp1(u, v1[1], v2[1]),
-		lerp1(u, v1[2], v2[2]),
-		lerp1(u, v1[3], v2[3])
-	}
-end
-
 CADVM =
 {
 	CLEARCACHEDOBJECTS  = 1,
