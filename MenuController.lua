@@ -13,6 +13,7 @@ require ("test_lpeg")
 require ("CADVM")
 require ("SceneBuilder")
 require ("AnimationTimer")
+require ("Layout")
 
 MenuController = {}
 function MenuController:new(o)
@@ -38,6 +39,7 @@ end
 --==============================================
 --	FILE OPERATIONS
 --==============================================
+
 function MenuController.do_file_open(self)
 	-- get a filename
 	local filename,err = defaultfilemanager:GetOpenFileName();
@@ -170,16 +172,25 @@ function MenuController.do_new_file(self)
 	Application.Window:SetFilename(defaultfilemanager.NAME);
 end
 
-function MenuController.do_exit (self)
+function MenuController.do_exit(self)
     return iup.CLOSE
 end
 
+--==============================================
+--	Tools
+--==============================================
 
+function MenuController.do_editor_options(self)
+	Layout:editorOptions()
+end
+
+function MenuController.do_console_options(self)
+	Layout:consoleOptions()
+end
 
 --==============================================
 --	RENDERING
 --==============================================
-
 
 function MenuController.do_compile_and_render(self)
 	local inputtext = intext.value
@@ -201,9 +212,6 @@ end
 --==============================================
 --	VIEW POSITION
 --==============================================
-
-
-
 
 function MenuController.do_view_back(self)
 	defaultviewer:SetViewBack();
@@ -244,6 +252,7 @@ end
 --===================================
 -- ANIMATION
 --===================================
+
 function MenuController.do_start_animation(self)
 	AnimationTimer:Start()
 end
@@ -283,8 +292,8 @@ local menudef = {
         "Paste",self.do_paste,
      },
     "Tools",{
-        "Editor",self.default,
-		"Console", self.default
+        "Editor", self.do_editor_options,
+		"Console", self.do_console_options,
     },
 	"Compile", {
 		"Compile and Render\tF6", self.do_compile_and_render
