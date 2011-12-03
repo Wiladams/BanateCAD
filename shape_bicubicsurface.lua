@@ -3,9 +3,9 @@
 -- BanateCAD
 -- Copyright (c) 2011  William Adams
 --
+--require ("Class")
 --require ("trimesh")
 require ("BiParametric")
-require ("Class")
 require ("ImageSampler")
 
 -- Create a subclass of BiParametric

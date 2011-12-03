@@ -14,27 +14,34 @@ Multiples of:
 
 --]]
 
-require ("CADVM")
-require ("supershape")
+-- dependant modules
+--require ("CADVM")
+--require ("glsl")
+--require ("Scene")
+
 require ("cone")
-require ("Scene")
+require ("crayola")
+require ("DisplacementSampler")
+require ("GAABBox")
+require ("ImageSampler")
+require ("BMaterial")
+require ("MassSpringCurve")
+require ("metaball")
+require ("param_superellipse")
+require ("ParticleSystem")
+require ("Platonics")
+require ("RubberSheet")
 require ("shape_bicubicsurface")
 require ("shape_disk")
 require ("shape_ellipsoid")
 require ("shape_hyperboloid")
+require ("shape_line")
 require ("shape_metaball")
 require ("shape_paraboloid")
 require ("shape_polyhedron")
 require ("shape_torus")
-require ("Platonics")
-require ("crayola")
-require ("metaball")
-require ("GAABBox")
-require ("RubberSheet")
-require ("ImageSampler")
-require ("DisplacementSampler")
-require ("param_superellipse")
-require ("STLCodec")
+require ("ShapeAnimator")
+require ("supershape")
 
 
 
@@ -275,7 +282,7 @@ end
 -- Blobs
 --===========================
 function blobs(balls, radius, stacksteps, anglesteps)
-	local lshape = shape_metaball:new({
+	local lshape = shape_metaball.new({
 		balls = balls,
 		radius = radius,
 		stacksteps = stacksteps,

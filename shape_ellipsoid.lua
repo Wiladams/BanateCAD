@@ -3,7 +3,7 @@
 -- BanateCAD
 -- Copyright (c) 2011  William Adams
 --
-require ("trimesh")
+--require ("trimesh")
 require ("Shape")
 require ("BiParametric")
 

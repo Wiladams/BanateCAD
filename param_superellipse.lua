@@ -1,4 +1,4 @@
-require ("Class")
+--require ("Class")
 
 function sign(n)
 	if n < 0 then

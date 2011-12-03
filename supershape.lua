@@ -4,8 +4,8 @@
 -- Copyright (c) 2011  William Adams
 --
 
-require ("CADVM")
-require ("trimesh")
+--require ("CADVM")
+--require ("trimesh")
 
 -- Helpful math routines
 -- Calculate length of a vector

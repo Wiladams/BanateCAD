@@ -5,8 +5,8 @@
 --
 
 
-require ("trimesh")
-require ("maths")
+--require ("trimesh")
+--require ("maths")
 require ("openscad_print")
 
 local MIN_THRESHOLD = 0.98;
@@ -49,15 +49,19 @@ end
 -- anglesteps
 -- name
 --
--- Create the prototypical cone
-shape_metaball = {}
-function shape_metaball:new(o)
-	o = o or {}		-- create object if user does not provide one
-	setmetatable(o, self)
-	self.__index = self
+shape_metaball = inheritsFrom(Shape)
+function shape_metaball.new(params)
+	local new_inst = shape_metaball.create()
 
-	o.atcenter = centroid(o.balls)
-	return o
+	new_inst.balls = params.balls
+	new_inst.atcenter = centroid(params.balls)
+	new_inst.radius = params.radius or 100
+	new_inst.anglesteps = params.anglesteps or 10
+	new_inst.stacksteps = params.stacksteps or 10
+
+	new_inst.Bounds = GAABBox.new()
+
+	return new_inst
 end
 
 function shape_metaball.vindex(self, col, row)
@@ -96,7 +100,7 @@ function shape_metaball.beamsearch(self, longitude, latitude, high, low)
 	local midpoint = low + (high-low)/2
 
 	-- start with the midpoint
-	local xyz = vec3_add(self.atcenter, sph_to_cart(sph(longitude, latitude, midpoint)))
+	local xyz = self.atcenter + sph_to_cart(sph(longitude, latitude, midpoint))
 	local sum = SumInfluence(xyz[1],xyz[2],xyz[3], self.balls);
 
 
@@ -156,6 +160,7 @@ function shape_metaball.GetVertices(self)
 
 			p = self:param_metaball(u, v)
 			if p ~= nil then
+				self.Bounds:Union(p)
 				table.insert(vertices, p)
 			end
 		end
@@ -184,7 +189,7 @@ function shape_metaball.GetMesh(self)
 	return mesh
 end
 
-
+--[[
 
 lshape = shape_metaball:new({
 		balls = {{-7, -12, 0, 5}, {8, -12, 0, 5}, {-2, 13, 0, 5}},
@@ -202,3 +207,4 @@ lshape = shape_metaball:new({
 --	translate(v)
 --	hexahedron(0.25)
 --end
+--]]

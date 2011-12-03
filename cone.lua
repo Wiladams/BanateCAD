@@ -3,8 +3,8 @@
 -- BanateCAD
 -- Copyright (c) 2011  William Adams
 --
-require ("CADVM")
-require ("trimesh")
+--require ("CADVM")
+--require ("trimesh")
 
 -- Create the prototypical cone
 shape_cone = {}

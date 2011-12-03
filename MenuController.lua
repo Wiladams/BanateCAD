@@ -7,12 +7,11 @@
 
 require ("iuplua")
 
+--require ("CADVM")
+
 require ("FileManager")
-require ("STLCodec")
 require ("test_lpeg")
-require ("CADVM")
 require ("SceneBuilder")
-require ("AnimationTimer")
 require ("Layout")
 
 MenuController = {}

@@ -3,8 +3,6 @@
 -- BanateCAD
 -- Copyright (c) 2011  William Adams
 --
-require ("maths")
-require ("trimesh")
 
 --[[
 

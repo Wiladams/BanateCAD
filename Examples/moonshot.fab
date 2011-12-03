@@ -3,7 +3,8 @@
 
 
 	local heightsampler = ImageSampler.new({
-		Filename='moonbumpmap2_720_360.png',
+		--Filename='moonbumpmap2_720_360.png',
+		Filename='earthheight_800_400.png',
 		Size = size,
 		Resolution = res,
 		MaxHeight=16,
@@ -23,8 +24,8 @@
 		})
 
 	local lshape =  BiParametric.new({
-		USteps = 360,
-		WSteps = 180,
+		USteps = 800/4,
+		WSteps = 400/4,
 		ColorSampler = heightsampler,
 		VertexFunction=dispSampler,
 		--Thickness = -2,

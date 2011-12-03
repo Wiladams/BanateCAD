@@ -6,6 +6,7 @@
 --
 
 require ("iuplua")
+require ("BAppContext")
 
 BApplication={}
 
@@ -16,6 +17,12 @@ function BApplication:new(o)
 	self.__index = self
 
 	o.Name = o.Name or "Application"
+
+	local mods = {
+		Modules={"core"},
+		}
+
+	o.AppContext = o.AppContext or BAppContext:new(mods)
 
 	return o
 end

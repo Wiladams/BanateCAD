@@ -5,9 +5,6 @@
 -- Copyright (c) 2011  William Adams
 --
 
-require ("maths")
-require ("openscad_print")
-
 trimesh = {
 	name='trimesh'
 	}
@@ -55,8 +52,7 @@ function trimesh:addface(face)
 
 	local norm = vec3_cross(vec2, vec1);
 
---print("normal ", normal[1], normal[2], normal[3]);
-	--vec3_print(io.stdout, norm); io.write('\n');
+--print("normal ", normal);
 
 	face.normal = norm;
 

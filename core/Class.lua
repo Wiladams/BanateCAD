@@ -8,6 +8,7 @@
 --
 --  sub = SubClass:new(params)
 --
+
 function inheritsFrom( baseClass )
 
     local new_class = {}
@@ -55,3 +56,20 @@ function inheritsFrom( baseClass )
     return new_class
 end
 
+function functor(objstate, func)
+	return {objstate, func}
+end
+
+function functorcall(func, params)
+	return func[2](func[1], params)
+end
+
+--[[
+class ={
+	inheritsFrom,
+	functor = functor,
+	functorcall = functorcall
+	}
+
+return class
+--]]

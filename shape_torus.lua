@@ -4,10 +4,10 @@
 -- Copyright (c) 2011  William Adams
 --
 
-require ("trimesh")
+--require ("trimesh")
 require ("BiParametric")
 require ("checkerboard")
-require ("maths")
+--require ("maths")
 
 shape_torus = inheritsFrom(BiParametric)
 function shape_torus.new(params)

@@ -23,3 +23,8 @@ colorschemes["Sunset"] = {
 	WIREFRAME_COLOR = {0,0,0,1}
 	}
 
+colorschemes["Space"] = {
+	BACKGROUND_COLOR = {0, 0, 0, 1},
+	CROSSHAIR_COLOR = {0.5, 0.75, 0.75, 1},
+	WIREFRAME_COLOR = {1,1,1,1}
+	}
