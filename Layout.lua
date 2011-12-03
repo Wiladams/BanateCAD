@@ -26,6 +26,13 @@ Layout = {}
 -- UI manipulation
 --============================
 
+-- clears and reloads layout options
+function Layout.reloadOptions(self)
+	self.Options = nil;
+	self:update()
+end
+
+-- loads options from the default options file
 function Layout.loadOptions(self)
 	local filename = optionsFile
 	local file, e =  io.open(filename) -- check if file exists.
@@ -57,7 +64,8 @@ function Layout.loadOptions(self)
 	self.Options = opts
 end
 
-function Layout.editorOptions(self)
+-- shows the editor options editor
+function Layout.showEditorOptions(self)
 	local opts = self.Options
 	local result,
 		editorfont,
@@ -82,7 +90,8 @@ function Layout.editorOptions(self)
 	end
 end
 
-function Layout.consoleOptions(self)
+-- shows the console options editor
+function Layout.showConsoleOptions(self)
 	local opts = self.Options
 	local result,
 		consolefont,
@@ -107,18 +116,21 @@ function Layout.consoleOptions(self)
 	end
 end
 
+-- updates editor properties from the current options
 function Layout.updateEditor(self)
 	self.editor.fgcolor = self.Options.editor.foreground
 	self.editor.bgcolor = self.Options.editor.background
 	self.editor.fontface = self.Options.editor.font
 end
 
+-- updates console properties from the current options
 function Layout.updateConsole(self)
 	self.console.fgcolor = self.Options.console.foreground
 	self.console.bgcolor = self.Options.console.background
 	self.console.fontface = self.Options.console.font
 end
 
+-- updates all ui element with the current options.
 function Layout.update(self)
 	if not self.Options then
 		self:loadOptions()

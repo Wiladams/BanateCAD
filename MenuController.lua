@@ -176,15 +176,15 @@ function MenuController.do_exit(self)
 end
 
 --==============================================
---	Tools
+--	TOOLS
 --==============================================
 
 function MenuController.do_editor_options(self)
-	Layout:editorOptions()
+	Layout:showEditorOptions()
 end
 
 function MenuController.do_console_options(self)
-	Layout:consoleOptions()
+	Layout:showConsoleOptions()
 end
 
 --==============================================
