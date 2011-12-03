@@ -15,7 +15,6 @@ require ("Options")
 
 local optionsFile = "Layout.options"
 
-
 --============================
 -- Layout entry point
 --============================

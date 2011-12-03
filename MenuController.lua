@@ -13,6 +13,8 @@ require ("FileManager")
 require ("test_lpeg")
 require ("SceneBuilder")
 require ("Layout")
+require ("Skeinforge")
+
 
 MenuController = {}
 function MenuController:new(o)
@@ -181,10 +183,27 @@ end
 
 function MenuController.do_editor_options(self)
 	Layout:showEditorOptions()
+	return iup.DEFAULT
 end
 
 function MenuController.do_console_options(self)
 	Layout:showConsoleOptions()
+	return iup.DEFAULT
+end
+
+function MenuController.do_skeinforge_locate(self)
+	Skeinforge:askUserForInstallPath()
+	return iup.DEFAULT
+end
+
+function MenuController.do_skeinforge_configure(self)
+	Skeinforge:configure()
+	return iup.DEFAULT
+end
+
+function MenuController.do_skeinforge_slice(self)
+	Skeinforge:slice()
+	return iup.DEFAULT
 end
 
 --==============================================
@@ -293,6 +312,11 @@ local menudef = {
     "Tools",{
         "Editor", self.do_editor_options,
 		"Console", self.do_console_options,
+		"Skeinforge" , {
+			"Locate", self.do_skeinforge_locate,
+			"Configure", self.do_skeinforge_configure,
+			"Slice", self.do_skeinforge_slice,
+		}
     },
 	"Compile", {
 		"Compile and Render\tF6", self.do_compile_and_render
