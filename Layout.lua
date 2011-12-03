@@ -44,13 +44,13 @@ function Layout.loadOptions(self)
 		{
 			editor =
 			{
-				font = "Courier",
+				font = "Courier New, 10",
 				foreground = "0 0 0",
 				background = "255 255 255",
 			},
 			console =
 			{
-				font = "Courier",
+				font = "Courier New, 10",
 				foreground = "0 0 0",
 				background = "255 255 255",
 			},
@@ -119,14 +119,14 @@ end
 function Layout.updateEditor(self)
 	self.editor.fgcolor = self.Options.editor.foreground
 	self.editor.bgcolor = self.Options.editor.background
-	self.editor.fontface = self.Options.editor.font
+	self.editor.font = self.Options.editor.font
 end
 
 -- updates console properties from the current options
 function Layout.updateConsole(self)
 	self.console.fgcolor = self.Options.console.foreground
 	self.console.bgcolor = self.Options.console.background
-	self.console.fontface = self.Options.console.font
+	self.console.font = self.Options.console.font
 end
 
 -- updates all ui element with the current options.
