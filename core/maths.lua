@@ -541,11 +541,11 @@ end
 
 -- Convert spherical to cartesian
 function sph_to_cart(s)
-	return {
+	return vec3(
 	clean(s[3]*math.sin(s[2])*math.cos(s[1])),
 	clean(s[3]*math.sin(s[2])*math.sin(s[1])),
 	clean(s[3]*math.cos(s[2]))
-	}
+	)
 end
 
 -- Convert from cartesian to spherical
@@ -653,7 +653,7 @@ function centroid(verts)
 	local y = miny + (maxy-miny)/2;
 	local z = minz + (maxz-minz)/2;
 
-	return {x,y,z}
+	return vec3(x,y,z)
 end
 
 function normalizeAngle(angle)

@@ -67,5 +67,5 @@ function sortvertices(v1, v2)
 	local zmin = math.min(v1[3], v2[3])
 	local zmax = math.max(v1[3], v2[3])
 
-	return {xmin,ymin,zmin}, {xmax, ymax, zmax}
+	return vec3(xmin,ymin,zmin), vec3(xmax, ymax, zmax)
 end

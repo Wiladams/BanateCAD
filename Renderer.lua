@@ -9,7 +9,7 @@
 require ("luagl")
 require ("luaglu")
 require ("openscad_print")
-require ("CADVM")
+--require ("CADVM")
 --
 -- Display the Scene
 --
@@ -216,7 +216,7 @@ end
 
 
 function Renderer.DisplayScene(self, ascene)
-	if (ascene.commands == nil or #defaultscene.commands == 0) then
+	if (ascene.commands == nil or #ascene.commands == 0) then
 		--print("no commands")
 		return
 	end

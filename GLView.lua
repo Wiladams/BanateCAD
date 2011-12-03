@@ -10,7 +10,7 @@ require ("iuplua")
 require ("iupluagl")
 require ("luagl")
 require ("luaglu")
-require ("Scene")
+--require ("Scene")
 --require ("Class")
 
 GLView = {}

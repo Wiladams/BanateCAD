@@ -7,7 +7,6 @@
 
 --require ("Class")
 require ("Shape")
-require ("openscad_print")
 
 
 -- An Axis Aligned Bounding Box is a simple construction
@@ -27,29 +26,30 @@ require ("openscad_print")
 
 GAABBox = inheritsFrom(Shape)
 
-
-
 -- Now we construct our own 'new' function so that we can
 -- do whatever special setup we want to do on our own.
 -- If we're setting any instance variables, we use 'self.'
 -- At the end we return 'self' to retain the metatable
 -- That was set when we subclassed Shape.
 
-function GAABBox.new(o)
-	o = o or {}		-- create object if user does not provide one
-	o[1] = o[1] or {0,0,0}
-	o[2] = o[2] or {0,0,0}
+function GAABBox.new()
+--	o = o or {}		-- create object if user does not provide one
+--	o[1] = o[1] or vec3(0,0,0)
+--	o[2] = o[2] or vec3(0,0,0)
 
 	local new_inst = GAABBox.create()
-	new_inst:Init(o[1], o[2])
+	new_inst:Init(vec3(0,0,0), vec3(0,0,0))
 
 	return new_inst
 end
 
 function GAABBox.Init(self, v1,v2)
-	v1 = v1 or {0,0,0}
-	v2 = v2 or {0,0,0}
+	v1 = v1 or vec3(0,0,0)
+	v2 = v2 or vec3(0,0,0)
 	v1, v2 = sortvertices(v1, v2)
+
+	self:SetBounds(v1, v2)
+--[[
 	self.LowerVertex = v1
 	self.HigherVertex = v2
 	self.Dimensions = {v2[1]-v1[1], v2[2]-v1[2], v2[3]-v1[3]}
@@ -65,6 +65,7 @@ function GAABBox.Init(self, v1,v2)
 		{v2[1],v2[2],v2[3]},
 		{v1[1],v2[2],v2[3]},
 	}
+--]]
 
 	self.Edges = {
 		{1,2},
@@ -86,10 +87,38 @@ function GAABBox.Init(self, v1,v2)
 	return self
 end
 
+function GAABBox.SetBounds(self, v1, v2)
+	self.LowerVertex = v1
+	self.HigherVertex = v2
+	self.Dimensions = vec.new(v2)-vec.new(v1)
+
+	self.Vertices = {
+		vec3(v1[1],v1[2],v1[3]),
+		vec3(v2[1],v1[2],v1[3]),
+		vec3(v2[1],v1[2],v2[3]),
+		vec3(v1[1],v1[2],v2[3]),
+
+		vec3(v1[1],v2[2],v1[3]),
+		vec3(v2[1],v2[2],v1[3]),
+		vec3(v2[1],v2[2],v2[3]),
+		vec3(v1[1],v2[2],v2[3]),
+	}
+end
+
 function GAABBox.Render(self, renderer)
 	for _,e in ipairs(self.Edges) do
 		renderer:DrawLine({self.Vertices[e[1]], self.Vertices[e[2]], 1})
 	end
+end
+
+-- Expand our borders by union with
+-- a new point
+function GAABBox.Union(self, pt)
+	local apt = vec.new(pt)
+	local newlow = min(self.LowerVertex, apt)
+	local newhigh = max(self.HigherVertex, apt)
+
+	self:SetBounds(newlow, newhigh)
 end
 
 function GAABBox.ToString(self)

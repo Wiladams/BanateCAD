@@ -1,11 +1,28 @@
 --someballs  = {{-10, -13, 0, 5},{10, -13, 0, 5}, {-2, 11, 0, 5},{-2, 11, 5, 3}}
 --someballs  = {{-10, -13, 0, 5},{10, -13, 0, 5}, {-2, 11, 0, 5},{-2, 11, 5, 3},{-2, 18, 7, 2}}
 --someballs  = {{-8, -13, 0, 5}, {10, -13, 0, 5}}
-someballs = {{-10, -13, 0, 5}, {10, -13, 0, 5}, {-2, 11, 0, 5}}
+local someballs = {{-10, -13, 0, 5}, {10, -13, 0, 5}, {-2, 11, 0, 5}}
 
 function balls()
 	color(crayola.rgba("Yellow", 1))
 	blobs(someballs, 100, 18, 18)
+end
+
+function boundingballs()
+	local blobula = shape_metaball.new({
+		balls = someballs,
+		radius = 60,
+		stacksteps = 180,
+		anglesteps = 180,
+	})
+
+print(blobula.anglesteps, blobula.stacksteps)
+
+	addmesh(blobula:GetMesh())
+
+	local bounds = blobula.Bounds
+
+	addshape(bounds)
 end
 
 function fingers()
@@ -78,4 +95,5 @@ end
 --fingers()
 --balls()
 --tripod()
-deciballs(triballs)
+--deciballs(triballs)
+boundingballs()

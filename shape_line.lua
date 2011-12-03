@@ -1,6 +1,6 @@
 --require ("Class")
 require ("Shape")
-require ("glsl")
+--require ("glsl")
 
 shape_line = inheritsFrom(Shape)
 function shape_line.new(params)

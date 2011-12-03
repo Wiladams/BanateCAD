@@ -91,12 +91,24 @@ function vec.div(a, b)
 	return res
 end
 
+--
+function vec.length(x)
+	local sum = 0
+	for i=1,#x do
+		sum = sum + (x[i]*x[i])
+	end
+
+	local f = sqrt(sum)
+
+	return f
+end
+
 -- Convenience functions
-function vec.tostring (vec)
+function vec.tostring (self)
       local s = "{"
       local sep = ""
-      for i=1,#vec do
-        s = s .. sep .. vec[i]
+      for i=1,#self do
+        s = s .. sep .. self[i]
         sep = ", "
       end
       return s .. "}"
@@ -113,7 +125,7 @@ vec.mt.__sub = vec.sub
 vec.mt.__mul = vec.mul
 vec.mt.__tostring = vec.tostring
 
-
+vec.Zero = vec.new({0,0,0})
 
 
 
