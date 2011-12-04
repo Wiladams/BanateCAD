@@ -142,17 +142,25 @@ end
 -- UI layout construction
 --============================
 
+Layout:loadOptions()
 intext = iup.text({
 	expand = 'YES',
 	MULTILINE = 'YES',
 	TABSIZE = "4",
 	WORDWRAP = "YES",
-	FONTFACE = "MS Shell Dlg 2",
-	FONTSIZE = 8,
+	FONT = Layout.Options.editor.font,
+	FGCOLOR = Layout.Options.editor.foreground,
+	BGCOLOR = Layout.Options.editor.background,
 	})
 
-outconsole = iup.canvas({
-	EXPAND = "YES"
+outconsole = iup.text({
+	expand = 'YES',
+	MULTILINE = 'YES',
+	TABSIZE = "4",
+	WORDWRAP = "YES",
+	FONT = Layout.Options.console.font,
+	FGCOLOR = Layout.Options.console.foreground,
+	BGCOLOR = Layout.Options.console.background,
 	})
 
 viewinsplit = iup.split({
@@ -168,4 +176,3 @@ Layout.editor = intext
 Layout.console = outconsole
 
 -- load and apply options
-Layout:update()
