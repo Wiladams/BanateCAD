@@ -369,7 +369,7 @@ local menudef = {
 	"Help",{
         "BanateCAD Home Page",self.do_go_homepage,
         "BanateCAD Documentation",self.do_go_documentation,
-        "BanateCAD Github",self.do_go_github,
+        "BanateCAD GitHub",self.do_go_github,
         "About",self.do_About,
     },
 }
