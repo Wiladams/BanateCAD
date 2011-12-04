@@ -32,11 +32,6 @@ function MenuController.default (self)
     return iup.DEFAULT
 end
 
-function MenuController.do_About(self)
-	iup.Message("About", "FabuCAD (c) 0.5, November 2011");
-	return iup.DEFAULT
-end
-
 --==============================================
 --	FILE OPERATIONS
 --==============================================
@@ -227,6 +222,18 @@ function MenuController.do_paste(self)
 	--intext.INSERT = "more text";
 end
 
+--===================================
+-- ANIMATION
+--===================================
+
+function MenuController.do_start_animation(self)
+	AnimationTimer:Start()
+end
+
+function MenuController.do_stop_animation(self)
+	AnimationTimer:Stop()
+end
+
 --==============================================
 --	VIEW POSITION
 --==============================================
@@ -267,16 +274,28 @@ function MenuController.do_toggle_axes_display(self)
 	defaultviewer:ToggleAxesDisplay();
 end
 
---===================================
--- ANIMATION
---===================================
+--==============================================
+--	HELP
+--==============================================
 
-function MenuController.do_start_animation(self)
-	AnimationTimer:Start()
+function MenuController.do_go_homepage(self)
+	os.execute('explorer /e,"http://williamaadams.wordpress.com/category/banate-cad/"')
+	return iup.DEFAULT
 end
 
-function MenuController.do_stop_animation(self)
-	AnimationTimer:Stop()
+function MenuController.do_go_documentation(self)
+	os.execute('explorer /e,"http://williamaadams.wordpress.com/banate-cad-documentation/"')
+	return iup.DEFAULT
+end
+
+function MenuController.do_go_github(self)
+	os.execute('explorer /e,"http://github.com/Wiladams/BanateCAD"')
+	return iup.DEFAULT
+end
+
+function MenuController.do_About(self)
+	iup.Message("About", "BanateCAD (c) 0.5, November 2011");
+	return iup.DEFAULT
 end
 
 --==============================================
@@ -348,8 +367,10 @@ local menudef = {
 		"Zoom Out", self.default
     },
 	"Help",{
+        "BanateCAD Home Page",self.do_go_homepage,
+        "BanateCAD Documentation",self.do_go_documentation,
+        "BanateCAD Github",self.do_go_github,
         "About",self.do_About,
-        "FabuCAD Home Page",self.default,
     },
 }
 	return menudef;
