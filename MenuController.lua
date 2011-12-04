@@ -310,13 +310,17 @@ local menudef = {
         "Paste",self.do_paste,
      },
     "Tools",{
-        "Editor", self.do_editor_options,
-		"Console", self.do_console_options,
 		"Skeinforge" , {
-			"Locate", self.do_skeinforge_locate,
-			"Configure", self.do_skeinforge_configure,
 			"Slice", self.do_skeinforge_slice,
-		}
+			"Configure", self.do_skeinforge_configure,
+			"Locate", self.do_skeinforge_locate,
+		} ,
+		"-",nil,
+		"Options" , {
+			"Viewport", self.default,
+			"Editor", self.do_editor_options,
+			"Console", self.do_console_options,
+		} ,
     },
 	"Compile", {
 		"Compile and Render\tF6", self.do_compile_and_render

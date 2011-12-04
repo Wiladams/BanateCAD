@@ -51,8 +51,8 @@ function Layout.loadOptions(self)
 			console =
 			{
 				font = "Courier New, 10",
-				foreground = "0 0 0",
-				background = "255 255 255",
+				foreground = "0 128 0",
+				background = "0 0 0",
 			},
 		}
 		-- save default configuration
@@ -143,6 +143,7 @@ end
 --============================
 
 Layout:loadOptions()
+
 intext = iup.text({
 	expand = 'YES',
 	MULTILINE = 'YES',
@@ -163,9 +164,17 @@ outconsole = iup.text({
 	BGCOLOR = Layout.Options.console.background,
 	})
 
+iosplit = iup.split({
+	intext,
+	outconsole;
+	orientation = "HORIZONTAL",
+	showgrip = "FALSE",
+	VALUE = "HALF",
+})
+
 viewinsplit = iup.split({
 	defaultglcanvas,
-	intext;
+	iosplit;
 	orientation = "HORIZONTAL",
 	showgrip = "FALSE",
 	VALUE = "800",
@@ -174,5 +183,5 @@ viewinsplit = iup.split({
 Layout.canvas = defaultglcanvas
 Layout.editor = intext
 Layout.console = outconsole
-
+Layout.console.value = "Banate CAD\n"
 -- load and apply options
