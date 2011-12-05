@@ -12,6 +12,9 @@ require ("iuplua")
 require ("FileManager")
 require ("test_lpeg")
 require ("SceneBuilder")
+require ("Layout")
+require ("Skeinforge")
+
 
 MenuController = {}
 function MenuController:new(o)
@@ -29,14 +32,10 @@ function MenuController.default (self)
     return iup.DEFAULT
 end
 
-function MenuController.do_About(self)
-	iup.Message("About", "FabuCAD (c) 0.5, November 2011");
-	return iup.DEFAULT
-end
-
 --==============================================
 --	FILE OPERATIONS
 --==============================================
+
 function MenuController.do_file_open(self)
 	-- get a filename
 	local filename,err = defaultfilemanager:GetOpenFileName();
@@ -169,16 +168,42 @@ function MenuController.do_new_file(self)
 	Application.Window:SetFilename(defaultfilemanager.NAME);
 end
 
-function MenuController.do_exit (self)
+function MenuController.do_exit(self)
     return iup.CLOSE
 end
 
+--==============================================
+--	TOOLS
+--==============================================
 
+function MenuController.do_editor_options(self)
+	Layout:showEditorOptions()
+	return iup.DEFAULT
+end
+
+function MenuController.do_console_options(self)
+	Layout:showConsoleOptions()
+	return iup.DEFAULT
+end
+
+function MenuController.do_skeinforge_locate(self)
+	Skeinforge:askUserForInstallPath()
+	return iup.DEFAULT
+end
+
+function MenuController.do_skeinforge_configure(self)
+	Skeinforge:configure()
+	return iup.DEFAULT
+end
+
+function MenuController.do_skeinforge_slice(self)
+	Skeinforge:slice()
+	return iup.DEFAULT
+end
 
 --==============================================
 --	RENDERING
 --==============================================
-
 
 function MenuController.do_compile_and_render(self)
 	local inputtext = intext.value
@@ -197,12 +222,21 @@ function MenuController.do_paste(self)
 	--intext.INSERT = "more text";
 end
 
+--===================================
+-- ANIMATION
+--===================================
+
+function MenuController.do_start_animation(self)
+	AnimationTimer:Start()
+end
+
+function MenuController.do_stop_animation(self)
+	AnimationTimer:Stop()
+end
+
 --==============================================
 --	VIEW POSITION
 --==============================================
-
-
-
 
 function MenuController.do_view_back(self)
 	defaultviewer:SetViewBack();
@@ -240,15 +274,28 @@ function MenuController.do_toggle_axes_display(self)
 	defaultviewer:ToggleAxesDisplay();
 end
 
---===================================
--- ANIMATION
---===================================
-function MenuController.do_start_animation(self)
-	AnimationTimer:Start()
+--==============================================
+--	HELP
+--==============================================
+
+function MenuController.do_go_homepage(self)
+	os.execute('explorer /e,"http://williamaadams.wordpress.com/category/banate-cad/"')
+	return iup.DEFAULT
 end
 
-function MenuController.do_stop_animation(self)
-	AnimationTimer:Stop()
+function MenuController.do_go_documentation(self)
+	os.execute('explorer /e,"http://williamaadams.wordpress.com/banate-cad-documentation/"')
+	return iup.DEFAULT
+end
+
+function MenuController.do_go_github(self)
+	os.execute('explorer /e,"http://github.com/Wiladams/BanateCAD"')
+	return iup.DEFAULT
+end
+
+function MenuController.do_About(self)
+	iup.Message("About", "BanateCAD (c) 0.5, November 2011");
+	return iup.DEFAULT
 end
 
 --==============================================
@@ -282,8 +329,17 @@ local menudef = {
         "Paste",self.do_paste,
      },
     "Tools",{
-        "Editor",self.default,
-		"Console", self.default
+		"Skeinforge" , {
+			"Slice", self.do_skeinforge_slice,
+			"Configure", self.do_skeinforge_configure,
+			"Locate", self.do_skeinforge_locate,
+		} ,
+		"-",nil,
+		"Options" , {
+			"Viewport", self.default,
+			"Editor", self.do_editor_options,
+			"Console", self.do_console_options,
+		} ,
     },
 	"Compile", {
 		"Compile and Render\tF6", self.do_compile_and_render
@@ -311,8 +367,10 @@ local menudef = {
 		"Zoom Out", self.default
     },
 	"Help",{
+        "BanateCAD Home Page",self.do_go_homepage,
+        "BanateCAD Documentation",self.do_go_documentation,
+        "BanateCAD GitHub",self.do_go_github,
         "About",self.do_About,
-        "FabuCAD Home Page",self.default,
     },
 }
 	return menudef;
