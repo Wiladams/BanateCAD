@@ -185,7 +185,7 @@ function BiParametric.GetVertices(self)
 	for w=0, self.WSteps do
 		for u=0, self.USteps do
 			local svert, normal = self:GetVertex(u/self.USteps, w/self.WSteps)
-			table.insert(vertices, svert);
+			table.insert(vertices, vec.new(svert));
 			if normal ~= nil then
 				table.insert(normals, normal);
 			end

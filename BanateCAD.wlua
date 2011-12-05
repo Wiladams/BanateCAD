@@ -19,6 +19,7 @@ local appctx = BAppContext:new({
 		"codec",		-- Coder/Decoder for files
 		"collab",		-- Collaboration Code
 		"animation",	-- Animation System
+		"physics",
 		}
 	})
 

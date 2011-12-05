@@ -47,13 +47,14 @@ function trimesh:addface(face)
 	local p1 = self.vertices[face[2]];
 	local p2 = self.vertices[face[3]];
 
-	local vec1 = vec3_sub(p0, p1);
-	local vec2 = vec3_sub(p2, p1);
+	local v1 = vec3_sub(p0,p1);
+	local v2 = vec3_sub(p2,p1);
 
-	local norm = vec3_cross(vec2, vec1);
+	local norm = vec3_cross(v2, v1);
 
 --print("normal ", normal);
 
+	-- WAA
 	face.normal = norm;
 
 	-- Add the face to the list of faces

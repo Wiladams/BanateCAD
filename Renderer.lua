@@ -173,23 +173,29 @@ function Renderer.DisplayMeshFace(self, omesh, facenumber)
 	end
 end
 
-function Renderer.DisplayMesh(self, omesh)
+function Renderer.DisplayMesh(self, omesh, uselist)
 
 	if (omesh == nil) then return end
 
+	uselist = uselist or true
+
 	-- if the mesh has a display list, use that to
 	-- render the mesh
-	if omesh.displaylist ~= nil then
-		gl.CallList(omesh.displaylist);
-		return
+	if uselist then
+		if omesh.displaylist ~= nil then
+			gl.CallList(omesh.displaylist);
+			return
+		end
 	end
 
 	local faceslen = #omesh.faces
 
 	-- If we are here, the mesh did not have a display list
 	-- Create and open the display list to do the rendering
-	omesh.displaylist = gl.GenLists(1)
-	gl.NewList(omesh.displaylist, gl.COMPILE)
+	if uselist then
+		omesh.displaylist = gl.GenLists(1)
+		gl.NewList(omesh.displaylist, gl.COMPILE)
+	end
 
 	if (self.wireframe) then
 			gl.Begin(gl.LINE_LOOP)
@@ -206,9 +212,10 @@ function Renderer.DisplayMesh(self, omesh)
 	end
 	gl.End();
 
-	gl.EndList();
-	gl.CallList(omesh.displaylist);
-
+	if uselist then
+		gl.EndList();
+		gl.CallList(omesh.displaylist);
+	end
 end
 
 

@@ -22,7 +22,7 @@ function DisplacementSampler.GetVertex(self, u, w)
 	local height = self.HeightSampler:GetHeight(u,w) * self.MaxHeight
 
 	-- Add the height from the height sampler
-	local nvert = vec3_add(vec3_mults(norm, height), vert)
+	local nvert = vec3_add(vec3_mults(norm,height), vert)
 
 --vec3_print_tuple(vert)
 --vec3_print_tuple(nvert)

@@ -3,11 +3,11 @@
 
 AsyncQueue = inheritsFrom(nil)
 
-function AsyncQueue.new(functor)
+function AsyncQueue.new(watcher)
 	new_inst = AsyncQueue.create()
 
 	new_inst.Queue = queue.new()
-	new_inst.QueueWatcher = functor
+	new_inst.QueueWatcher = watcher
 	new_inst.Coroutine = coroutine.create(new_inst.Execute)
 
 	return new_inst
