@@ -26,7 +26,7 @@ local dirsep = package.config:sub(1,1) -- hacky way to get the system directory 
 Skeinforge = {}
 
 -- loads options from the default options file
-function Skeinforge.loadOptions(self)
+function Skeinforge:loadOptions()
 	local filename = optionsFile
 	local file, e =  io.open(filename) -- check if file exists.
 	local opts
@@ -50,7 +50,7 @@ end
 
 -- function that discovers the available profiles from skeinforge itself
 -- returns a list of profile names.
-function Skeinforge.askUserForInstallPath(self)
+function Skeinforge:askUserForInstallPath()
 	local fileDialog = iup.filedlg{
 		dialogtype = "OPEN",
 		title = "Locate Skeinforge",
@@ -70,7 +70,7 @@ function Skeinforge.askUserForInstallPath(self)
 end
 
 -- runs Skeinforge itself
-function Skeinforge.configure(self, wait)
+function Skeinforge:configure(wait)
 	local skeinforge = self:getSkeinforgePath() or self:askUserForInstallPath()
 	if skeinforge then
 		local cmd = pythonw .. ' "' .. skeinforge .. '"'
@@ -79,7 +79,7 @@ function Skeinforge.configure(self, wait)
 end
 
 -- runs Skeinforge on a selected stl file
-function Skeinforge.slice(self)
+function Skeinforge:slice()
 	local skeinforge = self:getSkeinforgePath() or self:askUserForInstallPath()
 
 	local fileDialog = iup.filedlg{
@@ -100,7 +100,7 @@ function Skeinforge.slice(self)
 	end
 end
 
-function Skeinforge.getSkeinforgePath(self)
+function Skeinforge:getSkeinforgePath()
 	local path = self.Options.skeinforgePath;
 	if path then
 		return self.Options.skeinforgePath .. "skeinforge.py"

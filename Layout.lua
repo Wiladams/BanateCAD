@@ -26,19 +26,17 @@ Layout = {}
 --============================
 
 -- clears and reloads layout options
-function Layout.reloadOptions(self)
+function Layout:reloadOptions()
 	self.Options = nil;
 	self:update()
 end
 
 -- loads options from the default options file
-function Layout.loadOptions(self)
+function Layout:loadOptions()
 	local filename = optionsFile
-	local file, e =  io.open(filename) -- check if file exists.
-	local opts
+	local file, e = io.open(filename) -- check if file exists.
 	if file then
 		file:close() -- close it again.
-		opts = Options.load(filename)
 	else
 		local defaults =
 		{
@@ -55,16 +53,14 @@ function Layout.loadOptions(self)
 				background = "0 0 0",
 			},
 		}
-		-- save default configuration
 		Options.save(defaults, filename)
-		-- load options object
-		opts = Options.load(filename)
 	end
-	self.Options = opts
+	self.Options = Options.load(filename)
+	return self.Options
 end
 
 -- shows the editor options editor
-function Layout.showEditorOptions(self)
+function Layout:showEditorOptions()
 	local opts = self.Options
 	local result,
 		editorfont,
@@ -90,7 +86,7 @@ function Layout.showEditorOptions(self)
 end
 
 -- shows the console options editor
-function Layout.showConsoleOptions(self)
+function Layout:showConsoleOptions()
 	local opts = self.Options
 	local result,
 		consolefont,
@@ -116,21 +112,21 @@ function Layout.showConsoleOptions(self)
 end
 
 -- updates editor properties from the current options
-function Layout.updateEditor(self)
+function Layout:updateEditor()
 	self.editor.fgcolor = self.Options.editor.foreground
 	self.editor.bgcolor = self.Options.editor.background
 	self.editor.font = self.Options.editor.font
 end
 
 -- updates console properties from the current options
-function Layout.updateConsole(self)
+function Layout:updateConsole()
 	self.console.fgcolor = self.Options.console.foreground
 	self.console.bgcolor = self.Options.console.background
 	self.console.font = self.Options.console.font
 end
 
 -- updates all ui element with the current options.
-function Layout.update(self)
+function Layout:update()
 	if not self.Options then
 		self:loadOptions()
 	end
@@ -184,4 +180,3 @@ Layout.canvas = defaultglcanvas
 Layout.editor = intext
 Layout.console = outconsole
 Layout.console.value = "Banate CAD\n"
--- load and apply options
