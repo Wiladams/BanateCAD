@@ -13,7 +13,7 @@ local ppath = param_superellipse.new({
 
 -- Create the parametric transformer
 local pptransformer = ParamTransformer.new({
-	TranslateFunctor = functor(sellipse, ppath.GetProfileVertex)
+	TranslateFunctor = functor(ppath, ppath.GetProfileVertex)
 	})
 
 -- Create the shape animator

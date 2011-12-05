@@ -41,8 +41,8 @@ function panimator.Update(self, toTime)
 		radius = self.Radius,
 		Threshold = self.Threshold,
 
-		USteps = 10,
-		WSteps = 10,
+		USteps = 20,
+		WSteps = 20,
 	})
 end
 

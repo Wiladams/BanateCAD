@@ -11,8 +11,8 @@ function panimator.new(params)
 		radius = new_inst.Radius,
 		Threshold = new_inst.Threshold,
 
-		USteps = 360,
-		WSteps = 360,
+		USteps = 36,
+		WSteps = 36,
 	})
 
 	return new_inst
@@ -23,7 +23,7 @@ function panimator.RenderSelf(self, renderer)
 end
 
 function panimator.Update(self, toTime)
-	local period = 120
+	local period = 40	-- Change this value to alter the speed
 	local frac = mod(toTime, period)/period
 
 	local anifrac = frac
@@ -44,8 +44,8 @@ function panimator.Update(self, toTime)
 		radius = self.Radius,
 		Threshold = self.Threshold,
 
-		USteps = 360,
-		WSteps = 360,
+		USteps = 30,
+		WSteps = 30,
 	})
 end
 
@@ -58,8 +58,8 @@ function display_surface_plot()
 		radius = 50,
 		Threshold = 0.0001,
 
-		USteps = 360,
-		WSteps = 360,
+		USteps = 36,
+		WSteps = 36,
 	})
 
 	local verts = isosurface:GetVertices()

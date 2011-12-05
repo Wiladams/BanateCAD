@@ -283,8 +283,8 @@ function blobs(balls, radius, stacksteps, anglesteps)
 	local lshape = shape_metaball.new({
 		balls = balls,
 		radius = radius,
-		stacksteps = stacksteps,
-		anglesteps = anglesteps,
+		WSteps = stacksteps,
+		USteps = anglesteps,
 		});
 
 	addmesh(lshape:GetMesh())

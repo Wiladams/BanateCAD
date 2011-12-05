@@ -32,8 +32,8 @@
 		})
 
 	local lshape =  BiParametric.new({
-		USteps = 800/4,
-		WSteps = 400/4,
+		USteps = 800/2,
+		WSteps = 400/2,
 		ColorSampler = texturesampler,
 		VertexFunction=dispSampler,
 		--Thickness = -2,
