@@ -22,7 +22,7 @@ function shape_heart.Init(self, params)
 
 	self.Radius = params.Radius or 1
 
-	self.ParamFunction = self
+	--self.ParamFunction = self
 
 	return self
 end

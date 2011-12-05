@@ -20,9 +20,9 @@ end
 -- Returns a point on the surface given the angle and the position along the line
 function param_cone(u, lp1, lp2, angle)
 	local p = {
-		lerp(u, lp1, lp2)[1]*math.cos(angle),
-		lerp(u, lp1, lp2)[1]*math.sin(angle),
-		lerp(u, lp1, lp2)[2],
+		lerp(lp1, lp2, u)[1]*math.cos(angle),
+		lerp(lp1, lp2, u)[1]*math.sin(angle),
+		lerp(lp1, lp2, u)[2],
 		}
 
 	return p
@@ -63,12 +63,12 @@ function shape_cone.GetMesh(self)
 	for stack = 0, self.stacksteps do
 		local v = stack/self.stacksteps
 		for astep = 0, self.anglesteps do
-			local terp = lerp(v, lp1, lp2)
+			local terp = lerp(lp1, lp2, v)
 			local angle = astep * stepangle
 			local p = {
 				terp[1]*math.cos(angle),
 				terp[1]*math.sin(angle),
-				lerp(v, lp1, lp2)[3],
+				lerp(lp1, lp2, v)[3],
 			}
 
 			mesh:addvertex(p)

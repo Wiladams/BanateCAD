@@ -292,12 +292,12 @@ end
 --
 --=======================================
 function lerpfunc( p0, p1, u)
-	return (1-u)*p0 + u*p1
+	return p0 + (p1-p0)*u
 end
 
 ---[[
 function lerp(p0, p1, u)
-	if type(x) == 'number' then
+	if type(p0) == 'number' then
 		return  lerpfunc(p0, p1, u)
 	end
 

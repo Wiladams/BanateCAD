@@ -102,23 +102,13 @@ function show_blobs()
 		}
 
 	local radius = 30
-	local beamsteps = 300
-
-
-	-- Show the internal balls of influence
-	color(crayola.rgb("Purple"))
-	for _,v in ipairs(triballs) do
-		translate(vec3_add(offset,v))
-		sphere(v[4])
-	end
 
 	color("Yellow")
-	for v in IterateMetaballs(triballs, {60,80,60}, {3,3,3}) do
-		color({v[1]/30,v[2]/10,v[3]/20,1})
-		translate(vec3_add(offset,v))
-		--tetrahedron(0.33)
-		hexahedron(0.33)
-	end
+	translate(offset)
+	blobs(triballs, radius, 30, 30)
+
+
+
 end
 
 function show_supershape()

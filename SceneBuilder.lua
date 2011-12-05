@@ -25,10 +25,8 @@ require ("DisplacementSampler")
 require ("GAABBox")
 require ("ImageSampler")
 require ("BMaterial")
-require ("MassSpringCurve")
 require ("metaball")
 require ("param_superellipse")
-require ("ParticleSystem")
 require ("Platonics")
 require ("RubberSheet")
 require ("shape_bicubicsurface")
@@ -285,8 +283,8 @@ function blobs(balls, radius, stacksteps, anglesteps)
 	local lshape = shape_metaball.new({
 		balls = balls,
 		radius = radius,
-		stacksteps = stacksteps,
-		anglesteps = anglesteps,
+		WSteps = stacksteps,
+		USteps = anglesteps,
 		});
 
 	addmesh(lshape:GetMesh())

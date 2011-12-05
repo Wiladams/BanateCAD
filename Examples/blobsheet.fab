@@ -3,84 +3,60 @@
 --someballs  = {{-8, -13, 0, 5}, {10, -13, 0, 5}}
 local someballs = {{-10, -13, 0, 5}, {10, -13, 0, 5}, {-2, 11, 0, 5}}
 
-function balls()
-	color(crayola.rgba("Yellow", 1))
-	blobs(someballs, 100, 18, 18)
+function ringballs()
+	local influence = 1.75	
+	local OR = 7
+
+	local ring = {
+		{OR, 0, 0, influence},
+		{0, OR, 0, influence},
+		{-OR, 0, 0, influence},
+		{0, -OR, 0, influence},
+
+		{OR, OR, 0, influence/2},
+		{-OR, OR, 0, influence/2},
+		{-OR, -OR, 0, influence/2},	
+		{OR, -OR, 0, influence/2},
+
+
+		{-OR, OR, OR, influence/2},
+		{OR, -OR, OR, influence/2},
+
+		-- arms
+		{OR*1.618, OR*1.618, OR*1.618, influence*1/3},
+		{-OR*1.618, -OR*1.618, OR*1.618, influence*1/3},	
+
+
+		{-OR*.3, OR*.3, -OR, influence/2},
+		{OR*.3, -OR, -OR*.3, influence/2},
+
+		-- Legs
+		{OR, OR, -OR*2.75, influence/2},
+		{-OR, -OR, -OR*2.75, influence/2},	
+
+		{0,0,OR*3, influence*1.75/3},
+		}
+
+	local ablob = shape_metaball.new({
+		balls = ring,
+		radius = 60,
+		USteps = 60,
+		WSteps = 90,
+		Threshold = 0.00001,
+	})
+
+--	color(crayola.rgb("Purple"))
+--	for _,v in ipairs(ring) do
+--		translate(v)
+--		sphere(v[4])
+--	end
+
+	color(crayola.rgba("Yellow", 0.75))
+	addmesh(ablob:GetMesh())
 end
 
-function peanut()
-	local pballs = {{0, -2, -13,4}, {0,0,0,3}, {0, 1, 14, 4}}
 
-	local texturesampler = ImageSampler.new({
-		Filename='PeanutTexture_200_200.png',
-		Size = size,
-		Resolution = res,
-		MaxHeight=16,
-	})
-
-	local heightsampler = ImageSampler.new({
-		Filename='PeanutTexture_200_200.png',
-		Size = {200,200},
-		Resolution = {1,1},
-		MaxHeight=16,
-	})
-
-	local vertsampler = shape_metaball.new({
-		balls = pballs,
-		radius = 60,
-		stacksteps = 60,
-		anglesteps = 60,
-
-		USteps = 200,
-		WSteps = 200,
-		ColorSampler = texturesampler,
---		VertexFunction = nil,
---		Thickness = -1,
-	})
-
-	local dispSampler = DisplacementSampler.new({
-			VertexSampler = vertsampler,
-			HeightSampler = heightsampler,
-			MaxHeight = 4,
-		})
-
-	local lshape =  BiParametric.new({
-		USteps = 200,
-		WSteps = 200,
-		ColorSampler = texturesampler,
-		VertexFunction=dispSampler,
-		--Thickness = -2,
-		})
-
-	addshape(lshape)
-
---[[
-	local apeanut = shape_metaball.new({
-		balls = pballs,
-		radius = 60,
-		stacksteps = 60,
-		anglesteps = 60,
-
-		USteps = 200,
-		WSteps = 200,
-		ColorSampler = texturesampler,
---		VertexFunction = nil,
---		Thickness = -1,
-	})
-
-	color(crayola.rgb("Purple"))
-	for _,v in ipairs(pballs) do
-		translate(v)
-		sphere(v[4])
-	end
-
-	color(crayola.rgba("Almond", 0.65))
-	addmesh(apeanut:GetMesh())
---]]
-
-
-end
-
+-- Show the isosurface, as well as the bounding box
 function boundingballs()
 	local blobula = shape_metaball.new({
 		balls = someballs,
@@ -88,8 +64,6 @@ function boundingballs()
 		stacksteps = 180,
 		anglesteps = 180,
 	})
-
-print(blobula.anglesteps, blobula.stacksteps)
 
 	addmesh(blobula:GetMesh())
 
@@ -171,4 +145,4 @@ end
 --tripod()
 --deciballs(triballs)
 --boundingballs()
-peanut()
+ringballs()
