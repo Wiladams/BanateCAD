@@ -48,34 +48,3 @@ function BAppContext.LoadDirectory(self, dir)
 	end
 end
 
-
-
-
-
-
----[[
-appc = BAppContext:new({
-	Modules = {"core"}
-	})
-
----]]
-
----[[
---Quick Tests
-v1 = vec.new{1,0,0}
-v2 = vec.new{2,3, 4}
-
-v3 = v1 + v2
-v4 = v1 - v2
-
-print(v3)
-print(v4)
-
-v5 = v2 * 2
-v6 = 2 * v2
-
-print(v5)
-print(v6)
-
-print(v6/2)
---]]
