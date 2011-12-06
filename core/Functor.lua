@@ -20,9 +20,10 @@ end
 Functor_mt.__call = Functor.Execute;
 
 
+--[[
 local aCommand = Functor.new("this")
 
 aCommand()
-
+--]]
 
 

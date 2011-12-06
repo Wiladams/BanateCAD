@@ -7,6 +7,9 @@
 --
 
 require ("iuplua")
+require ("ChatConduit")
+local http = require("socket.http")
+local ltn12 = require("ltn12")
 
 
 intext = iup.text({
@@ -19,9 +22,14 @@ intext = iup.text({
 	})
 
 -- Capture keyboard commands
+intext.Url = "http://paxosvotingservice.cloudapp.net/paxosvotingservice.svc/votes"
+
 function intext.k_any(self, c)
 	if iup.K_CR == c then
-		outconsole.APPEND = intext.VALUE
+		local val = intext.VALUE
+
+		ChatConduit.Propose(val)
+		-- Clear the current input text
 		intext.VALUE = ''
 	end
 end
@@ -64,22 +72,10 @@ function BChatWindow:new(o)
 		TITLE=o.Name,
 		})
 
-	--o.menucontrol = MenuController:new({window=o})
-	--o.window.MENU = o.menuman:GetMainMenu(o.menucontrol)
-
 	return o
 end
 
---[[
-function BWindow.Run(self)
-	-- turn on keyboard input
-	iup.key_open();
 
-	self.window:show();
-
-	iup.MainLoop()
-end
---]]
 
 function BChatWindow.Show(self)
 	self.window:show();
@@ -92,5 +88,14 @@ function BChatWindow.SetFilename(self,filename)
 end
 
 
+
+-- Create the polling timer
+local frequency = 1
+pollingTimer = iup.timer({time=1000/frequency})
+pollingTimer.run = "YES"
+
+function pollingTimer.action_cb(self)
+	ChatConduit:GetRecentVotes()
+end
 
 

@@ -7,10 +7,6 @@
 
 --require ("trimesh")
 --require ("maths")
-require ("openscad_print")
-
---local MIN_THRESHOLD = 0.999;
---local MAX_THRESHOLD = 1.001;
 
 -- Another influence function
 -- http://www.geisswerks.com/ryan/BLOBS/blobs.html
@@ -19,39 +15,57 @@ require ("openscad_print")
 -- g(r) = r * r * r * (r * (r * 6 - 15) + 10)
 
 -- metaball - x, y, z, radius
---[[
-function MetaInfluence(pt,ball, scale)
-	local val = scale * math.pow( (math.pow((vec3_sub(pt,ball)),2)/(ball[4]*ball[4]))-1,4)
 
-	return val
+
+--[[
+function g1(r)
+	return  r * r * r * (r * (r * 6 - 15) + 10)
+end
+
+function  MBInfluence(x, y, z, mball, radius)
+	local dx = x - mball[1]
+	local dy = y - mball[2]
+	local dz = z - mball[3]
+
+	local x2 = g1(dx)
+	local y2 = g1(dy)
+	local z2 = g1(dz)
+
+	local mag = math.sqrt(x2 + y2 + z2)
+
+
+	return (radius / mag)
 end
 --]]
 
-function  MBInfluence(x, y, z, mball)
-	local x2 = (x-mball[1])*(x-mball[1]);
-	local y2 = (y-mball[2])*(y-mball[2]);
-	local z2 = (z-mball[3])*(z-mball[3]);
 
-	return (mball[4] / math.sqrt(x2 + y2 + z2));
+function  MBInfluence(pt, mball, radius)
+	local dx = pt[1] - mball[1]
+	local dy = pt[2] - mball[2]
+	local dz = pt[3] - mball[3]
+
+	local x2 = dx * dx
+	local y2 = dy * dy
+	local z2 = dz * dz
+
+	local rsquared = x2 + y2 + z2
+
+	local mag = math.sqrt(rsquared)
+
+	return (radius / mag)
 end
 
 
-function SumInfluence(x,y,z, ballList)
+
+function SumInfluence(pt, ballList, func)
 	local sum = 0;
 
 	for i,ball in ipairs(ballList) do
-		sum = sum + MBInfluence(x,y,z, ball)
+		sum = sum + func(pt, ball, ball[4])
 	end
 	return sum;
 end
 
-function DiffInfluence(x,y,z, ballList)
-	local sum = 0;
-
-	sum = MBInfluence(x,y,z, ballList[1]) - MBInfluence(x,y,z, ballList[2])
-
-	return sum;
-end
 
 
 -- balls
@@ -95,8 +109,7 @@ function shape_metaball.beamsearch(self, longitude, latitude, high, low)
 
 	-- start with the midpoint
 	local xyz = vec3_add(self.atcenter, sph_to_cart(sph(longitude, latitude, midpoint)))
-	local sum = SumInfluence(xyz[1],xyz[2],xyz[3], self.balls);
-	--local sum = DiffInfluence(xyz[1],xyz[2],xyz[3], self.balls);
+	local sum = SumInfluence(xyz, self.balls, MBInfluence);
 
 	-- We're right within the threshold, so return the point
 	if sum > self.MinThreshold and sum < self.MaxThreshold then
