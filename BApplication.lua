@@ -18,11 +18,7 @@ function BApplication:new(o)
 
 	o.Name = o.Name or "Application"
 
-	local mods = {
-		Modules={"core"},
-		}
-
-	o.AppContext = o.AppContext or BAppContext:new(mods)
+	o.AppContext = o.AppContext or BAppContext:new({Modules={"core"},})
 
 	return o
 end

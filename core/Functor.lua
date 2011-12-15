@@ -1,7 +1,11 @@
--- This is a pattern
--- It should be copied, and the Execute
--- and .new functions should be changed to
--- specific
+-- This is a template
+-- In order to create a functor:
+-- 1) Copy this code
+-- 2) Change the Moniker: 'Functor' to the name of
+--		Whatever functor is being created
+-- 3) Implement the specific code in the Execute() function
+--
+
 Functor={}
 Functor_mt = {}
 

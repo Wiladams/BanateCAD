@@ -1,14 +1,24 @@
+
+-- This is the cheapest way to setup a 'class'
 vec = {}
 vec.mt = {}
+vec.mt.__index = vec
 
 function vec.new(params)
 	local _vec = {}
 	setmetatable(_vec, vec.mt)
+
 	for i,v in ipairs(params) do
 		_vec[i] = v
 	end
 
 	return _vec
+end
+
+function vec.clone(this)
+	local new_inst = vec.new(this)
+
+	return new_inst
 end
 
 -- Arithmetic overloads
@@ -98,9 +108,17 @@ function vec.length(x)
 		sum = sum + (x[i]*x[i])
 	end
 
-	local f = sqrt(sum)
+	local f = math.sqrt(sum)
 
 	return f
+end
+
+function vec.neg(this)
+	for i=1,#this do
+		this[i] = -this[i]
+	end
+
+	return this
 end
 
 -- Convenience functions
@@ -119,10 +137,12 @@ function vec.print (s)
 end
 
 -- Setup the meta methods
+vec.mt.__index = vec
 vec.mt.__add = vec.add
 vec.mt.__div = vec.div
 vec.mt.__sub = vec.sub
 vec.mt.__mul = vec.mul
+vec.mt.__unm = vec.neg
 vec.mt.__tostring = vec.tostring
 
 vec.Zero = vec.new({0,0,0})
@@ -135,9 +155,13 @@ vec.Zero = vec.new({0,0,0})
 
 
 --[[
+print("LinearAlgebra.lua")
 --Quick Tests
 v1 = vec.new{1,0,0}
 v2 = vec.new{2,3, 4}
+
+print("Length 1: ", v1:length())
+print("Length v1: ", v2:length())
 
 v3 = v1 + v2
 v4 = v1 - v2
@@ -152,4 +176,6 @@ print(v5)
 print(v6)
 
 print(v6/2)
+
+print(-v2)
 --]]

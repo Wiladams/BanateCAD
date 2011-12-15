@@ -122,12 +122,15 @@ function Renderer.vertex(self, vert)
 	gl.Vertex (vert)
 end
 
-function Renderer.DrawLine(self, line)
---print("Renderer.DrawLine")
-	gl.LineWidth(line[3])
+function Renderer.DrawLine(self, aline)
+	if self.StrokeColor ~= nil then
+		gl.Color(self.StrokeColor[1],self.StrokeColor[2],self.StrokeColor[3],self.StrokeColor[4])
+	end
+
+	gl.LineWidth(aline[3])
 	gl.Begin(gl.LINES)
-		gl.Vertex(line[1])
-		gl.Vertex(line[2])
+		gl.Vertex(aline[1])
+		gl.Vertex(aline[2])
 	gl.End()
 end
 

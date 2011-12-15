@@ -11,7 +11,7 @@ require ("iuplua")
 
 require ("FileManager")
 require ("test_lpeg")
-require ("SceneBuilder")
+--require ("SceneBuilder")
 
 MenuController = {}
 function MenuController:new(o)
@@ -179,6 +179,15 @@ end
 --	RENDERING
 --==============================================
 
+function MenuController.do_collab_render(self)
+	local inputtext = intext.value
+
+	CommandConduit.Propose(inputtext)
+
+	intext.value = ''
+
+	iup.Update(glcanvas)
+end
 
 function MenuController.do_compile_and_render(self)
 	local inputtext = intext.value
@@ -283,10 +292,11 @@ local menudef = {
      },
     "Tools",{
         "Editor",self.default,
-		"Console", self.default
+		"Console", self.default,
     },
 	"Compile", {
-		"Compile and Render\tF6", self.do_compile_and_render
+	--	"Collab Render", self.do_collab_render,
+		"Compile and Render\tF6", self.do_compile_and_render,
     },
 	"Animation", {
 		"Start", self.do_start_animation,

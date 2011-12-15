@@ -1,6 +1,5 @@
 --require ("Class")
 --require ("maths")
-require ("openscad_print")
 
 DisplacementSampler = inheritsFrom(nil)
 function DisplacementSampler.new(params)
@@ -23,10 +22,6 @@ function DisplacementSampler.GetVertex(self, u, w)
 
 	-- Add the height from the height sampler
 	local nvert = vec3_add(vec3_mults(norm,height), vert)
-
---vec3_print_tuple(vert)
---vec3_print_tuple(nvert)
-
 
 	return nvert, norm
 

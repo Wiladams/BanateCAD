@@ -15,6 +15,23 @@ function radians(degrees)
 	return math.pi/180 * degrees;
 end
 
+function dmstodeg(degrees, minutes, seconds)
+	degrees = degrees or 0
+	minutes = minutes or 0
+	seconds = seconds or 0
+	return degrees + (minutes/60) + (seconds / (60*60))
+end
+
+function latlonto_sph(latitude, longitude)
+	local latsign = sign(latitude)
+	local lonsign = sign(longitude)
+
+	local newlat = latsign*90 - latitude
+	local newlon = 180 - longitude
+
+	return newlat, newlon
+end
+
 -- Basic vector routines
 -- Conversions
 function point3h_from_vec3(vec)
@@ -310,6 +327,9 @@ function lerp(p0, p1, u)
 end
 --]]
 
+function map(a, rlo, rhi, slo, shi)
+	return slo + ((a-rlo)/(rhi-rlo) * (shi-slo))
+end
 
 --=======================================
 --
@@ -667,3 +687,24 @@ function normalizeAngle(angle)
 
 	return angle;
 end
+
+
+--[[
+
+function showmap(a, rlo, rhi, slo, shi)
+	print("map "..a.." from("..rlo..", "..rhi..") to ("..slo..", "..shi..") = "..map(a, rlo, rhi, slo, shi))
+end
+
+local r1 = 10
+local r2 = 20
+local s1 = 30
+local s2 = 40
+local a = 12
+
+showmap(a, r1, r2, s1, s2)
+showmap(a, r2, r1, s1, s2)
+showmap(a, r1, r2, s2, s1)
+showmap(a, r2, r1, s2, s1)
+
+showmap(127, 0,255, 0, 1)
+--]]

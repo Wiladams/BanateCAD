@@ -109,10 +109,25 @@ defaultglcanvas = iup.glcanvas({
 		DEPTH_SIZE = "16"});
 
 
+function defaultglcanvas.setup(self)
+	iup.GLMakeCurrent(self);
+
+	defaultviewer:DisplayScene(defaultscene);
+
+	setup()
+
+	-- double buffered
+	-- so swap buffers in the end
+	iup.GLSwapBuffers(self);
+	gl.Flush();
+end
+
 function defaultglcanvas.action(self)
 	iup.GLMakeCurrent(self);
 
 	defaultviewer:DisplayScene(defaultscene);
+
+	draw()
 
 	-- double buffered
 	-- so swap buffers in the end

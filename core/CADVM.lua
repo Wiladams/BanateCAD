@@ -20,6 +20,7 @@ CADVM =
 	ELLIPSE = 133,
 	TRIMESH = 134,
 	MESH = 135,
+	DISPATCHER = 136,
 }
 
 -- The Rendering System

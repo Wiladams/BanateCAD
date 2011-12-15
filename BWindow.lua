@@ -39,17 +39,6 @@ function BWindow:new(o)
 	return o
 end
 
---[[
-function BWindow.Run(self)
-	-- turn on keyboard input
-	iup.key_open();
-
-	self.window:show();
-
-	iup.MainLoop()
-end
---]]
-
 function BWindow.Show(self)
 	self.window:show();
 end

@@ -157,7 +157,7 @@ setmetatable(k, {
       str = str .. "setmetatable(k, {})\n"
     end
 
-    str = str .. "return _L"
+    str = str .. "return _L\n"
     return str
 end
 
@@ -171,9 +171,10 @@ end
 
 function pickle.loads(object)
     local fn, err = loadstring(object)
-    if fn then
+    if fn ~= nil then
         return fn()
     end
+	print("pickle.loads error: ", err)
     error(err)
 end
 

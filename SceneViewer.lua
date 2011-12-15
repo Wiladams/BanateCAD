@@ -18,7 +18,7 @@ require ("colorschemes")
 require ("Renderer")
 require ("PrimaryAxes")
 require ("AxesBug")
-require ("SceneBuilder")
+--require ("SceneBuilder")
 require ("GLView")
 
 FARAWAY = 100000;
@@ -197,6 +197,11 @@ function SceneViewer.DisplayScene(self, scene)
 	if (self.showaxes) then
 		self.AxesBugGraphic:Draw();
 	end
+
+	-- Position camera once again for whomever
+	-- will draw after this
+	self:PositionCamera();
+
 end
 
 function SceneViewer.SetSize(self, width, height)
@@ -309,7 +314,7 @@ function SceneViewer.KeyPress(self, c)
   end
 
 	if c == iup.K_F6 then
-		do_compile_and_render()
+		Application.Window.menucontrol:do_compile_and_render()
 	end
 
 
@@ -351,11 +356,6 @@ defaultviewer = SceneViewer:new({
 
 
 defaultviewer:SetCanvas(defaultglcanvas);
-
-
-
-
-
 
 
 
