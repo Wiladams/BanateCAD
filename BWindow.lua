@@ -48,3 +48,27 @@ function BWindow.SetFilename(self,filename)
 
 	self.window.TITLE = self.Name..' - '..name;
 end
+
+function BWindow.close_cb()
+print("BWindow.close_cb")
+	return iup.CLOSE
+end
+
+function BWindow.show_cb(state)
+print("BWindow.show_cb")
+end
+
+function BWindow.Run(self)
+	self:Show()
+
+	local status = iup.DEFAULT
+	repeat
+		status = iup.LoopStep()
+
+		if (status == iup.CLOSE) then
+		print(status)
+			iup.ExitLoop()
+		end
+		--print(status)
+	until status == iup.CLOSE
+end

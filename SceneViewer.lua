@@ -201,7 +201,9 @@ function SceneViewer.DisplayScene(self, scene)
 	-- Position camera once again for whomever
 	-- will draw after this
 	self:PositionCamera();
-
+	if (_G.draw) ~= nil then
+		draw()
+	end
 end
 
 function SceneViewer.SetSize(self, width, height)

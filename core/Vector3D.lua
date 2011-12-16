@@ -1,11 +1,11 @@
 
 -- This is the cheapest way to setup a 'class'
 Vector3D = {}
-Vector3D.mt = {}
+Vector3D_mt = {}
 
 function Vector3D.new(...)
 	local this = {}
-	setmetatable(this, Vector3D.mt)
+	setmetatable(this, Vector3D_mt)
 
 	if arg.n == 3 then
 		-- Three discreet arguments
@@ -192,14 +192,14 @@ end
 
 
 -- Setup the meta methods
-Vector3D.mt.__index = Vector3D_swizzler
+Vector3D_mt.__index = Vector3D_swizzler
 --Vector3D.mt.__index = Vector3D
-Vector3D.mt.__add = Vector3D.add
-Vector3D.mt.__div = Vector3D.div
-Vector3D.mt.__sub = Vector3D.sub
-Vector3D.mt.__mul = Vector3D.mul
-Vector3D.mt.__unm = Vector3D.neg
-Vector3D.mt.__tostring = Vector3D.tostring
+Vector3D_mt.__add = Vector3D.add
+Vector3D_mt.__div = Vector3D.div
+Vector3D_mt.__sub = Vector3D.sub
+Vector3D_mt.__mul = Vector3D.mul
+Vector3D_mt.__unm = Vector3D.neg
+Vector3D_mt.__tostring = Vector3D.tostring
 
 Vector3D.Zero = Vector3D.new({0,0,0})
 
@@ -210,6 +210,7 @@ Vector3D.Zero = Vector3D.new({0,0,0})
 
 
 --[[
+print("Vector3D.lua")
 --Quick Tests
 v1 = Vector3D.new{1,0,0}
 v2 = Vector3D.new{2,3, 4}

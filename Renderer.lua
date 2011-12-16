@@ -115,11 +115,32 @@ function Renderer.ApplyMaterial(self, mat)
 	end
 end
 
+function Renderer.SetAntiAlias(antialiasing)
+	if antialiasing then
+		gl.Enable(gl.POINT_SMOOTH)
+	else
+		gl.Disable(gl.POINT_SMOOTH)
+	end
+end
 --=========================================
 --	DRAWING PRIMITIVES
 --=========================================
 function Renderer.vertex(self, vert)
 	gl.Vertex (vert)
+end
+
+function Renderer.DrawPoint(self, apt)
+	if self.FillColor ~= nil then
+		gl.Color(self.FillColor[1],self.FillColor[2],self.FillColor[3],self.FillColor[4])
+	end
+
+	if self.PointSize ~= nil then
+		gl.PointSize(self.PointSize)
+	end
+
+	gl.Begin(gl.POINTS)
+		gl.Vertex(apt)
+	gl.End()
 end
 
 function Renderer.DrawLine(self, aline)
@@ -131,6 +152,28 @@ function Renderer.DrawLine(self, aline)
 	gl.Begin(gl.LINES)
 		gl.Vertex(aline[1])
 		gl.Vertex(aline[2])
+	gl.End()
+end
+
+function Renderer.DrawPolygon(self, pts, mode)
+--print("Renderer.DrawPolygon",pts)
+
+	mode = mode or RenderMode.SOLID
+
+	if mode == RenderMode.LOOP then
+		gl.Begin(gl.LINE_LOOP)
+	elseif mode == RenderMode.SOLID then
+		gl.Begin(gl.POLYGON)
+	end
+
+	if self.StrokeColor ~= nil then
+		gl.Color(self.FillColor[1],self.FillColor[2],self.FillColor[3],self.FillColor[4])
+	end
+
+	for _,vert in ipairs(pts) do
+		gl.Vertex(vert);
+	end
+
 	gl.End()
 end
 
@@ -171,9 +214,18 @@ function Renderer.DisplayMeshFace(self, omesh, facenumber)
 		gl.Color(facecolor[1], facecolor[2], facecolor[3], facecolor[4]);
 	end
 
+	--if mode == RenderMode.LOOP then
+	--	gl.Begin(gl.LINE_LOOP)
+	--elseif mode == RenderMode.SOLID then
+		gl.Begin(gl.POLYGON)
+	--end
+
+
 	for i,vindex in ipairs(face) do
 		self:vertex(omesh.vertices[vindex])
 	end
+
+	gl.End()
 end
 
 function Renderer.DisplayMesh(self, omesh, uselist)
@@ -200,12 +252,6 @@ function Renderer.DisplayMesh(self, omesh, uselist)
 		gl.NewList(omesh.displaylist, gl.COMPILE)
 	end
 
-	if (self.wireframe) then
-			gl.Begin(gl.LINE_LOOP)
-	else
-			gl.Begin(gl.TRIANGLES)
-	end
-
 	gl.Enable(gl.CULL_FACE);
 	gl.CullFace(gl.BACK);
 	gl.Disable(gl.CULL_FACE);
@@ -213,7 +259,6 @@ function Renderer.DisplayMesh(self, omesh, uselist)
 	for i=1, faceslen do
 			self:DisplayMeshFace(omesh, i)
 	end
-	gl.End();
 
 	if uselist then
 		gl.EndList();

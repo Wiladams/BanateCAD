@@ -127,8 +127,6 @@ function defaultglcanvas.action(self)
 
 	defaultviewer:DisplayScene(defaultscene);
 
-	draw()
-
 	-- double buffered
 	-- so swap buffers in the end
 	iup.GLSwapBuffers(self);
@@ -137,6 +135,8 @@ end
 
 
 function defaultglcanvas.map_cb(self)
+	iup.GLMakeCurrent(self);
+
 	defaultviewer:SetCanvas(self)
 end
 

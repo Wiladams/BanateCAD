@@ -15,6 +15,7 @@ require ("BAppContext")
 local appctx = BAppContext:new({
 	Modules={
 		"core",			-- Guts of the system
+		"csg",
 		"BanateCAD",	-- For BanateCAD specifics
 		"codec",		-- Coder/Decoder for files
 		"collab",		-- Collaboration Code
@@ -25,11 +26,13 @@ local appctx = BAppContext:new({
 
 local AppName = "Banate CAD";
 
+--require("BGameApplication")
 require("BApplication")
 require("BWindow")
 
 
 Application = BApplication:new({
+--Application = BGameApplication:new({
 	AppContext = appctx,
 	Name=AppName,
 	Window = BWindow:new({Name=AppName})
