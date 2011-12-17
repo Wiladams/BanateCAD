@@ -24,74 +24,6 @@ intext = iup.text({
 	FONTSIZE = 8,
 	})
 
---
--- Construct the default GL Canvas
-
-defaultglcanvas = iup.glcanvas({
-		BUFFER = "SINGLE",
-		EXPAND = "YES",
-		RASTERSIZE = "1024x768",
-		--DEPTH_SIZE = "16"
-		});
-
-
-
-function defaultglcanvas.action(self)
-	iup.GLMakeCurrent(self);
-
-	if (_G.draw) ~= nil then
-		draw()
-	end
-
-	gl.Flush();
-
-	-- double buffered
-	-- so swap buffers in the end
-	--iup.GLSwapBuffers(self);
-end
-
-
-function defaultglcanvas.map_cb(self)
-	iup.GLMakeCurrent(self);
-
-end
-
-function defaultglcanvas.resize_cb(self, width, height)
-	iup.GLMakeCurrent(self)
-	Processing.SetSize(width, height)
-
-	iup.Update(self)
-end
-
---[[
-function defaultglcanvas.k_any(self, c)
-	iup.GLMakeCurrent(self);
-
-	defaultviewer:KeyPress(c);
-
-	iup.Update(self)
-end
-
-function defaultglcanvas.wheel_cb(self, delta, x, y, status)
-	defaultviewer:Wheel(delta, x, y, status)
-end
-
--- Indicates mouse button activity, either pressed or released
-function defaultglcanvas.button_cb(self, but, pressed, x, y, status)
-	if pressed == 1 then
-		defaultviewer:MouseDown(but, x, y, status);
-	else
-		defaultviewer:MouseUp(but, x, y, status);
-	end
-end
-
--- Mouse movement
-function defaultglcanvas.motion_cb(self, x, y, status)
-	defaultviewer:MouseMove(x, y, status);
-end
---]]
-
-
 viewinsplit = iup.split({
 	defaultglcanvas,
 	intext;
@@ -117,6 +49,7 @@ function ProcessingWindow:new(o)
 			--size='HALFxHALF',
 			RASTERSIZE = "1024x768",
 			TITLE=o.Name,
+			SHRINK= "YES",
 		})
 
 	o.menucontrol = MenuController:new({window=o})
@@ -136,7 +69,10 @@ function ProcessingWindow.SetFilename(self,filename)
 	self.window.TITLE = self.Name..' - '..name;
 end
 
-
+function ProcessingWindow.k_any(self, c)
+print("ProcessingWindow.k_any: ", c)
+	return iup.CONTINUE;
+end
 
 
 

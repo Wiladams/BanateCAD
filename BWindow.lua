@@ -31,6 +31,7 @@ function BWindow:new(o)
 		--size='HALFxHALF',
 		RASTERSIZE = "1024x768",
 		TITLE=o.Name,
+		SHRINK="YES",
 		})
 
 	o.menucontrol = MenuController:new({window=o})

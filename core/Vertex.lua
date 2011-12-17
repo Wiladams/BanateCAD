@@ -41,7 +41,7 @@ end
 Vertex_mt.__tostring = Vertex.tostring
 
 
----[[
+--[[
 
 	local v1 = Vertex.new({1,1,1},{0,0,1})
 

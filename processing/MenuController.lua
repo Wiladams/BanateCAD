@@ -7,8 +7,6 @@
 
 require ("iuplua")
 
-require ("FileManager")
---require ("Processing")
 
 MenuController = {}
 function MenuController:new(o)

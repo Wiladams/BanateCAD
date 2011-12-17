@@ -9,6 +9,72 @@ require ("iupluagl")
 require ("luagl")
 require ("luaglu")
 
+--
+-- Construct the default GL Canvas
+
+defaultglcanvas = iup.glcanvas({
+		BUFFER = "SINGLE",
+		EXPAND = "YES",
+		--RASTERSIZE = "1024x768",
+		--DEPTH_SIZE = "16"
+		});
+
+
+
+function defaultglcanvas.action(self)
+	iup.GLMakeCurrent(self);
+
+	if (_G.draw) ~= nil then
+		draw()
+	end
+
+	gl.Flush();
+
+end
+
+
+function defaultglcanvas.map_cb(self)
+	iup.GLMakeCurrent(self);
+
+end
+
+function defaultglcanvas.resize_cb(self, width, height)
+	iup.GLMakeCurrent(self)
+	Processing.SetSize(width, height)
+
+	iup.Update(self)
+end
+
+
+--[[
+function defaultglcanvas.k_any(self, c)
+	iup.GLMakeCurrent(self);
+
+	defaultviewer:KeyPress(c);
+
+	iup.Update(self)
+end
+
+function defaultglcanvas.wheel_cb(self, delta, x, y, status)
+	defaultviewer:Wheel(delta, x, y, status)
+end
+
+-- Indicates mouse button activity, either pressed or released
+function defaultglcanvas.button_cb(self, but, pressed, x, y, status)
+	if pressed == 1 then
+		defaultviewer:MouseDown(but, x, y, status);
+	else
+		defaultviewer:MouseUp(but, x, y, status);
+	end
+end
+
+-- Mouse movement
+function defaultglcanvas.motion_cb(self, x, y, status)
+	defaultviewer:MouseMove(x, y, status);
+end
+--]]
+
+
 defaultrenderer = GLRenderer:new()
 
 Processing = {
@@ -169,6 +235,9 @@ function Processing.Tick()
 
 --	iup.Update(defaultglcanvas);	-- will cause action() to be called
 	gl.Flush();
+	-- if double buffered
+	-- swap buffers in the end
+	--iup.GLSwapBuffers(self);
 end
 
 function Processing.SetSize(width, height)

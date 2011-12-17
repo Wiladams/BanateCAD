@@ -9,7 +9,7 @@ require ("iuplua")
 
 --require ("CADVM")
 
-require ("FileManager")
+--require ("FileManager")
 require ("test_lpeg")
 --require ("SceneBuilder")
 
