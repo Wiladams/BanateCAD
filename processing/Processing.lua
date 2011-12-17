@@ -4,6 +4,13 @@
 	From the Processing Reference: http://processing.org/reference/
 --]]
 
+require ("iuplua")
+require ("iupluagl")
+require ("luagl")
+require ("luaglu")
+
+defaultrenderer = GLRenderer:new()
+
 Processing = {
 	ColorMode = RGB,
 	BackgroundColor = {0.5, 0.5, 0.5, 1},
@@ -21,17 +28,19 @@ function Processing.SetColorMode(amode)
 end
 
 function Processing.SetSmooth(smoothing)
-	local graphics = defaultviewer.Renderer
+	local graphics = defaultrenderer
+	Processing.Smooth = smoothing
+
 	graphics:SetAntiAlias(smoothing)
 end
 
 function Processing.SetBackgroundColor(acolor)
+	local graphics = defaultrenderer
+
 	local oldColor = Processing.BackgroundColor
 	Processing.BackgroundColor = acolor
 
-	defaultviewer.colorscheme.BACKGROUND_COLOR = acolor
-
-	--iup.Update(glcanvas);
+	graphics:ClearCanvas(Processing.BackgroundColor)
 
 	return oldColor
 end
@@ -39,7 +48,7 @@ end
 function Processing.SetFillColor(acolor)
 	local oldColor = Processing.FillColor
 	Processing.FillColor = acolor
-	defaultviewer.Renderer.FillColor = Processing.FillColor
+	defaultrenderer.FillColor = Processing.FillColor
 
 	return oldColor
 end
@@ -47,19 +56,24 @@ end
 function Processing.SetStrokeColor(acolor)
 	local oldColor = Processing.StrokeColor
 	Processing.StrokeColor = acolor
-	defaultviewer.Renderer.StrokeColor = Processing.StrokeColor
+	defaultrenderer.StrokeColor = Processing.StrokeColor
 
 	return oldColor
 end
 
 -- Drawing Primitives
 function Processing.SetPointSize(ptSize)
-	local graphics = defaultviewer.Renderer
-	graphics.PointSize = ptSize
+	local graphics = defaultrenderer
+	graphics:SetPointSize(ptSize)
+end
+
+function Processing.SetStrokeWeight(weight)
+	local graphics = defaultrenderer
+	graphics:SetLineWidth(weight)
 end
 
 function Processing.DrawPoint(x,y,z)
-	local graphics = defaultviewer.Renderer
+	local graphics = defaultrenderer
 	z = z or 0
 
 	local pt = Vector3D.new(x, y, z)
@@ -67,11 +81,14 @@ function Processing.DrawPoint(x,y,z)
 end
 
 function Processing.DrawLine(startPoint, endPoint)
-	defaultviewer.Renderer:DrawLine({startPoint, endPoint, 1})
+	local graphics = defaultrenderer
+
+	graphics:DrawLine({startPoint, endPoint, 1})
 end
 
 function Processing.DrawRect(x, y, width, height)
-	local graphics = defaultviewer.Renderer
+	local graphics = defaultrenderer
+
 	local pts = {
 		Vector3D.new{x, y, 0},
 		Vector3D.new{x, y+height, 0},
@@ -84,7 +101,7 @@ function Processing.DrawRect(x, y, width, height)
 end
 
 function Processing.DrawTriangle(x1, y1, x2, y2, x3, y3)
-	local graphics = defaultviewer.Renderer
+	local graphics = defaultrenderer
 	local pts = {
 		Vector3D.new{x1, y1, 0},
 		Vector3D.new{x3, y3, 0},
@@ -95,7 +112,7 @@ function Processing.DrawTriangle(x1, y1, x2, y2, x3, y3)
 end
 
 function Processing.DrawQuad(x1, y1, x2, y2, x3, y3, x4, y4)
-	local graphics = defaultviewer.Renderer
+	local graphics = defaultrenderer
 	local pts = {
 		Vector3D.new{x1, y1, 0},
 		Vector3D.new{x2, y2, 0},
@@ -112,4 +129,73 @@ function Processing.ApplyState()
 	Processing.SetFillColor(Processing.FillColor)
 	Processing.SetStrokeColor(Processing.StrokeColor)
 	Processing.SetSmooth(Processing.Smooth)
+end
+
+function Processing.Compile(inputtext)
+	iup.GLMakeCurrent(defaultglcanvas);
+
+	local graphics = defaultrenderer
+
+
+	-- Apply State before compiling
+	-- new code
+	Processing.ApplyState()
+
+	-- Set the camera position
+	OrthoCamera.Render()
+
+	-- Clear out setup() and draw()
+	_G.setup = nil
+	_G.draw = nil
+
+
+	-- Compile the code
+	local f = loadstring(inputtext)
+	f()
+
+	if _G.setup ~= nil then
+		print("User Defined setup()")
+		_G.setup()
+	end
+
+end
+
+function Processing.Tick()
+	iup.GLMakeCurrent(defaultglcanvas);
+
+	if (_G.draw) ~= nil then
+		draw()
+	end
+
+--	iup.Update(defaultglcanvas);	-- will cause action() to be called
+	gl.Flush();
+end
+
+function Processing.SetSize(width, height)
+	if height == 0 then           -- Calculate The Aspect Ratio Of The Window
+		height = 1
+	end
+
+	OrthoCamera.SetSize(width, height)
+end
+
+function Processing.SetCanvasSize(awidth, aheight, MODE)
+	width = awidth;
+	height = aheight;
+
+	--OrthoCamera.SetSize(width, height)
+end
+
+
+-- Setup Animation Timer
+function createTimer(frequency)
+	aTimer = iup.timer({time=1000/frequency})
+
+	return aTimer
+end
+
+defaultFrequency = 20
+defaultTimer = createTimer(defaultFrequency)
+function defaultTimer.action_cb(self)
+	Processing.Tick()
 end

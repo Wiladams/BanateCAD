@@ -9,9 +9,11 @@
 -- Global namespace
 
 
-require ("iuplua")
+require "iuplua"
+require "iupluagl"
+require "luagl"
+require "luaglu"
 
-require ("SceneViewer")
 
 intext = iup.text({
 	expand = 'YES',
@@ -23,6 +25,73 @@ intext = iup.text({
 	})
 
 --
+-- Construct the default GL Canvas
+
+defaultglcanvas = iup.glcanvas({
+		BUFFER = "SINGLE",
+		EXPAND = "YES",
+		RASTERSIZE = "1024x768",
+		--DEPTH_SIZE = "16"
+		});
+
+
+
+function defaultglcanvas.action(self)
+	iup.GLMakeCurrent(self);
+
+	if (_G.draw) ~= nil then
+		draw()
+	end
+
+	gl.Flush();
+
+	-- double buffered
+	-- so swap buffers in the end
+	--iup.GLSwapBuffers(self);
+end
+
+
+function defaultglcanvas.map_cb(self)
+	iup.GLMakeCurrent(self);
+
+end
+
+function defaultglcanvas.resize_cb(self, width, height)
+	iup.GLMakeCurrent(self)
+	Processing.SetSize(width, height)
+
+	iup.Update(self)
+end
+
+--[[
+function defaultglcanvas.k_any(self, c)
+	iup.GLMakeCurrent(self);
+
+	defaultviewer:KeyPress(c);
+
+	iup.Update(self)
+end
+
+function defaultglcanvas.wheel_cb(self, delta, x, y, status)
+	defaultviewer:Wheel(delta, x, y, status)
+end
+
+-- Indicates mouse button activity, either pressed or released
+function defaultglcanvas.button_cb(self, but, pressed, x, y, status)
+	if pressed == 1 then
+		defaultviewer:MouseDown(but, x, y, status);
+	else
+		defaultviewer:MouseUp(but, x, y, status);
+	end
+end
+
+-- Mouse movement
+function defaultglcanvas.motion_cb(self, x, y, status)
+	defaultviewer:MouseMove(x, y, status);
+end
+--]]
+
+
 viewinsplit = iup.split({
 	defaultglcanvas,
 	intext;
@@ -42,14 +111,12 @@ function ProcessingWindow:new(o)
 	o.Name = o.Name or "Application"
 	o.menuman = MenuManager:new()
 	o.window = iup.dialog({
-		-- The primary content
-		--mainsplit;
-		viewinsplit;
+			viewinsplit;	-- The primary content
 
-		-- Initial attributes of window
-		--size='HALFxHALF',
-		RASTERSIZE = "1024x768",
-		TITLE=o.Name,
+			-- Initial attributes of window
+			--size='HALFxHALF',
+			RASTERSIZE = "1024x768",
+			TITLE=o.Name,
 		})
 
 	o.menucontrol = MenuController:new({window=o})
@@ -70,24 +137,6 @@ function ProcessingWindow.SetFilename(self,filename)
 end
 
 
--- Dummy function for setup()
--- User script should overwrite this
-function setup()
-end
 
--- Dummy function to draw
--- The user should supply a new draw() method in their code
-function draw()
-	--print("ProcessingWindow - draw()")
-end
 
-function createTimer(frequency)
-	aTimer = iup.timer({time=1000/frequency})
-	return aTimer
-end
 
-defaultFrequency = 2
-defaultTimer = createTimer(defaultFrequency)
-function defaultTimer.action_cb(self)
-	draw()	-- dummy function
-end

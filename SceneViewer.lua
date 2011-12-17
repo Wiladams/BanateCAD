@@ -13,13 +13,11 @@ require ("luaglu")
 require ("BLight")
 require ("BLighting")
 require ("colorschemes")
---require ("maths")
 
 require ("Renderer")
 require ("PrimaryAxes")
 require ("AxesBug")
---require ("SceneBuilder")
-require ("GLView")
+
 
 FARAWAY = 100000;
 

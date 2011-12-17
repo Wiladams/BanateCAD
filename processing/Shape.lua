@@ -2,9 +2,7 @@ function point(x,y,z)
 	Processing.DrawPoint(x,y,z)
 end
 
-function pointSize(ptSize)
-	Processing.SetPointSize(ptSize)
-end
+
 
 function line(...)
 	-- We either have 4, or 5 parameters
@@ -42,4 +40,16 @@ end
 
 function noSmooth()
 	Processing.SetSmooth(false)
+end
+
+function pointSize(ptSize)
+	Processing.SetPointSize(ptSize)
+end
+
+function strokeWeight(weight)
+	Processing.SetStrokeWeight(weight)
+end
+
+function size(awidth, aheight, MODE)
+	Processing.SetCanvasSize(awidth, aheight, MODE)
 end

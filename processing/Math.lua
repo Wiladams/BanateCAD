@@ -5,10 +5,12 @@
 
 -- Calculation
 
-function abs()
+function abs(value)
+	return math.abs(value)
 end
 
-function ceil()
+function ceil(value)
+	return math.ceil(value)
 end
 
 function constrain()
@@ -20,11 +22,12 @@ end
 function exp()
 end
 
-function floor()
+function floor(value)
+	return math.floor(value)
 end
 
-function lerp()
-end
+--function lerp()
+--end
 
 function log()
 end
@@ -32,8 +35,8 @@ end
 function mag()
 end
 
-function map()
-end
+--function map()
+--end
 
 function max(...)
 	if arg.n == 2 then
@@ -75,7 +78,12 @@ function min(...)
 	return nil
 end
 
-function norm()
+function norm(val, in1, in2)
+	local part = val - in1
+	local range = in2-in1
+	local frac = part / range
+
+	return frac
 end
 
 function pow(num, exponent)
@@ -146,40 +154,59 @@ function noiseSeed(...)
 end
 
 function random(...)
+	local num = math.random()
+
 	if arg.n == 1 then
-		return math.random(0, arg[1])
+		if arg[1] == 0 then return 0 end
+		return num * arg[1]
 	elseif arg.n == 2 then
-		return math.random(arg[1], arg[2])
+		local range = arg[2] - arg[1]
+
+		return arg[1] + (range * num)
 	end
+
+	return 0
 end
 
-function randomSeed(...)
+function randomSeed(aseed)
+	math.randomseed(aseed)
 end
 
 
 
---[[
+---[[
 print("Math.lua - TESTING")
-print("min()")
+
+print("norm")
+print(norm(20, 0, 50))
+
+--print("min()")
 local d = min(5,9)
 local e = min(-4, -12)
 local f = min(12.3, 230.24, 5)
 
-print(d,e,f)
+--print(d,e,f)
 
 local list = {5,1,2,-3}
 local h = min(list)
-print(h)
+--print(h)
 
-print("max()")
+--print("max()")
 d = max(5,9)
 e = max(-4, -12)
 f = max(12.3, 230.24, 5)
 
-print(d,e,f)
+--print(d,e,f)
 
 list = {5,1,2,-3}
 h = max(list)
-print(h)
+--print(h)
 
+local rand = 0
+local r = random(0,0)
+print(r)
+
+for i=1,100 do
+	print(random(0.7, 0.98))
+end
 --]]

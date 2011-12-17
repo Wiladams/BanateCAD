@@ -120,12 +120,13 @@ end
 function MenuController.do_compile_and_render(self)
 	local inputtext = intext.value
 
-	--print(inputtext)
-
-	defaultscene:clear()
-
 	local f = loadstring(inputtext)
 	f()
+
+	-- Call setup if the user has defined a setup function
+	if (_G.setup) ~= nil then
+		setup()
+	end
 
 end
 
@@ -135,18 +136,7 @@ end
 function MenuController.do_start_animation(self)
 	local inputtext = intext.value
 
-	--print(inputtext)
-
-	defaultscene:clear()
-
-	-- Tell processing to do it's setup
-	Processing.ApplyState()
-
-	local f = loadstring(inputtext)
-	f()
-
-	-- First call the 'setup' function
-	defaultglcanvas:setup()
+	Processing.Compile(inputtext)
 
 	-- Then turn on the timer, so the
 	-- draw function is called repeatedly
