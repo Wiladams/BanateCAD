@@ -69,8 +69,13 @@ function ProcessingWindow.SetFilename(self,filename)
 	self.window.TITLE = self.Name..' - '..name;
 end
 
-function ProcessingWindow.k_any(self, c)
-print("ProcessingWindow.k_any: ", c)
+--function defaultglcanvas.map_cb(self)
+	-- Do whatever we want once
+	-- we are actually mapped to a real window
+--end
+
+function ProcessingWindow.keypress_cb(c, press)
+print("ProcessingWindow.keypress_cb: ", c, press)
 	return iup.CONTINUE;
 end
 

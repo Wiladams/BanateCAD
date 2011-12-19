@@ -13,10 +13,20 @@ function ceil(value)
 	return math.ceil(value)
 end
 
-function constrain()
+function constrain(value, amin, amax)
+	if value < amin then return amin end
+	if value > amax then return amax end
+
+	return value
 end
 
-function dist()
+function dist(x1, y1, x2, y2)
+	local dx = x2-x1
+	local dy = y2-y1
+
+	local d = sqrt(dx*dx + dy*dy)
+
+	return d
 end
 
 function exp()
@@ -32,11 +42,13 @@ end
 function log()
 end
 
-function mag()
+function mag(x1, y1)
+	return sqrt(x1*x1+y1*y1)
 end
 
---function map()
---end
+function map(a, rlo, rhi, slo, shi)
+	return slo + ((a-rlo)/(rhi-rlo) * (shi-slo))
+end
 
 function max(...)
 	if arg.n == 2 then
@@ -110,16 +122,20 @@ end
 
 -- Trigonometry
 
-function acos()
+function acos(rad)
+	return math.acos(rad)
 end
 
-function asin()
+function asin(rad)
+	return math.asin(rad)
 end
 
-function atan()
+function atan(value)
+	return math.atan(value)
 end
 
-function atan2()
+function atan2(x, y)
+	return math.atan(x/y)
 end
 
 function cos(rad)
@@ -176,6 +192,10 @@ end
 
 --[[
 print("Math.lua - TESTING")
+
+print("dist")
+local d = dist(0,0,150,100)
+print(d)
 
 print("norm")
 print(norm(20, 0, 50))

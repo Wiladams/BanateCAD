@@ -35,7 +35,7 @@ function csg_cylinder.new(options)
 
 	local s = Vector3D.new(options.start);
 	local e = Vector3D.new(options.ending);
-	local ray = e - s; -- e:minus(s);
+	local ray = e - s;
 
 	local r = options.radius
 	local slices = options.slices

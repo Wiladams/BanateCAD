@@ -33,6 +33,10 @@ function quad(x1, y1, x2, y2, x3, y3, x4, y4)
 	Processing.DrawQuad(x1, y1, x2, y2, x3, y3, x4, y4)
 end
 
+function ellipse(centerx, centery, awidth, aheight)
+	Processing.DrawEllipse(centerx, centery, awidth, aheight)
+end
+
 -- ATTRIBUTES
 function smooth()
 	Processing.SetSmooth(true)

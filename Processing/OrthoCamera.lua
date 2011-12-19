@@ -11,15 +11,15 @@ OrthoCamera.viewer_distance = 100
 OrthoCamera.Width = 640
 OrthoCamera.Height = 480
 
-function OrthoCamera.SetSize(width, height)
+function OrthoCamera.SetSize(awidth, aheight)
 	iup.GLMakeCurrent(defaultglcanvas);
 
-	OrthoCamera.Width = width
-	OrthoCamera.Height = height
-	OrthoCamera.w_h_ratio = math.sqrt(width/height);
+	OrthoCamera.Width = awidth
+	OrthoCamera.Height = aheight
+	OrthoCamera.w_h_ratio = math.sqrt(awidth/aheight);
 
 --print("OrthoCamers.SetSize", width, height)
-	gl.Viewport(0, 0, width, height)
+	--gl.Viewport(0, 0, awidth, aheight)
 end
 
 
