@@ -12,6 +12,9 @@ require "iupluagl"
 require "luagl"
 require "luaglu"
 
+class = require "pl.class"
+
+
 
 -- Initial Processing State
 Processing = {
@@ -95,6 +98,15 @@ end
 -- Mouse Activity
 function defaultglcanvas.motion_cb(self, x, y, status)
 	Processing.MouseMove(x, y, status);
+end
+
+-- Indicates mouse button activity, either pressed or released
+function defaultglcanvas.button_cb(self, but, pressed, x, y, status)
+	if pressed == 1 then
+		Processing:MouseDown(but, x, y, status);
+	else
+		Processing:MouseUp(but, x, y, status);
+	end
 end
 
 --[[
@@ -453,7 +465,16 @@ function Processing.MouseMove(x, y, status)
 	mouseY = y
 end
 
+function Processing.MouseDown(but, x, y, status)
+	isMousePressed = true;
+	if (_G.mousePressed) ~= nil then
+		mousePressed()
+	end
+end
 
+function Processing.MouseUp(but, x, y, status)
+	isMousePressed = false;
+end
 
 
 -- Setup Animation Timer

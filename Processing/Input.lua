@@ -1,7 +1,7 @@
 -- Mouse State information
 -- These are changed live
 mouseButton = false
-mousePressed = false
+isMousePressed = false
 
 -- Mouse position during current frame
 mouseX = 0
