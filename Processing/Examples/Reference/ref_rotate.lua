@@ -1,0 +1,4 @@
+size(300, 300);
+translate(width/2, height/2)
+rotate(PI/3);
+rect(-26, -26, 52, 52);
