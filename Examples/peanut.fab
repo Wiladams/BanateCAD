@@ -72,5 +72,5 @@ function peanut_textured()
 	addmesh(apeanut:GetMesh())
 end
 
---peanut_bumped()
-peanut_textured()
+peanut_bumped()
+--peanut_textured()

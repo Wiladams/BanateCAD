@@ -81,7 +81,7 @@ function shape_metaball.new(params)
 	new_inst.radius = params.radius or 100
 	new_inst.Threshold = params.Threshold or 0.001
 
-	new_inst.Bounds = GAABBox.new()
+	new_inst.Bounds = GAABBox.new({})
 
 	new_inst.USteps = params.USteps or 10
 	new_inst.WSteps = params.WSteps or 10

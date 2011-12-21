@@ -18,7 +18,7 @@ local appctx = BAppContext:new({
 		"csg",
 		"BanateCAD",	-- For BanateCAD specifics
 		"codec",		-- Coder/Decoder for files
-		"collab",		-- Collaboration Code
+--		"collab",		-- Collaboration Code
 		"animation",	-- Animation System
 		"physics",
 		}

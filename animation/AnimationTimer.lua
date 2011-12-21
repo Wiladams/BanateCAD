@@ -26,7 +26,7 @@ function createTimer(frequency)
 	return aTimer
 end
 
-defaultFrequency = 2
+defaultFrequency = 5
 defaultTimer = createTimer(defaultFrequency)
 
 AnimationTimer = {TickCount=0, Frequency=2}

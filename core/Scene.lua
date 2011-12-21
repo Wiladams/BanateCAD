@@ -31,11 +31,6 @@ end
 	Update methods.
 --]]
 function Scene.Update(self, count)
-	-- Get the recent commands if there are any
-	if CommandConduit ~= nil then
-		CommandConduit.GetRecentVotes()
-	end
-
 	-- Now tell all the objects to update themselves
 	for i, cmd in ipairs(self.commands) do
 		if cmd.command == CADVM.SHAPE then

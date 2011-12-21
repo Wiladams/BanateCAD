@@ -134,10 +134,10 @@ end
 
 function mat4_transpose(m)
 	return {
-	mat4_col(m,0),
 	mat4_col(m,1),
 	mat4_col(m,2),
-	mat4_col(m,3)
+	mat4_col(m,3),
+	mat4_col(m,4)
 	}
 end
 
@@ -354,13 +354,20 @@ function vec43_to_vec44(mesh)
 		}
 end
 
-function quadratic_U(u)
-	return {3*(u*u), 2*u, 1, 0}
+function quadratic_U(u, mult)
+	mult = mult or 1
+	return {mult*3*(u*u), mult*2*u, mult*1, 0}
 end
 
-function cubic_U(u)
-	return {u*u*u, u*u, u, 1}
+function cubic_U(u, mult)
+	mult = mult or 1
+	return {mult*u*u*u, mult*u*u, mult*u, mult*1}
 end
+
+--function cubic_U(u, mult)
+--	mult = mult or 1
+--	return {mult*1, mult*u, mult*(u*u), mult*(u*u*u)}
+--end
 
 function cerp(U, M, G)
 	return vec4_mult_mat4(vec4_mult_mat4(U, M), G)
@@ -467,14 +474,31 @@ end
 
 function cubic_catmullrom_M()
 	return {
-	{-1, 3, -3, 1},
-	{2, -5, 4, -1},
-	{-1, 0, 1, 0},
-	{0, 2, 0, 0}
+	{-1,  3, -3,  1},
+	{ 2, -5,  4, -1},
+	{-1,  0,  1,  0},
+	{ 0,  2,  0,  0}
 	}
+--[[
+-- Transpose
+	return {
+	{-1,  2, -1,  0},
+	{ 3, -5,  4, -2},
+	{-3,  4,  1,  0},
+	{ 1, -1,  0,  0}
+	}
+--]]
 end
 
 
+function  cubic_timmer_M()
+	return {
+	{-2,  4, -4,  2},
+	{ 5, -8,  4, -1},
+	{-4,  4,  0,  0},
+	{ 1,  0,  0,  0}
+	}
+end
 
 --	To use the B-spline, you must use a multiplier of 1/6 on the matrix itself
 --	Also, the parameter matrix is
@@ -497,6 +521,18 @@ function cubic_bspline_M()
 end
 
 
+--
+-- Catmull ROM Convenience Routines
+--
+function ccerp(u, cps)
+	return cerp(cubic_U(u, 1/2), cubic_catmullrom_M(), cubic_vec3_to_cubic_vec4(cps));
+end
+
+local CatmullRom_M = cubic_catmullrom_M()
+
+function catmull_eval(u, mult, geom4)
+	return cerp(cubic_U(u, mult), CatmullRom_M, geom4)
+end
 
 --=======================================
 --
@@ -504,10 +540,15 @@ end
 --
 --=======================================
 
+local Bezier_M = cubic_bezier_M()
+
 function berp(u, cps)
 	return cerp(cubic_U(u), cubic_bezier_M(), cubic_vec3_to_cubic_vec4(cps));
 end
 
+function bezier_eval(u, geom4)
+	return cerp(cubic_U(u, 1), Bezier_M, geom4)
+end
 
 -- Calculate a point on a Bezier mesh
 -- Given the mesh, and the parametric 'u', and 'v' values
@@ -690,21 +731,43 @@ end
 
 
 --[[
+print("maths.lua - TEST")
+
+function print_mat4(m4)
+	for i=1,4 do
+		print(m4[i][1]..','..m4[i][2]..','..m4[i][3]..','..m4[i][4]);
+	end
+end
+
+function test_mat4()
+	local idmat4 = mat4_identity()
+	local trans1 = transform_translate({2, 2, 2})
+	local trans2 = mat4_transpose(trans1)
+
+	print_mat4(trans1);
+	print();
+	print_mat4(trans2);
+end
 
 function showmap(a, rlo, rhi, slo, shi)
 	print("map "..a.." from("..rlo..", "..rhi..") to ("..slo..", "..shi..") = "..map(a, rlo, rhi, slo, shi))
 end
 
-local r1 = 10
-local r2 = 20
-local s1 = 30
-local s2 = 40
-local a = 12
+function testmap()
+	local r1 = 10
+	local r2 = 20
+	local s1 = 30
+	local s2 = 40
+	local a = 12
 
-showmap(a, r1, r2, s1, s2)
-showmap(a, r2, r1, s1, s2)
-showmap(a, r1, r2, s2, s1)
-showmap(a, r2, r1, s2, s1)
+	showmap(a, r1, r2, s1, s2)
+	showmap(a, r2, r1, s1, s2)
+	showmap(a, r1, r2, s2, s1)
+	showmap(a, r2, r1, s2, s1)
 
-showmap(127, 0,255, 0, 1)
+	showmap(127, 0,255, 0, 1)
+end
+
+test_mat4();
+
 --]]

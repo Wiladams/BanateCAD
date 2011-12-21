@@ -4,7 +4,6 @@ function setup()
 end
 
 function draw()
-	background(200)
 	fill(47, 64, 84);
 	rect(25, 25, 550, 140);
 

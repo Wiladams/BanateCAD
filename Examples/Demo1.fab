@@ -1,3 +1,6 @@
+-- Set the color scheme to "Cornfield"
+defaultviewer.colorscheme = colorschemes.Cornfield
+
 stagesize = 100
 
 -- Demo
@@ -35,7 +38,7 @@ for v in pairs(crayola) do
 		--print(v)
 		color(crayola.rgb(v))
 		translate({column*size, row*size, 0})
-		sphere(3)
+		octahedron(3)
 		column = column + 1
 		if column > width then
 			column = 1

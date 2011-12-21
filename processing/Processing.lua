@@ -12,6 +12,7 @@ require "iupluagl"
 require "luagl"
 require "luaglu"
 
+-- Implementing a class structure
 class = require "pl.class"
 
 
@@ -196,8 +197,8 @@ function Processing.SetStrokeColor(acolor)
 	defaultrenderer.StrokeColor = Processing.StrokeColor
 
 	local rgb = RGBColor(acolor)
-	Processing.StrokeColorRGB = cd.EncodeColor(rgb[1], rgb[2], rgb[3])
-	Processing.StrokeColorRGBA = cd.EncodeAlpha(Processing.StrokeColorRGB, rgb[4])
+	--Processing.StrokeColorRGB = cd.EncodeColor(rgb[1], rgb[2], rgb[3])
+	--Processing.StrokeColorRGBA = cd.EncodeAlpha(Processing.StrokeColorRGB, rgb[4])
 
 
 	--local canvas2D = defaultglcanvas.canvas2D
@@ -374,10 +375,12 @@ function Processing.Compile(inputtext)
 	-- Set the camera position
 	OrthoCamera.Render()
 
-	-- Clear out setup() and draw()
+	-- Clear out the global routines
+	-- That the user may have supplied
 	_G.setup = nil
 	_G.draw = nil
-
+	_G.keyPressed = nil
+	_G.mousePressed = nil
 
 	-- Compile the code
 	local f = loadstring(inputtext)

@@ -25,49 +25,7 @@ require ("Shape")
 -- inherits all the methods of the base class.
 
 GAABBox = inheritsFrom(Shape)
-
--- Now we construct our own 'new' function so that we can
--- do whatever special setup we want to do on our own.
--- If we're setting any instance variables, we use 'self.'
--- At the end we return 'self' to retain the metatable
--- That was set when we subclassed Shape.
-
-function GAABBox.new()
---	o = o or {}		-- create object if user does not provide one
---	o[1] = o[1] or vec3(0,0,0)
---	o[2] = o[2] or vec3(0,0,0)
-
-	local new_inst = GAABBox.create()
-	new_inst:Init(vec3(0,0,0), vec3(0,0,0))
-
-	return new_inst
-end
-
-function GAABBox.Init(self, v1,v2)
-	v1 = v1 or vec3(0,0,0)
-	v2 = v2 or vec3(0,0,0)
-	v1, v2 = sortvertices(v1, v2)
-
-	self:SetBounds(v1, v2)
---[[
-	self.LowerVertex = v1
-	self.HigherVertex = v2
-	self.Dimensions = {v2[1]-v1[1], v2[2]-v1[2], v2[3]-v1[3]}
-
-	self.Vertices = {
-		{v1[1],v1[2],v1[3]},
-		{v2[1],v1[2],v1[3]},
-		{v2[1],v1[2],v2[3]},
-		{v1[1],v1[2],v2[3]},
-
-		{v1[1],v2[2],v1[3]},
-		{v2[1],v2[2],v1[3]},
-		{v2[1],v2[2],v2[3]},
-		{v1[1],v2[2],v2[3]},
-	}
---]]
-
-	self.Edges = {
+GAABBox.Edges = {
 		{1,2},
 		{2,3},
 		{3,4},
@@ -84,8 +42,24 @@ function GAABBox.Init(self, v1,v2)
 		{4,8},
 	}
 
-	return self
+-- Now we construct our own 'new' function so that we can
+-- do whatever special setup we want to do on our own.
+-- If we're setting any instance variables, we use 'self.'
+-- At the end we return 'self' to retain the metatable
+-- That was set when we subclassed Shape.
+
+function GAABBox.new(params)
+	local new_inst = GAABBox:create()
+
+	local v1 = params[1] or vec3(0,0,0)
+	local v2 = params[2] or vec3(0,0,0)
+	v1, v2 = sortvertices(v1, v2)
+
+	new_inst:SetBounds(v1, v2)
+
+	return new_inst
 end
+
 
 function GAABBox.SetBounds(self, v1, v2)
 	self.LowerVertex = v1
@@ -106,7 +80,7 @@ function GAABBox.SetBounds(self, v1, v2)
 end
 
 function GAABBox.Render(self, renderer)
-	for _,e in ipairs(self.Edges) do
+	for _,e in ipairs(GAABBox.Edges) do
 		renderer:DrawLine({self.Vertices[e[1]], self.Vertices[e[2]], 1})
 	end
 end

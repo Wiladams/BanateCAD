@@ -66,6 +66,15 @@ function noStroke(...)
 end
 
 function stroke(...)
+--[[
+	if arg.n == 1 and type(arg[1]) == "table" then
+		-- We already have a color structure
+		-- so just set it
+		return Processing.SetStrokeColor(acolor)
+	end
+--]]
+	-- Otherwise, construct a new color object
+	-- and set it
 	local acolor = color(unpack(arg))
 
 	return Processing.SetStrokeColor(acolor)
