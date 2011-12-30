@@ -1,6 +1,6 @@
-local b = Texture("csg1.png")
-local starhead = Texture("starhead.png")
-local proccer = Texture("Processing1.PNG")
+local b = PImage("csg1.png")
+local starhead = PImage("starhead.png")
+local proccer = PImage("Processing1.PNG")
 
 function setup()
 	size(1024, 768)
@@ -18,7 +18,7 @@ function drawTexture(tex, offsetx, offsety, deg)
 	rotate(radians(deg*frameCount));
 
 	-- Draw the image
-	Processing.DrawTexture(tex, -tex.width/2, -tex.height/2);
+	image(tex, -tex.width/2, -tex.height/2);
 
 	-- Reset the transform
 	popMatrix();

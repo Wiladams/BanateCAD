@@ -335,7 +335,7 @@ function Processing.DrawEllipse(centerx, centery, awidth, aheight)
 	Processing.DrawPolygon(pts, true)
 end
 
-function Processing.DrawTexture(tex, offsetx, offsety, awidth, aheight)
+function Processing.DrawImage(tex, offsetx, offsety, awidth, aheight)
 	offsetx = offsetx or 0
 	offsety = offsety or 0
 	awidth = awidth or tex.width
@@ -346,8 +346,9 @@ function Processing.DrawTexture(tex, offsetx, offsety, awidth, aheight)
 	tex:Render(offsetx, offsety, awidth, aheight)
 end
 
+--[=[
 function Processing.DrawImage(img, offsetx, offsety, awidth, aheight)
-	local canvas2D = defaultglcanvas.canvas2D
+	--local canvas2D = defaultglcanvas.canvas2D
 
 	--canvas2D:PutImageRectRGB(img.GLData, offsetx, offsety, img.width, img.height, 0, 0, 0, 0)
     --canvas2D:Flush()
@@ -385,6 +386,7 @@ function Processing.DrawImage(img, offsetx, offsety, awidth, aheight)
 	gl.Enable(gl.BLEND);
 --]]
 end
+--]=]
 
 --[==============================[
 	TRANSFORMATION
