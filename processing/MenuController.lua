@@ -131,6 +131,7 @@ end
 --===================================
 -- ANIMATION
 --===================================
+
 function MenuController.do_start_animation(self)
 	local inputtext = intext.value
 
@@ -138,11 +139,12 @@ function MenuController.do_start_animation(self)
 
 	-- Then turn on the timer, so the
 	-- draw function is called repeatedly
-	defaultTimer.run = "YES"
+	--defaultTimer.run = "YES"
 end
 
 function MenuController.do_stop_animation(self)
-	defaultTimer.run = "NO"
+	--defaultTimer.run = "NO"
+	Processing.StopAnimation()
 end
 
 --===================================

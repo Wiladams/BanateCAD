@@ -1,37 +1,121 @@
+local class = require "pl.class"
 
-Color = {}
+local bit = require "bit"
+local band = bit.band
+local lshift = bit.lshift
+local rshift = bit.rshift
+
+
+function rgba(c)
+	local b = band(c, 0xff)
+	c = rshift(c,8)
+	local g = band(c, 0xff)
+	c = rshift(c,8)
+	local r = band(c, 0xff)
+	c = rshift(c, 8)
+	local a = band(c, 0xff)
+
+	return r,g,b,a
+end
+
+function rgbaNormalized(c)
+	local r,g,b,a = rgba(c)
+
+	return {r/255, g/255, b/255, a/255}
+end
+
+
+
+class.Color()
+
+function Color:_init(r,g,b,a)
+	self.IntValue = lshift(a, 24) + lshift(r, 16) + lshift(g, 8) + b
+
+	self.R = r
+	self.G = g
+	self.B = b
+	self.A = a
+end
+
+function Color:Normalized()
+	if self.Norm == nil then
+		self.Norm = {
+			self.R/255,
+			self.G/255,
+			self.B/255,
+			self.A/255
+		}
+	end
+
+	return self.Norm;
+end
+
+function Color.__tostring(self)
+	return '{'..self.R..','..self.G..','..self.B..','..self.A..'}'
+end
+
+
+
+
+
+
+
+function blue(c)
+	local b = band(c, 0xff)
+	return b
+end
+
+function green(c)
+	local g = band(rshift(c, 8), 0xff)
+	return g
+end
+
+function red(c)
+	local r = band(rshift(c, 16), 0xff)
+	return r
+end
+
+function alpha(c)
+	local a = band(rshift(c, 24), 0xff)
+	return a
+end
 
 function color(...)
 	-- There can be 1, 2, 3, or 4, arguments
 --	print("Color.new - ", arg.n)
 
-	local acolor = {0.5, 0.5, 0.5, 1}	-- default to a gray
+	local r = 0
+	local g = 0
+	local b = 0
+	local a = 0
 
-	if Processing.ColorMode == RGB then
+--	if Processing.ColorMode == RGB then
+	if true then
 		if (arg.n == 1) then
-			acolor[1] = arg[1]/255
-			acolor[2] = arg[1]/255
-			acolor[3] = arg[1]/255
-			acolor[4] = 1
+			r = arg[1]
+			g = arg[1]
+			b = arg[1]
+			a = 255
 		elseif arg.n == 2 then
-			acolor[1] = arg[1]/255
-			acolor[2] = arg[1]/255
-			acolor[3] = arg[1]/255
-			acolor[4] = arg[2]/255
+			r = arg[1]
+			g = arg[1]
+			b = arg[1]
+			a = arg[2]
 		elseif arg.n == 3 then
-			acolor[1] = arg[1]/255
-			acolor[2] = arg[2]/255
-			acolor[3] = arg[3]/255
-			acolor[4] = 1
+			r = arg[1]
+			g = arg[2]
+			b = arg[3]
+			a = 255
 		elseif arg.n == 4 then
-			acolor[1] = arg[1]/255
-			acolor[2] = arg[2]/255
-			acolor[3] = arg[3]/255
-			acolor[4] = arg[4]/255
+			r = arg[1]
+			g = arg[2]
+			b = arg[3]
+			a = arg[4]
 		end
 	end
 
-	return acolor
+	return Color(r,g,b,a)
+
 end
 
 function background(...)
@@ -48,6 +132,12 @@ function colorMode(amode)
 end
 
 function fill(...)
+	-- See if we're being passed a 'Color'
+	-- type
+	if arg.n == 1 and type(arg[1]) == "table" then
+		return Processing.SetFillColor(arg[1])
+	end
+
 	local acolor = color(unpack(arg))
 
 	return Processing.SetFillColor(acolor)
@@ -66,13 +156,12 @@ function noStroke(...)
 end
 
 function stroke(...)
---[[
 	if arg.n == 1 and type(arg[1]) == "table" then
 		-- We already have a color structure
 		-- so just set it
-		return Processing.SetStrokeColor(acolor)
+		return Processing.SetStrokeColor(arg[1])
 	end
---]]
+
 	-- Otherwise, construct a new color object
 	-- and set it
 	local acolor = color(unpack(arg))
@@ -81,13 +170,11 @@ function stroke(...)
 end
 
 --[[
-require("Language")
-
 print("Color.lua - TEST")
 
-local c1 = color(10, 20, 30)
+local c1 = color(10, 20, 30, 100)
 
-print(c1[1], c1[2], c1[3], c1[4])
+print(red(c1), green(c1), blue(c1), alpha(c1))
 
-background(102,200,30)
+--background(102,200,30)
 --]]

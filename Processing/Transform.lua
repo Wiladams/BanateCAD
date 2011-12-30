@@ -1,29 +1,40 @@
+
+-- Matrix Stack
+function popMatrix()
+	Processing.PopMatrix();
+end
+
+
+function pushMatrix()
+	Processing.PushMatrix();
+end
+
 function applyMatrix()
 end
 
-function popMatrix()
+function resetMatrix()
 end
 
 function printMatrix()
 end
 
-function pushMatrix()
-end
 
-function resetMatrix()
+-- Simple transforms
+function translate(x, y, z)
+	Processing.Translate(x, y, z)
 end
 
 function rotate(rad)
 	Processing.Rotate(0,0,rad)
 end
 
-function rotateX()
+function rotateX(rad)
 end
 
-function rotateY()
+function rotateY(rad)
 end
 
-function rotateZ()
+function rotateZ(rad)
 end
 
 function scale()
@@ -35,6 +46,4 @@ end
 function shearY()
 end
 
-function translate(x, y, z)
-	Processing.Translate(x, y, z)
-end
+

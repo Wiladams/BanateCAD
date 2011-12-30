@@ -1,9 +1,10 @@
-local b = PImage.new("csg1.png")
-local starhead = PImage.new("starhead.png")
-local proccer = PImage.new("Processing1.PNG")
+local b = loadImage("csg1.png")
+local starhead = loadImage("starhead.png")
+local proccer = loadImage("Processing1.PNG")
 
 function setup()
 	size(1024, 768)
+	background(53)
 
 	--rotate(radians(20))
 	image(b, 30, 30)

@@ -1,9 +1,8 @@
 require("imlua")
---require "color"
+local class = require "pl.class"
 
-PImage={}
-PImage_mt = {}
-PImage_mt.__index = PImage;
+class.PImage()
+
 
 local GLFormat = {
 	GL_COLOR_INDEX           =         0x1900,
@@ -29,37 +28,49 @@ function GLFormat.PixelSize(dtype)
 	return 1
 end
 
-function PImage.new(filename)
-	new_inst = {}
-
+function PImage:LoadImage(filename)
 	-- load the bitmap
 	local bm = im.FileImageLoadBitmap(filename)
 
 	if bm == nil then return nil end
 
-
 	local gldata, glformat = bm:GetOpenGLData()
 
 	-- Fields
-	new_inst.Bitmap = bm
-	new_inst.width = bm:Width()
-	new_inst.height = bm:Height()
-	new_inst.pixels = gldata
+	self.Bitmap = bm
+	self.width = bm:Width()
+	self.height = bm:Height()
+	self.pixels = gldata
 
-	new_inst.PixelSize = GLFormat.PixelSize(glformat)
-	new_inst.LineSize = new_inst.PixelSize * new_inst.width
-	new_inst.Size = new_inst.LineSize*new_inst.height
+	self.GLFormat = glformat
+	self.GLData = gldata
+	self.GLPixelSize = GLFormat.PixelSize(glformat)
+	self.GLLineSize = self.GLPixelSize * self.width
+	self.GLSize = self.GLLineSize*self.height
 
-	new_inst.GLFormat = glformat
-
-	setmetatable(new_inst, PImage_mt)
-
-	return new_inst
+	return bm
 end
 
-function PImage.get(self, x, y)
-	local offset = y*self.LineSize + x*self.PixelSize
+function PImage:CreateImage(awidth, aheight, aformat)
+	local img = im.ImageCreate(500, 500, im.RGB, im.BYTE)
+	img:AddAlpha()
 
+	self.Bitmap = img
+	self.width = img:Width()
+	self.height = img:Height()
+end
+
+function PImage:_init(...)
+	if arg.n == 1 and type(arg[1]) == "string" then
+		local filename = arg[1]
+		self:LoadImage(filename)
+	elseif arg.n == 3 then
+		self:CreateImage(unpack(arg))
+	end
+end
+
+
+function PImage.get(self, x, y)
 	local r = self.Bitmap[0][self.height-1-y][x]
 	local g = self.Bitmap[1][self.height-1-y][x]
 	local b = self.Bitmap[2][self.height-1-y][x]
@@ -69,6 +80,10 @@ function PImage.get(self, x, y)
 end
 
 function PImage.set(self, x, y, acolor)
+	local offset = y*self.GLLineSize + x*self.GLPixelSize
+
+	self.Bitmap[0][self.height-1-y][x] = acolor.red
+
 end
 
 function PImage.copy(self)
@@ -99,11 +114,11 @@ end
 
 
 function PImage.Render(self, canvas)
-  iup.GLMakeCurrent(self)
+  iup.GLMakeCurrent(canvas)
   gl.PixelStore(gl.UNPACK_ALIGNMENT, 1)
   --gl.Clear('COLOR_BUFFER_BIT,DEPTH_BUFFER_BIT') -- Clear Screen And Depth Buffer
 
-  gl.DrawPixelsRaw (self.Width, self.Height, self.Format, gl.UNSIGNED_BYTE, self.Pixels)
+  gl.DrawPixelsRaw (self.width, self.height, self.GLFormat, gl.UNSIGNED_BYTE, self.GLData)
 
 --  iup.GLSwapBuffers(self)
 end
@@ -126,7 +141,7 @@ function PImage.print(self)
 	print("Pixel Metatable: ", mt)
 end
 
----[[
+--[[
 print("PImage.lua - TEST")
 
 function print_data_type(dtype)

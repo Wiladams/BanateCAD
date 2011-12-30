@@ -13,6 +13,7 @@ function setup()
 end
 
 function draw()
+	stroke(mod(frameCount, 255))
 	rand=0
 	for i=1, steps do
 		local x = (width/steps)*i

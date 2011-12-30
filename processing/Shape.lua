@@ -125,3 +125,70 @@ end
 function size(awidth, aheight, MODE)
 	Processing.SetCanvasSize(awidth, aheight, MODE)
 end
+
+-- VERTEX
+function beginShape(...)
+	local sMode = POLYGON
+	if arg.n == 0 then
+		Processing.VertexMode = gl.POLYGON
+	elseif arg[1] == POINTS then
+		Processing.ShapeMode = gl.POINTS
+	elseif arg[1] == LINES then
+		Processing.ShapeMode = gl.LINES
+	end
+end
+
+function bezierVertex()
+end
+
+function curveVertex()
+end
+
+function endShape()
+end
+
+function texture()
+end
+
+function textureMode()
+end
+
+function vertex(...)
+	local x = nil
+	local y = nil
+	local z = nil
+	local u = nil
+	local v = nil
+
+	if (arg.n == 2) then
+		x = arg[1]
+		y = arg[2]
+		z = 0
+	elseif arg.n == 3 then
+		x = arg[1]
+		y = arg[2]
+		z = arg[3]
+	elseif arg.n == 4 then
+		x = arg[1]
+		y = arg[2]
+		u = arg[3]
+		v = arg[4]
+	elseif arg.n == 5 then
+		x = arg[1]
+		y = arg[2]
+		z = arg[3]
+		u = arg[4]
+		v = arg[5]
+	end
+
+
+	if u and v then
+		-- texture coordinate
+	end
+
+	if x and y and z then
+		gl.vertex(x,y,z)
+	end
+
+end
+

@@ -74,10 +74,4 @@ end
 	-- we are actually mapped to a real window
 --end
 
-function ProcessingWindow.keypress_cb(c, press)
-print("ProcessingWindow.keypress_cb: ", c, press)
-	return iup.CONTINUE;
-end
-
-
 

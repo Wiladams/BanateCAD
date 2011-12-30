@@ -4,13 +4,17 @@
 	From the Processing Reference: http://processing.org/reference/
 --]]
 
+require "imlua"
 require "cdlua"
+require "cdluaim"
 require "iuplua"
 require "iupluacd"
 
 require "iupluagl"
 require "luagl"
 require "luaglu"
+
+local socket = require "socket"
 
 -- Implementing a class structure
 class = require "pl.class"
@@ -20,13 +24,17 @@ class = require "pl.class"
 -- Initial Processing State
 Processing = {
 	ColorMode = RGB,
-	BackgroundColor = {0.5, 0.5, 0.5, 1},
-	FillColor = {1, 1, 1, 1},
-	StrokeColor = {0, 0, 0, 1},
+
+	BackgroundColor = color(127, 255),
+	FillColor = color(255),
+	StrokeColor = color(0),
+
 	StrokeWeight = 1,
 
 	Smooth = false,
 
+	Running = false,
+	FrameRate = 30
 }
 
 --
@@ -112,20 +120,9 @@ end
 
 --[[
 
-
 function defaultglcanvas.wheel_cb(self, delta, x, y, status)
 	defaultviewer:Wheel(delta, x, y, status)
 end
-
--- Indicates mouse button activity, either pressed or released
-function defaultglcanvas.button_cb(self, but, pressed, x, y, status)
-	if pressed == 1 then
-		defaultviewer:MouseDown(but, x, y, status);
-	else
-		defaultviewer:MouseUp(but, x, y, status);
-	end
-end
-
 
 --]]
 
@@ -133,10 +130,10 @@ end
 defaultrenderer = GLRenderer:new()
 
 
-function RGBColor(acolor)
-	local rgb = {acolor[1]*255, acolor[2]*255, acolor[3]*255, acolor[4]*255}
-	return rgb;
-end
+--function RGBColor(acolor)
+--	local rgb = {acolor[1]*255, acolor[2]*255, acolor[3]*255, acolor[4]*255}
+--	return rgb;
+--end
 
 function Processing.SetColorMode(amode)
 	local oldMode = Processing.ColorMode
@@ -156,9 +153,9 @@ function Processing.SetBackgroundColor(acolor)
 	local oldColor = Processing.BackgroundColor
 	Processing.BackgroundColor = acolor
 
-	local rgb = RGBColor(acolor)
-	Processing.BackgroundColorRGB = cd.EncodeColor(rgb[1], rgb[2], rgb[3])
-	Processing.BackgroundColorRGBA = cd.EncodeAlpha(Processing.BackgroundColorRGB, rgb[4])
+	--local r,g,b,a = rgba(acolor)
+	--Processing.BackgroundColorRGB = cd.EncodeColor(r, g, b)
+	--Processing.BackgroundColorRGBA = cd.EncodeAlpha(Processing.BackgroundColorRGB, a)
 
 	Processing.ClearCanvas()
 
@@ -167,7 +164,10 @@ end
 
 function Processing.ClearCanvas()
 	local graphics = defaultrenderer
-	graphics:ClearCanvas(Processing.BackgroundColor)
+
+	local norm = Processing.BackgroundColor:Normalized();
+	--print(Processing.BackgroundColor)
+	graphics:ClearCanvas(norm)
 
 	--local canvas2D = defaultglcanvas.canvas2D
 	--canvas2D:SetBackground(Processing.BackgroundColorRGBA)
@@ -178,15 +178,15 @@ function Processing.SetFillColor(acolor)
 	local oldColor = Processing.FillColor
 
 	Processing.FillColor = acolor
-	defaultrenderer.FillColor = acolor
+	defaultrenderer.FillColor = acolor:Normalized()
 
-	local rgb = RGBColor(acolor)
-	Processing.FillColorRGB = cd.EncodeColor(rgb[1], rgb[2], rgb[3])
-	Processing.FillColorRGBA = cd.EncodeAlpha(Processing.FillColorRGB, rgb[4])
+	--local rgb = RGBColor(acolor)
+	--Processing.FillColorRGB = cd.EncodeColor(rgb[1], rgb[2], rgb[3])
+	--Processing.FillColorRGBA = cd.EncodeAlpha(Processing.FillColorRGB, rgb[4])
 
 
-	local canvas2D = defaultglcanvas.canvas2D
-	canvas2D:Foreground(Processing.FillColorRGBA)
+	--local canvas2D = defaultglcanvas.canvas2D
+	--canvas2D:Foreground(Processing.FillColorRGBA)
 
 	return oldColor
 end
@@ -194,9 +194,9 @@ end
 function Processing.SetStrokeColor(acolor)
 	local oldColor = Processing.StrokeColor
 	Processing.StrokeColor = acolor
-	defaultrenderer.StrokeColor = Processing.StrokeColor
+	defaultrenderer.StrokeColor = acolor:Normalized(acolor)
 
-	local rgb = RGBColor(acolor)
+	--local rgb = RGBColor(acolor)
 	--Processing.StrokeColorRGB = cd.EncodeColor(rgb[1], rgb[2], rgb[3])
 	--Processing.StrokeColorRGBA = cd.EncodeAlpha(Processing.StrokeColorRGB, rgb[4])
 
@@ -335,6 +335,57 @@ function Processing.DrawEllipse(centerx, centery, awidth, aheight)
 	Processing.DrawPolygon(pts, true)
 end
 
+function Processing.DrawTexture(tex, offsetx, offsety, awidth, aheight)
+	offsetx = offsetx or 0
+	offsety = offsety or 0
+	awidth = awidth or tex.width
+	aheight = aheight or tex.height
+
+	-- Ideally, make it a texture map, and put it on a quad
+	-- Render the quad
+	tex:Render(offsetx, offsety, awidth, aheight)
+end
+
+function Processing.DrawImage(img, offsetx, offsety, awidth, aheight)
+	local canvas2D = defaultglcanvas.canvas2D
+
+	--canvas2D:PutImageRectRGB(img.GLData, offsetx, offsety, img.width, img.height, 0, 0, 0, 0)
+    --canvas2D:Flush()
+
+	-- This works, but can't control transparency
+	-- y-coordinates are flipped
+	img.Bitmap:cdCanvasPutImageRect(canvas2D, offsetx, offsety, img.width, img.height, 0, 0, 0, 0)
+    canvas2D:Flush()
+
+	-- This will work, but y-coordinates are flipped
+	--img:Render(defaultglcanvas)
+
+
+--[[
+	-- Disable blending, until we figure out the
+	-- proper blending function
+	gl.Disable(gl.BLEND);
+
+	-- This is the absolute slowest this routine
+	-- could be.  Going pixel by pixel, reconstructing
+	-- color values along the way.
+
+	-- TODO - use the image as a texture map on a quad
+	-- and display the quad.  This should make it very
+	-- fast as well as give the ability to stretch and
+	-- shrink easily
+	for row = 0, img.height-1 do
+		for column = 0, img.width-1 do
+			local r,g,b,a = img:get(column, row)
+			stroke(r,g,b)
+			point(x+column, y+row)
+		end
+	end
+
+	gl.Enable(gl.BLEND);
+--]]
+end
+
 --[==============================[
 	TRANSFORMATION
 --]==============================]
@@ -349,6 +400,17 @@ end
 function Processing.Rotate(x,y,z)
 	local graphics = defaultrenderer
 	graphics:Rotate({degrees(x),degrees(y),degrees(z)})
+
+	local canvas2D = defaultglcanvas.canvas2D
+	canvas2D:TransformRotate(degrees(z))
+end
+
+function Processing.PushMatrix()
+	gl.PushMatrix();
+end
+
+function Processing.PopMatrix()
+	gl.PopMatrix();
 end
 
 --[==============================[
@@ -360,6 +422,20 @@ function Processing.ApplyState()
 	Processing.SetFillColor(Processing.FillColor)
 	Processing.SetStrokeColor(Processing.StrokeColor)
 	Processing.SetSmooth(Processing.Smooth)
+end
+
+function Processing.ClearGlobalFunctions()
+	-- Clear out the global routines
+	-- That the user may have supplied
+	_G.setup = nil
+	_G.draw = nil
+	_G.keyPressed = nil
+	_G.mousePressed = nil
+
+	-- Reset Transformation matrices
+	local canvas2D = defaultglcanvas.canvas2D
+	canvas2D:Transform(nil)
+
 end
 
 function Processing.Compile(inputtext)
@@ -375,12 +451,7 @@ function Processing.Compile(inputtext)
 	-- Set the camera position
 	OrthoCamera.Render()
 
-	-- Clear out the global routines
-	-- That the user may have supplied
-	_G.setup = nil
-	_G.draw = nil
-	_G.keyPressed = nil
-	_G.mousePressed = nil
+	Processing.ClearGlobalFunctions();
 
 	-- Compile the code
 	local f = loadstring(inputtext)
@@ -391,6 +462,53 @@ function Processing.Compile(inputtext)
 		_G.setup()
 	end
 
+	-- Run animation loop
+	Processing.StartAnimation()
+end
+
+function Processing.StartAnimation()
+	-- How many milliseconds per frame
+	local secondsperframe = 1 / Processing.FrameRate
+	local status = iup.DEFAULT
+	local startTime = socket.gettime()		-- startMillis
+	local nextTime = startTime + secondsperframe
+	local tolerance = 0.001
+	local currentTime = startTime
+
+	Processing.Running = true;
+	frameCount = 0
+	repeat
+		-- update seconds per frame
+		-- in case it changes during the animation
+		--secondsperframe = 1 / Processing.FrameRate
+
+		-- If we don't do this, then UI will never
+		-- get a chance to do anything
+		status = iup.LoopStep()
+
+		if ((status == iup.CLOSE) or (not Processing.Running)) then
+			--print(status)
+			break
+		end
+
+		currentTime = socket.gettime()
+		if currentTime < nextTime then
+			-- do nothing but perhaps wait
+			--local diff = nextTime - currentTime
+			--if diff < tolerance then
+			--end
+		else
+			Processing.Tick()
+			frameCount = frameCount + 1
+			nextTime = nextTime + secondsperframe
+		end
+	until status == iup.CLOSE
+
+	--print("Processing.StartAnimation - END")
+end
+
+function Processing.StopAnimation()
+	Processing.Running = false
 end
 
 function Processing.Tick()
