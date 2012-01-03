@@ -1,4 +1,4 @@
-local img = Texture("csg1.png")
+local img = loadImage("csg1.png")
 
 function setup()
 	background(55);
@@ -9,7 +9,7 @@ function setup()
 	--displayImage();
 	img:updatePixels();
 
-	Processing.DrawTexture(img)
+	image(img,0,0)
 end
 
 function displayImage()

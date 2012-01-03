@@ -1,6 +1,6 @@
 local class = require "pl.class"
-
 local bit = require "bit"
+
 local band = bit.band
 local lshift = bit.lshift
 local rshift = bit.rshift
@@ -59,7 +59,7 @@ end
 
 
 
-
+--[[
 function blue(c)
 	local b = band(c, 0xff)
 	return b
@@ -79,6 +79,7 @@ function alpha(c)
 	local a = band(rshift(c, 24), 0xff)
 	return a
 end
+--]]
 
 function color(...)
 	-- There can be 1, 2, 3, or 4, arguments

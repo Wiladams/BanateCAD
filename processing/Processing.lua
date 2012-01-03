@@ -245,29 +245,6 @@ function Processing.DrawPolygon(pts, use3D)
 
 		return
 	end
-
-	local canvas2D = defaultglcanvas.canvas2D
-
-	-- First do the solid portion using
-	-- the fill color
-	if Processing.FillColor[4] ~= 0 then
-		canvas2D:Foreground(Processing.FillColorRGBA)
-		canvas2D:Begin(cd.FILL)
-		for _,pt in ipairs(pts) do
-			canvas2D:Vertex(pt[1], pt[2])
-		end
-		canvas2D:End()
-	end
-
-	-- Then do it again with the stroke Color
-	if Processing.StrokeColor[4] ~= 0 then
-		canvas2D:Foreground(Processing.StrokeColorRGBA)
-		canvas2D:Begin(cd.CLOSED_LINES)
-		for _,pt in ipairs(pts) do
-			canvas2D:Vertex(pt[1], pt[2])
-		end
-		canvas2D:End()
-	end
 end
 
 function Processing.DrawLine(startPoint, endPoint)
