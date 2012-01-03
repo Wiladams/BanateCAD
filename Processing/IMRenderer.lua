@@ -1,0 +1,165 @@
+require"imlua"
+require"cdlua"
+require"cdluaim"
+
+
+local class = require "pl.class"
+
+class.IMRenderer()
+
+function IMRenderer:_init(awidth, aheight)
+	self.width = awidth;
+	self.height = aheight;
+
+	-- Create the basic image
+	self.Image = im.ImageCreate(awidth, aheight, im.RGB, im.BYTE)
+	self.Image:AddAlpha();
+	self.canvas = self.Image:cdCreateCanvas()  -- Creates a CD_IMAGERGB canvas
+
+	-- Activate the canvas so we can draw into it
+	self.canvas:Activate();
+	self.canvas:YAxisMode(1)	-- Invert the y-axis
+	--self.canvas:InvertYAxis(1)
+
+	self:ApplyAttributes();
+
+	return self
+end
+
+function IMRenderer.ApplyAttributes(self)
+	-- Apply attributes before any drawing occurs
+	self:SetStrokeColor(color(0))
+	self:SetFillColor(color(255))
+	self:SetBackgroundColor(color(53))
+end
+
+function IMRenderer.get(self, x, y)
+	local row = self.height-1 - y
+	local col = x
+
+	local r = self.Image[0][row][col]
+	local g = self.Image[1][row][col]
+	local b = self.Image[2][row][col]
+	local a = self.Image[3][row][col]
+
+	return Color(r*255,g*255,b*255,a*255)
+end
+
+function IMRenderer.set(self, x, y, acolor)
+
+	local row = self.height-1 - y
+	local col = x
+
+	self.Image[0][row][col] = acolor.R
+	self.Image[1][row][col] = acolor.G
+	self.Image[2][row][col] = acolor.B
+	self.Image[3][row][col] = acolor.A
+end
+
+function IMRenderer.loadPixels(self)
+end
+
+function IMRenderer.updatePixels(self)
+	-- Copy the data to the actual texture object
+	local gldata, glformat = self.Image:GetOpenGLData()
+
+	self.glformat = glformat;
+
+	-- Initial copy to texture using the userdata
+	self.Texture = Texture(self.width, self.height, glformat, gldata)
+end
+
+function IMRenderer.Render(self, x, y, awidth, aheight)
+	self.Texture:Render(x, y, awidth, aheight)
+end
+
+
+--[[
+	Rendering
+--]]
+
+--[[
+	ATTRIBUTES
+--]]
+function IMRenderer.SetStrokeColor(self, acolor)
+	self.StrokeColor = acolor;
+
+	local ecolor = cd.EncodeColor(acolor.R, acolor.G, acolor.B)
+	self.EStrokeColor = cd.EncodeAlpha(ecolor, acolor.A)
+end
+
+function IMRenderer.SetFillColor(self, acolor)
+	self.FillColor = acolor;
+
+	local ecolor = cd.EncodeColor(acolor.R, acolor.G, acolor.B)
+	self.EFillColor = cd.EncodeAlpha(ecolor, acolor.A)
+end
+
+function IMRenderer.SetBackgroundColor(self, acolor)
+	self.BackgroundColor = acolor;
+
+	local ecolor = cd.EncodeColor(acolor.R, acolor.G, acolor.B)
+	local bgcolor = cd.EncodeAlpha(ecolor, acolor.A)
+	self.canvas:SetBackground(bgcolor)
+end
+
+function IMRenderer.Clear(self)
+	self.canvas:Clear()
+end
+
+--[[
+	PRIMITIVES
+--]]
+function IMRenderer.DrawPoint(self, x, y)
+	self:set(x,y,self.StrokeColor);
+end
+
+function IMRenderer.DrawLine(self, x1, y1, x2, y2)
+	self.canvas:SetForeground(self.EStrokeColor)
+	self.canvas:Line(x1, y1, x2, y2)
+end
+
+function IMRenderer.DrawPolygon(self, pts)
+	local canvas2D = self.canvas
+
+	-- First do the solid portion using
+	-- the fill color
+	if self.FillColor.A ~= 0 then
+		canvas2D:Foreground(self.EFillColor)
+		canvas2D:Begin(cd.FILL)
+		for _,pt in ipairs(pts) do
+			canvas2D:Vertex(pt[1], pt[2])
+		end
+		canvas2D:End()
+	end
+
+	-- Then do it again with the stroke Color
+	if self.StrokeColor.A ~= 0 then
+		canvas2D:Foreground(self.EStrokeColor)
+		canvas2D:Begin(cd.CLOSED_LINES)
+		for _,pt in ipairs(pts) do
+			canvas2D:Vertex(pt[1], pt[2])
+		end
+		canvas2D:End()
+	end
+end
+
+--[[
+	TYPOGRAPHY
+--]]
+
+function IMRenderer.SetFont(self, fontname, style, points)
+	self.canvas:NativeFont(fontname)
+end
+
+function IMRenderer.SetTextAlignment(self, alignment)
+	self.canvas:TextAlignment(alignment);
+end
+
+function IMRenderer.DrawText(self, x, y, txt)
+	local row = self.height-1 - y
+
+	self.canvas:YAxisMode(0)	-- Normal y-axis
+	self.canvas:Text(x, row, txt)
+	self.canvas:YAxisMode(1)	-- Invert the y-axis
+end
