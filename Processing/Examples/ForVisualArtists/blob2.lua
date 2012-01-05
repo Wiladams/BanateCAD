@@ -1,4 +1,3 @@
-local class = require "pl.class"
 local Img = nil
 
 class.Blob()
@@ -20,8 +19,6 @@ function Blob.render(self)
 		end
 	end
 end
-
-
 
 function setup()
 	size(600, 400);

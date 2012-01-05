@@ -4,37 +4,48 @@
 -- class PFont
 
 -- Loading and Displaying
---[[
+
 function createFont()
 end
 
 function loadFont()
 end
 
-function text()
+function text(x, y, txt)
+	Processing.DrawText(x, y, txt)
 end
 
-function textFont()
-end
---]]
+
 
 -- Attributes
---[[
-function textAlign()
+
+function textAlign(align, yalign)
+	yalign = yalign or Processing.TextYAlignment
+
+	Processing.TextAlignment = align
+	Processing.TextYAlignment = yalign
+	Processing.SetTextAlignment(align, yalign)
 end
 
-function textLeading()
+function textLeading(leading)
+	Processing.TextLeading = leading
 end
 
-function textMode()
+function textMode(mode)
+	Processing.TextMode = mode
 end
 
-function textSize()
+function textSize(asize)
+	Processing.TextSize = asize
 end
 
-function textWidth()
+function textWidth(astring)
+	return Processing.GetTextWidth(astring)
 end
---]]
+
+function textFont(fontname)
+	return Processing.SetFontName(fontname)
+end
 
 -- Metrics
 --[[

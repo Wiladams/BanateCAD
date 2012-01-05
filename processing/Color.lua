@@ -1,4 +1,4 @@
-local class = require "pl.class"
+--local class = require "pl.class"
 local bit = require "bit"
 
 local band = bit.band
@@ -120,6 +120,10 @@ function color(...)
 end
 
 function background(...)
+	if arg.n == 1 and type(arg[1]) == "table" then
+		return Processing.SetBackgroundColor(arg[1])
+	end
+
 	local acolor = color(unpack(arg))
 --print("background: ", acolor[1], acolor[2], acolor[3], acolor[4])
 	return Processing.SetBackgroundColor(acolor)

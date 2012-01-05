@@ -2,7 +2,7 @@ local width = 300;
 local height = 300;
 
 local totalPts = 300;
-local steps = totalPts + 1;
+local steps = totalPts;
 local rand = 0;
 
 function setup()
@@ -19,6 +19,7 @@ function draw()
 		local x = (width/steps)*i
 		local y = (height/2)+random(-rand,rand)
 		point(x, y);
-		rand = rand + random(-5,5);
+		rand = rand + random(-4,4);
+
 	end
 end

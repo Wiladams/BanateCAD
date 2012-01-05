@@ -7,6 +7,9 @@
 
 require ("BAppContext")
 
+-- Implementing a class structure
+class = require "pl.class"
+
 -- Create the main window we will be using
 local AppName = "Banate Processing";
 
@@ -20,6 +23,7 @@ local appctx = BAppContext:new({
 
 require("BApplication")
 require("ProcessingWindow")
+
 
 local pWindow = ProcessingWindow:new({Name=AppName})
 

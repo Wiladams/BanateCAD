@@ -16,26 +16,9 @@ require "luaglu"
 
 local socket = require "socket"
 
--- Implementing a class structure
-class = require "pl.class"
 
 
 
--- Initial Processing State
-Processing = {
-	ColorMode = RGB,
-
-	BackgroundColor = color(127, 255),
-	FillColor = color(255),
-	StrokeColor = color(0),
-
-	StrokeWeight = 1,
-
-	Smooth = false,
-
-	Running = false,
-	FrameRate = 30
-}
 
 --
 -- Construct the default GL Canvas
@@ -129,11 +112,32 @@ end
 
 defaultrenderer = GLRenderer:new()
 
+-- Initial Processing State
+Processing = {
+	Renderer = IMRenderer(1920, 1080),
 
---function RGBColor(acolor)
---	local rgb = {acolor[1]*255, acolor[2]*255, acolor[3]*255, acolor[4]*255}
---	return rgb;
---end
+	ColorMode = RGB,
+
+	BackgroundColor = color(127, 255),
+	FillColor = color(255),
+	StrokeColor = color(0),
+
+	StrokeWeight = 1,
+
+	Smooth = false,
+
+	Running = false,
+	FrameRate = 30,
+
+	-- Typography
+	TextSize = 12,
+	TextAlignment = LEFT,
+	TextYAlignment = BASELINE,
+	TextLeading = 0,
+	TextMode = SCREEN,
+	TextSize = 12,
+}
+
 
 function Processing.SetColorMode(amode)
 	local oldMode = Processing.ColorMode
@@ -150,61 +154,22 @@ function Processing.SetSmooth(smoothing)
 end
 
 function Processing.SetBackgroundColor(acolor)
-	local oldColor = Processing.BackgroundColor
-	Processing.BackgroundColor = acolor
-
-	--local r,g,b,a = rgba(acolor)
-	--Processing.BackgroundColorRGB = cd.EncodeColor(r, g, b)
-	--Processing.BackgroundColorRGBA = cd.EncodeAlpha(Processing.BackgroundColorRGB, a)
-
-	Processing.ClearCanvas()
+	Processing.Renderer:SetBackgroundColor(acolor)
+	Processing.Renderer:Clear();
 
 	return oldColor
 end
 
 function Processing.ClearCanvas()
-	local graphics = defaultrenderer
-
-	local norm = Processing.BackgroundColor:Normalized();
-	--print(Processing.BackgroundColor)
-	graphics:ClearCanvas(norm)
-
-	--local canvas2D = defaultglcanvas.canvas2D
-	--canvas2D:SetBackground(Processing.BackgroundColorRGBA)
-	--canvas2D:Clear()
+	Processing.Renderer:Clear();
 end
 
 function Processing.SetFillColor(acolor)
-	local oldColor = Processing.FillColor
-
-	Processing.FillColor = acolor
-	defaultrenderer.FillColor = acolor:Normalized()
-
-	--local rgb = RGBColor(acolor)
-	--Processing.FillColorRGB = cd.EncodeColor(rgb[1], rgb[2], rgb[3])
-	--Processing.FillColorRGBA = cd.EncodeAlpha(Processing.FillColorRGB, rgb[4])
-
-
-	--local canvas2D = defaultglcanvas.canvas2D
-	--canvas2D:Foreground(Processing.FillColorRGBA)
-
-	return oldColor
+	return Processing.Renderer:SetFillColor(acolor);
 end
 
 function Processing.SetStrokeColor(acolor)
-	local oldColor = Processing.StrokeColor
-	Processing.StrokeColor = acolor
-	defaultrenderer.StrokeColor = acolor:Normalized(acolor)
-
-	--local rgb = RGBColor(acolor)
-	--Processing.StrokeColorRGB = cd.EncodeColor(rgb[1], rgb[2], rgb[3])
-	--Processing.StrokeColorRGBA = cd.EncodeAlpha(Processing.StrokeColorRGB, rgb[4])
-
-
-	--local canvas2D = defaultglcanvas.canvas2D
-	--canvas2D:Foreground(Processing.FillColorRGBA)
-
-	return oldColor
+	return Processing.Renderer:SetStrokeColor(acolor);
 end
 
 -- Drawing Primitives
@@ -213,56 +178,38 @@ function Processing.SetPointSize(ptSize)
 	graphics:SetPointSize(ptSize)
 end
 
+function Processing.SetLineCap(cap)
+	Processing.Renderer:SetLineCap(cap)
+end
+
+function Processing.SetLineJoin(join)
+	Processing.Renderer:SetLineJoin(join)
+end
+
 function Processing.SetStrokeWeight(weight)
 	Processing.StrokeWeight = weight
 	local graphics = defaultrenderer
 	graphics:SetLineWidth(weight)
 
-	--local canvas2D = defaultglcanvas.canvas2D
-	--canvas2D:LineWidth(weight)
+	Processing.Renderer:SetLineWidth(weight)
 end
 
 function Processing.DrawPoint(x,y,z)
 	z = z or 0
 
-	local pt = Point3D.new(x, y, z)
-	local graphics = defaultrenderer
-	graphics:DrawPoint(pt)
+	Processing.Renderer:DrawPoint(x,y)
+end
 
-	--local canvas2D = defaultglcanvas.canvas2D
-	--canvas2D:Pixel(x, y, Processing.StrokeColorRGBA)
+function Processing.DrawLine(startPt, endPt)
+	Processing.Renderer:DrawLine(startPt[1], startPt[2],
+		endPt[1], endPt[2])
 end
 
 function Processing.DrawPolygon(pts, use3D)
-	use3D = use3D or false
-
-	if (use3D) then
-		local graphics = defaultrenderer
-
-		graphics:DrawPolygon(pts, RenderMode.SOLID);
-
-		graphics:DrawPolygon(pts, RenderMode.LOOP);
-
-		return
-	end
+	Processing.Renderer:DrawPolygon(pts)
 end
-
-function Processing.DrawLine(startPoint, endPoint)
-
-	--local canvas2D = defaultglcanvas.canvas2D
-	--canvas2D:Foreground(Processing.StrokeColorRGBA)
-	--canvas2D:Line(
-	--	startPoint[1], startPoint[2],
-	--	endPoint[1], endPoint[2]
-	--	)
-
-	local graphics = defaultrenderer
-	graphics:DrawLine({startPoint, endPoint, Processing.StrokeWeight}, Processing.StrokeWeight)
-end
-
 
 function Processing.DrawRect(x, y, width, height)
-
 	local pts = {
 		Vector3D.new{x, y, 0},
 		Vector3D.new{x, y+height, 0},
@@ -270,7 +217,7 @@ function Processing.DrawRect(x, y, width, height)
 		Vector3D.new{x+width, y, 0},
 	}
 
-	Processing.DrawPolygon(pts, true)
+	Processing.DrawPolygon(pts)
 end
 
 function Processing.DrawTriangle(x1, y1, x2, y2, x3, y3)
@@ -280,12 +227,10 @@ function Processing.DrawTriangle(x1, y1, x2, y2, x3, y3)
 		Vector3D.new{x2, y2, 0},
 	}
 
-	Processing.DrawPolygon(pts, true)
-
+	Processing.DrawPolygon(pts)
 end
 
 function Processing.DrawQuad(x1, y1, x2, y2, x3, y3, x4, y4)
-	local graphics = defaultrenderer
 	local pts = {
 		Vector3D.new{x1, y1, 0},
 		Vector3D.new{x2, y2, 0},
@@ -324,46 +269,24 @@ function Processing.DrawImage(tex, offsetx, offsety, awidth, aheight)
 end
 
 --[=[
-function Processing.DrawImage(img, offsetx, offsety, awidth, aheight)
-	--local canvas2D = defaultglcanvas.canvas2D
-
-	--canvas2D:PutImageRectRGB(img.GLData, offsetx, offsety, img.width, img.height, 0, 0, 0, 0)
-    --canvas2D:Flush()
-
-	-- This works, but can't control transparency
-	-- y-coordinates are flipped
-	img.Bitmap:cdCanvasPutImageRect(canvas2D, offsetx, offsety, img.width, img.height, 0, 0, 0, 0)
-    canvas2D:Flush()
-
-	-- This will work, but y-coordinates are flipped
-	--img:Render(defaultglcanvas)
-
-
---[[
-	-- Disable blending, until we figure out the
-	-- proper blending function
-	gl.Disable(gl.BLEND);
-
-	-- This is the absolute slowest this routine
-	-- could be.  Going pixel by pixel, reconstructing
-	-- color values along the way.
-
-	-- TODO - use the image as a texture map on a quad
-	-- and display the quad.  This should make it very
-	-- fast as well as give the ability to stretch and
-	-- shrink easily
-	for row = 0, img.height-1 do
-		for column = 0, img.width-1 do
-			local r,g,b,a = img:get(column, row)
-			stroke(r,g,b)
-			point(x+column, y+row)
-		end
-	end
-
-	gl.Enable(gl.BLEND);
---]]
-end
+	TYPOGRAPHY
 --]=]
+
+function Processing.GetTextWidth(astring)
+	return 0
+end
+
+function Processing.DrawText(x, y, txt)
+	Processing.Renderer:DrawText(x, y, txt)
+end
+
+function Processing.SetFontName(fontname)
+	Processing.Renderer:SetFont(fontname);
+end
+
+function Processing.SetTextAlignment(align, yalign)
+	Processing.Renderer:SetTextAlignment(align)
+end
 
 --[==============================[
 	TRANSFORMATION
@@ -397,9 +320,7 @@ end
 --]==============================]
 
 function Processing.ApplyState()
-	Processing.SetBackgroundColor(Processing.BackgroundColor)
-	Processing.SetFillColor(Processing.FillColor)
-	Processing.SetStrokeColor(Processing.StrokeColor)
+	Processing.Renderer:ApplyAttributes();
 	Processing.SetSmooth(Processing.Smooth)
 end
 
@@ -423,6 +344,8 @@ function Processing.Compile(inputtext)
 	local graphics = defaultrenderer
 
 
+	Processing.Renderer:loadPixels()
+
 	-- Apply State before compiling
 	-- new code
 	Processing.ApplyState()
@@ -431,6 +354,7 @@ function Processing.Compile(inputtext)
 	OrthoCamera.Render()
 
 	Processing.ClearGlobalFunctions();
+	Processing.Renderer:Clear();
 
 	-- Compile the code
 	local f = loadstring(inputtext)
@@ -440,6 +364,10 @@ function Processing.Compile(inputtext)
 		--print("User Defined setup()")
 		_G.setup()
 	end
+
+	-- Update pixels and draw to screen
+	Processing.Renderer:updatePixels()
+	Processing.Renderer:Render(0,0)
 
 	-- Run animation loop
 	Processing.StartAnimation()
@@ -480,6 +408,11 @@ function Processing.StartAnimation()
 			Processing.Tick()
 			frameCount = frameCount + 1
 			nextTime = nextTime + secondsperframe
+
+			-- Update pixels and draw to screen
+			-- Draw the pixels to the screen
+			Processing.Renderer:updatePixels()
+			Processing.Renderer:Render(0,0)
 		end
 	until status == iup.CLOSE
 
@@ -576,7 +509,7 @@ function Processing.MouseUp(but, x, y, status)
 	isMousePressed = false;
 end
 
-
+--[[
 -- Setup Animation Timer
 function createTimer(frequency)
 	aTimer = iup.timer({time=1000/frequency})
@@ -589,3 +522,4 @@ defaultTimer = createTimer(defaultFrequency)
 function defaultTimer.action_cb(self)
 	Processing.Tick()
 end
+--]]

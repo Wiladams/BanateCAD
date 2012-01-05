@@ -1,5 +1,5 @@
-local class = require "pl.class"
 require "luagl"
+--local class = require "pl.class"
 
 class.Texture()
 
@@ -80,29 +80,27 @@ function Texture:_init(...)
 	end
 end
 
+function Texture.CopyGLData(self, img)
+	local gldata, glformat = img:GetOpenGLData()
+
+	-- Enable Texture Mapping
+	gl.Enable('TEXTURE_2D')
+	self:MakeCurrent();
+	gl.PixelStore(gl.UNPACK_ALIGNMENT, 1)
+	self.glformat = glformat
+
+	-- Copy the pixel data into the texture object
+	--gl.TexImage2D(0, self.glPixelSize, self.width, self.height, 0, self.glformat, gl.UNSIGNED_BYTE, gldata);
+--print("Texture.CopyGLData() - ",self.width, self.height, self.glformat, self.glPixelSize)
+
+	gl.TexSubImage2D (0, 0, 0, self.width, self.height, 'RGBA', gl.UNSIGNED_BYTE, gldata)
+end
+
 function Texture.MakeCurrent(self)
+--print("Texture.MakeCurrent() - ID: ", self.TextureID);
   gl.BindTexture('TEXTURE_2D', self.TextureID)
 end
 
-function create2DPixelArray(width, height, depth, pixels1D)
-	-- create 2D pixel array
-	local pixels2D = {}
-	local offset = 1
-	for row=1,height do
-		local rowarray = {}
-		-- A single row
-		for col=1, width do
-			-- A single pixel
-			for comp=1,depth do
-				table.insert(rowarray, pixels1D[offset])
-				offset = offset + 1
-			end
-		end
-		table.insert(pixels2D, rowarray)
-	end
-
-	return pixels2D
-end
 
 function Texture.CreatePixelArray(self)
 	-- get a copy of the texture data into an array
@@ -156,4 +154,24 @@ function Texture.Render(self, x, y, awidth, aheight)
 
 	-- Disable Texture Mapping
 	gl.Disable('TEXTURE_2D')
+end
+
+function create2DPixelArray(width, height, depth, pixels1D)
+	-- create 2D pixel array
+	local pixels2D = {}
+	local offset = 1
+	for row=1,height do
+		local rowarray = {}
+		-- A single row
+		for col=1, width do
+			-- A single pixel
+			for comp=1,depth do
+				table.insert(rowarray, pixels1D[offset])
+				offset = offset + 1
+			end
+		end
+		table.insert(pixels2D, rowarray)
+	end
+
+	return pixels2D
 end

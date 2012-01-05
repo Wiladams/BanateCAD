@@ -2,8 +2,10 @@ require"imlua"
 require"cdlua"
 require"cdluaim"
 
+--require "color"
+--require "Texture"
 
-local class = require "pl.class"
+--local class = require "pl.class"
 
 class.IMRenderer()
 
@@ -14,28 +16,38 @@ function IMRenderer:_init(awidth, aheight)
 	-- Create the basic image
 	self.Image = im.ImageCreate(awidth, aheight, im.RGB, im.BYTE)
 	self.Image:AddAlpha();
+
+	-- Copy the data to the actual texture object
+	--self:CreateTexture()
+
+	-- Create canvas for drawing commands
 	self.canvas = self.Image:cdCreateCanvas()  -- Creates a CD_IMAGERGB canvas
 
 	-- Activate the canvas so we can draw into it
 	self.canvas:Activate();
 	self.canvas:YAxisMode(1)	-- Invert the y-axis
-	--self.canvas:InvertYAxis(1)
 
-	self:ApplyAttributes();
 
-	return self
+	self:SetStrokeColor(color(0))
+	self:SetFillColor(color(255))
+	self:SetBackgroundColor(color(53))
+
+	--return self
 end
 
 function IMRenderer.ApplyAttributes(self)
 	-- Apply attributes before any drawing occurs
-	self:SetStrokeColor(color(0))
-	self:SetFillColor(color(255))
-	self:SetBackgroundColor(color(53))
+	self:SetStrokeColor(self.StrokeColor)
+	self:SetFillColor(self.FillColor)
+	self:SetBackgroundColor(self.BackgroundColor)
 end
 
 function IMRenderer.get(self, x, y)
 	local row = self.height-1 - y
 	local col = x
+
+	if row < 0 or row > self.height-1 then return end
+	if col < 0 or col > self.width-1 then return end
 
 	local r = self.Image[0][row][col]
 	local g = self.Image[1][row][col]
@@ -59,7 +71,7 @@ end
 function IMRenderer.loadPixels(self)
 end
 
-function IMRenderer.updatePixels(self)
+function IMRenderer.CreateTexture(self)
 	-- Copy the data to the actual texture object
 	local gldata, glformat = self.Image:GetOpenGLData()
 
@@ -69,18 +81,56 @@ function IMRenderer.updatePixels(self)
 	self.Texture = Texture(self.width, self.height, glformat, gldata)
 end
 
+function IMRenderer.GetTexture(self)
+	if self.Texture ~= nil then
+		return self.Texture
+	end
+
+	self:CreateTexture();
+
+	return self.Texture;
+end
+
+function IMRenderer.updatePixels(self)
+	-- Copy the data to the actual texture object
+
+	local tx = self:GetTexture()
+	if tx ~= nil then
+		tx:CopyGLData(self.Image)
+	end
+end
+
 function IMRenderer.Render(self, x, y, awidth, aheight)
-	self.Texture:Render(x, y, awidth, aheight)
+	local tx = self:GetTexture()
+	if tx ~= nil then
+		tx:Render(x, y, awidth, aheight)
+	end
 end
 
 
---[[
+--[==========[
 	Rendering
---]]
+--]==========]
 
 --[[
 	ATTRIBUTES
 --]]
+function IMRenderer.SetLineCap(self, cap)
+	self.LineCap = cap
+	self.canvas:LineCap(cap)
+print("IMRenderer.SetLineCap()", cap)
+end
+
+function IMRenderer.SetLineJoin(self, join)
+	self.LineJoin = join
+	self.canvas:LineJoin(join)
+end
+
+function IMRenderer.SetLineWidth(self, lwidth)
+	self.LineWidth = lwidth
+	self.canvas:LineWidth(lwidth)
+end
+
 function IMRenderer.SetStrokeColor(self, acolor)
 	self.StrokeColor = acolor;
 
@@ -163,3 +213,4 @@ function IMRenderer.DrawText(self, x, y, txt)
 	self.canvas:Text(x, row, txt)
 	self.canvas:YAxisMode(1)	-- Invert the y-axis
 end
+

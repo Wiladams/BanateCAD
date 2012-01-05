@@ -39,19 +39,23 @@ end
 function filter()
 end
 
-function get()
+function get(x, y)
+	return Processing.Renderer:get(x,y)
 end
 
-function set()
+function set(x, y, acolor)
+	Processing.Renderer:set(x, y, acolor)
 end
 
 function loadPixels()
+	Processing.Renderer:loadPixels()
 end
 
 function pixels()
 end
 
 function updatePixels()
+	Processing.Renderer:updatePixels();
 end
 
 

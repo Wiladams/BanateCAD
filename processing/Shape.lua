@@ -118,6 +118,14 @@ function pointSize(ptSize)
 	Processing.SetPointSize(ptSize)
 end
 
+function strokeCap(cap)
+	Processing.SetLineCap(cap);
+end
+
+function strokeJoin(join)
+	Processing.SetLineJoin(join)
+end
+
 function strokeWeight(weight)
 	Processing.SetStrokeWeight(weight)
 end
