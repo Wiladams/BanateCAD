@@ -17,6 +17,8 @@ local AppName = "Banate Processing";
 local appctx = BAppContext:new({
 		Modules={
 			"core",
+			"geometry",
+			"UI",
 			"Processing",
 		}
 	})

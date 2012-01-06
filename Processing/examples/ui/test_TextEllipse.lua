@@ -1,25 +1,61 @@
 
-class.IPEllipse()
+class.EllipseLabel()
 
-function IPEllipse:_init(ipname, centerx, centery, acolor)
+function EllipseLabel:_init(ipname, centerx, centery, acolor)
 	self.centerx = centerx
 	self.centery = centery
 	self.color = acolor
 	self.name = ipname
-	self.sizex = 172
-	self.sizey = 38
+	self.width = 172
+	self.height = 38
 
 end
 
-function IPEllipse:render()
+function EllipseLabel:render()
 	strokeWeight(1)
 	fill(self.color)
 
-	ellipse(self.centerx, self.centery, self.sizex, self.sizey)
+	ellipse(self.centerx, self.centery, self.width, self.height)
 	textFont("Quartz, 9")
 	textAlign(cd.CENTER);
 	text(self.centerx, self.centery, self.name)
 end
+
+
+
+class.StarCluster()
+
+function StarCluster:_init(namelist, centerx, centery, radius, acolor)
+	self.LabelList = {}
+	local stepAngle = 2*PI / #namelist
+
+	for i=1,#namelist in ipairs(namelist) do
+		local x = radius * cos(stepAngle*i)
+		local y = radius * sin(stepAngle*i)
+		local label = EllipseLabel(name, x, y, acolor)
+		table.insert(self.LabelList, label)
+	end
+end
+
+function StarCluster:render()
+	-- Draw some interesting lines
+	for _,label in ipairs(self.LabelList) do
+		line(10, 250, label.centerx, label.centery)
+	end
+
+	for _,label in ipairs(self.LabelList) do
+		label:render()
+	end
+end
+
+
+
+
+
+
+
+
+
 
 function setup()
 	size(600,400)

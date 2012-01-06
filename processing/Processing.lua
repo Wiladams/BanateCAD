@@ -83,10 +83,6 @@ function defaultglcanvas.keypress_cb(c, press)
 	return iup.DEFAULT
 end
 
---function defaultglcanvas.k_any(self, c)
---	Processing.KeyActivity(c);
---end
-
 -- Mouse Activity
 function defaultglcanvas.motion_cb(self, x, y, status)
 	Processing.MouseMove(x, y, status);
@@ -110,17 +106,18 @@ end
 --]]
 
 
-defaultrenderer = GLRenderer:new()
+--defaultrenderer = GLRenderer:new()
+defaultrenderer = IMRenderer(1920, 1080)
 
 -- Initial Processing State
 Processing = {
-	Renderer = IMRenderer(1920, 1080),
+	Renderer = defaultrenderer,
 
 	ColorMode = RGB,
 
-	BackgroundColor = color(127, 255),
-	FillColor = color(255),
-	StrokeColor = color(0),
+	BackgroundColor = Color(127, 127, 127, 255),
+	FillColor = Color(255,255,255,255),
+	StrokeColor = Color(0,0,0,255),
 
 	StrokeWeight = 1,
 
@@ -150,7 +147,7 @@ function Processing.SetSmooth(smoothing)
 	local graphics = defaultrenderer
 	Processing.Smooth = smoothing
 
-	graphics:SetAntiAlias(smoothing)
+	Processing.Renderer:SetAntiAlias(smoothing)
 end
 
 function Processing.SetBackgroundColor(acolor)
@@ -188,8 +185,8 @@ end
 
 function Processing.SetStrokeWeight(weight)
 	Processing.StrokeWeight = weight
-	local graphics = defaultrenderer
-	graphics:SetLineWidth(weight)
+	--local graphics = defaultrenderer
+	--graphics:SetLineWidth(weight)
 
 	Processing.Renderer:SetLineWidth(weight)
 end
@@ -209,25 +206,12 @@ function Processing.DrawPolygon(pts, use3D)
 	Processing.Renderer:DrawPolygon(pts)
 end
 
-function Processing.DrawRect(x, y, width, height)
-	local pts = {
-		Vector3D.new{x, y, 0},
-		Vector3D.new{x, y+height, 0},
-		Vector3D.new{x+width, y+height, 0},
-		Vector3D.new{x+width, y, 0},
-	}
-
-	Processing.DrawPolygon(pts)
+function Processing.DrawRect(x, y, w, h)
+	Processing.Renderer:DrawRect(x, y, w, h)
 end
 
 function Processing.DrawTriangle(x1, y1, x2, y2, x3, y3)
-	local pts = {
-		Vector3D.new{x1, y1, 0},
-		Vector3D.new{x3, y3, 0},
-		Vector3D.new{x2, y2, 0},
-	}
-
-	Processing.DrawPolygon(pts)
+	Processing.Renderer:DrawTriangle(x1, y1, x2, y2, x3, y3)
 end
 
 function Processing.DrawQuad(x1, y1, x2, y2, x3, y3, x4, y4)

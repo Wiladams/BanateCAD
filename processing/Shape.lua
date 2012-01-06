@@ -1,3 +1,119 @@
+--[[
+function blue(c)
+	local b = band(c, 0xff)
+	return b
+end
+
+function green(c)
+	local g = band(rshift(c, 8), 0xff)
+	return g
+end
+
+function red(c)
+	local r = band(rshift(c, 16), 0xff)
+	return r
+end
+
+function alpha(c)
+	local a = band(rshift(c, 24), 0xff)
+	return a
+end
+--]]
+
+function color(...)
+	-- There can be 1, 2, 3, or 4, arguments
+--	print("Color.new - ", arg.n)
+
+	local r = 0
+	local g = 0
+	local b = 0
+	local a = 0
+
+--	if Processing.ColorMode == RGB then
+	if true then
+		if (arg.n == 1) then
+			r = arg[1]
+			g = arg[1]
+			b = arg[1]
+			a = 255
+		elseif arg.n == 2 then
+			r = arg[1]
+			g = arg[1]
+			b = arg[1]
+			a = arg[2]
+		elseif arg.n == 3 then
+			r = arg[1]
+			g = arg[2]
+			b = arg[3]
+			a = 255
+		elseif arg.n == 4 then
+			r = arg[1]
+			g = arg[2]
+			b = arg[3]
+			a = arg[4]
+		end
+	end
+
+	return Color(r,g,b,a)
+
+end
+
+function background(...)
+	if arg.n == 1 and type(arg[1]) == "table" then
+		return Processing.SetBackgroundColor(arg[1])
+	end
+
+	local acolor = color(unpack(arg))
+--print("background: ", acolor[1], acolor[2], acolor[3], acolor[4])
+	return Processing.SetBackgroundColor(acolor)
+end
+
+function colorMode(amode)
+	-- if it's not valid input, just return
+	if amode ~= RGB and amode ~= HSB then return end
+
+	return Processing.SetColorMode(amode)
+end
+
+function fill(...)
+	-- See if we're being passed a 'Color'
+	-- type
+	if arg.n == 1 and type(arg[1]) == "table" then
+		return Processing.SetFillColor(arg[1])
+	end
+
+	local acolor = color(unpack(arg))
+
+	return Processing.SetFillColor(acolor)
+end
+
+function noFill()
+	local acolor = color(0,0,0,0)
+
+	return Processing.SetFillColor(acolor)
+end
+
+function noStroke(...)
+	local acolor = color(0,0,0,0)
+
+	return Processing.SetStrokeColor(acolor)
+end
+
+function stroke(...)
+	if arg.n == 1 and type(arg[1]) == "table" then
+		-- We already have a color structure
+		-- so just set it
+		return Processing.SetStrokeColor(arg[1])
+	end
+
+	-- Otherwise, construct a new color object
+	-- and set it
+	local acolor = color(unpack(arg))
+
+	return Processing.SetStrokeColor(acolor)
+end
+
+
 function point(x,y,z)
 	Processing.DrawPoint(x,y,z)
 end
