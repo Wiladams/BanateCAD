@@ -4,10 +4,11 @@ require"cdluaim"
 
 --require "color"
 --require "Texture"
+--local Renderer = require "Renderer"
 
 --local class = require "pl.class"
 
-class.IMRenderer()
+class.IMRenderer(Renderer)
 
 function IMRenderer:_init(awidth, aheight)
 	self.width = awidth;
@@ -39,6 +40,12 @@ function IMRenderer:_init(awidth, aheight)
 end
 
 function IMRenderer.ApplyAttributes(self)
+--[[
+print("IMRenderer.ApplyAttributes - BEGIN")
+print(self.StrokeColor)
+print(self.FillColor)
+print(self.BackgroundColor)
+--]]
 	-- Apply attributes before any drawing occurs
 	self:SetStrokeColor(self.StrokeColor)
 	self:SetFillColor(self.FillColor)
@@ -200,6 +207,7 @@ function IMRenderer.DrawPolygon(self, pts)
 	end
 end
 
+
 function IMRenderer.DrawRect(self, x, y, w, h)
 	local pts = {
 		Vector3D.new{x, y, 0},
@@ -220,6 +228,7 @@ function IMRenderer.DrawTriangle(self, x1, y1, x2, y2, x3, y3)
 
 	self:DrawPolygon(pts)
 end
+
 
 --[[
 	TYPOGRAPHY

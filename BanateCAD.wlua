@@ -15,6 +15,8 @@ require ("BAppContext")
 local appctx = BAppContext:new({
 	Modules={
 		"core",			-- Guts of the system
+		"Geometry",
+		"UI",
 		"csg",
 		"BanateCAD",	-- For BanateCAD specifics
 		"codec",		-- Coder/Decoder for files

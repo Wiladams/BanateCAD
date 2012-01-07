@@ -37,3 +37,4 @@ function Color.__tostring(self)
 end
 
 
+return Color
