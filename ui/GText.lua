@@ -1,6 +1,22 @@
 local class = require "pl.class"
+local IMRenderer = require "IMRenderer"
 
 class.GText()
+
+GText._TextMeasurer = IMRenderer(1,1)
+
+-- Measure the size of a string
+function GText.MeasureString(txt)
+	renderer = GText._TextMeasurer
+
+	local fontdesc = txt.FontName..', '..txt.FontStyle..' '..txt.FontSize
+
+	--textFont(fontdesc)
+	renderer:SetFont(fontdesc)
+	local txtsize = GText._TextMeasurer:MeasureString(txt.Text)
+
+	return txtsize
+end
 
 function GText:_init(atext, pos, params)
 	params = params or {}
@@ -23,13 +39,15 @@ function GText:_init(atext, pos, params)
 
 -- FontSize
 	self.FontSize = params.FontSize or 9
+
+	self.Size = GText.MeasureString(self)
 end
 
 function GText:render(renderer)
 	renderer = renderer or defaultrenderer
 	local fontdesc = self.FontName..', '..self.FontStyle..' '..self.FontSize
 
-print(fontdesc)
+--print(fontdesc)
 --print(self.Alignment)
 --print(self.Position[1], self.Position[2])
 

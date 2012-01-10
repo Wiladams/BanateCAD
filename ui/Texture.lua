@@ -1,5 +1,5 @@
 require "luagl"
---local class = require "pl.class"
+local class = require "pl.class"
 
 class.Texture()
 

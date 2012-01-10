@@ -1,7 +1,32 @@
 TODO
 
-Change Render to be on the camera, rather than the Viewer
-Implement some Animations
+
 Implement UI overlays
-Implement Command Distribution (Renderer)
+	Implement Graphic Group
+	Implement Caption
+	Implement PushButton
+	Implement TrackSlider
+	
+Finish CSG Implementation
+
+Connect HUD to designs
+
+
+Notes to self
+A dynamic design will create a UI configuration.  That configuration
+will consist of a number of numeric elements.
+
+Each element has a range, and whether it is discrete or contiguous
+
+desc = {
+	title = "Super Ellipse",
+	fields = {
+		{name = "XRadius", id = "xrad", low="1", high="10", continuous = true},
+		{name = "YRadius", id = "yrad", low="1", high="10", continuous = true},
+		{name = "N", id = "n", low="0.1", high="5", continuous = false, increment = 0.1},
+	}
+}
+
+
+
 

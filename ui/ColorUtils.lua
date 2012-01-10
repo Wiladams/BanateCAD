@@ -1,3 +1,8 @@
+local bit = require "bit"
+
+local band = bit.band
+local lshift = bit.lshift
+local rshift = bit.rshift
 --local color = require "Color"
 
 ColorUtils = {}
@@ -17,5 +22,34 @@ function ColorUtils.brighter(acolor)
 
 	return Color(red, green, blue);
 end
+
+function ColorUtils.cref(r,g,b,a)
+	a = a or 255
+	b = b or 0
+	g = g or 0
+	r = r or 0
+
+	local value = lshift(a, 24) + lshift(r, 16) + lshift(g, 8) + b
+	return value
+end
+
+function ColorUtils.rgba(c)
+	local b = band(c, 0xff)
+	c = rshift(c,8)
+	local g = band(c, 0xff)
+	c = rshift(c,8)
+	local r = band(c, 0xff)
+	c = rshift(c, 8)
+	local a = band(c, 0xff)
+
+	return r,g,b,a
+end
+
+function ColorUtils.rgbaNormalized(c)
+	local r,g,b,a = rgba(c)
+
+	return {r/255, g/255, b/255, a/255}
+end
+
 
 return ColorUtils

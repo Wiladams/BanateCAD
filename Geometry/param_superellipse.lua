@@ -1,4 +1,5 @@
---require ("Class")
+local class = require "pl.class"
+
 
 function sign(n)
 	if n < 0 then
@@ -7,15 +8,12 @@ function sign(n)
 	return 1
 end
 
-param_superellipse = inheritsFrom(nil)
-function param_superellipse.new(params)
-	local new_inst = param_superellipse.create()
+class.param_superellipse()
 
-	new_inst.XRadius = params.XRadius or 1
-	new_inst.ZRadius = params.ZRadius or 1
-	new_inst.N = params.N or 1
-
-	return new_inst
+function param_superellipse:_init(params)
+	self.XRadius = params.XRadius or 1
+	self.ZRadius = params.ZRadius or 1
+	self.N = params.N or 1
 end
 
 function param_superellipse.GetProfileVertex(self, u)

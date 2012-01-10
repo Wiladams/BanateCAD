@@ -1,4 +1,4 @@
-require ("Shape")
+--require ("Shape")
 
 ParticleSystem = inheritsFrom(Shape);
 function ParticleSystem.new(params)
