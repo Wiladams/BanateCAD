@@ -1,0 +1,148 @@
+--someballs  = {{-10, -13, 0, 5},{10, -13, 0, 5}, {-2, 11, 0, 5},{-2, 11, 5, 3}}
+--someballs  = {{-10, -13, 0, 5},{10, -13, 0, 5}, {-2, 11, 0, 5},{-2, 11, 5, 3},{-2, 18, 7, 2}}
+--someballs  = {{-8, -13, 0, 5}, {10, -13, 0, 5}}
+local someballs = {{-10, -13, 0, 5}, {10, -13, 0, 5}, {-2, 11, 0, 5}}
+
+function ringballs()
+	local influence = 1.75	
+	local OR = 7
+
+	local ring = {
+		{OR, 0, 0, influence},
+		{0, OR, 0, influence},
+		{-OR, 0, 0, influence},
+		{0, -OR, 0, influence},
+
+		{OR, OR, 0, influence/2},
+		{-OR, OR, 0, influence/2},
+		{-OR, -OR, 0, influence/2},	
+		{OR, -OR, 0, influence/2},
+
+
+		{-OR, OR, OR, influence/2},
+		{OR, -OR, OR, influence/2},
+
+		-- arms
+		{OR*1.618, OR*1.618, OR*1.618, influence*1/3},
+		{-OR*1.618, -OR*1.618, OR*1.618, influence*1/3},	
+
+
+		{-OR*.3, OR*.3, -OR, influence/2},
+		{OR*.3, -OR, -OR*.3, influence/2},
+
+		-- Legs
+		{OR, OR, -OR*2.75, influence/2},
+		{-OR, -OR, -OR*2.75, influence/2},	
+
+		{0,0,OR*3, influence*1.75/3},
+		}
+
+	local ablob = shape_metaball.new({
+		balls = ring,
+		radius = 60,
+		USteps = 60,
+		WSteps = 90,
+		Threshold = 0.00001,
+	})
+
+--	color(crayola.rgb("Purple"))
+--	for _,v in ipairs(ring) do
+--		translate(v)
+--		sphere(v[4])
+--	end
+
+	color(crayola.rgba("Yellow", 0.75))
+	addmesh(ablob:GetMesh())
+end
+
+
+-- Show the isosurface, as well as the bounding box
+function boundingballs()
+	local blobula = shape_metaball.new({
+		balls = someballs,
+		radius = 60,
+		stacksteps = 180,
+		anglesteps = 180,
+	})
+
+	addmesh(blobula:GetMesh())
+
+	local bounds = blobula.Bounds
+
+	addshape(bounds)
+end
+
+function fingers()
+
+-- Some 'fingers'
+-- finger1
+seg1 = {{0, -10, 0, 3}, {0, 0, 0, 3}}
+seg2 = {{0, 0, 0, 3}, {0, 10, 3, 3}}
+
+-- Show the influencing balls
+color(crayola.rgb("Purple"))
+for _,v in ipairs(seg1) do
+	translate(v)
+	sphere(2)
+end
+
+color(crayola.rgb("Purple"))
+for _,v in ipairs(seg2) do
+	translate(v)
+	sphere(2)
+end
+
+	local radius = 100
+	local beamsteps = 300
+	color(crayola.rgba("Flesh", 0.65))
+	blobs(seg1, radius, 30, 30, beamsteps)
+
+	--color(crayola.rgba("Yellow", 0.65))
+	blobs(seg2, radius, 30, 30, beamsteps)
+end
+
+local triballs = {
+	{-10,-5,12,5},		-- eye
+	{10,-5,12,5},		-- eye
+
+	--{0,10,0,5},
+	{0,-30,0,5},		-- snout
+
+	{0,0,5,5}
+	}
+
+function tripod()
+	local radius = 30
+	local beamsteps = 300
+
+	color(crayola.rgb("Purple"))
+	for _,v in ipairs(triballs) do
+		translate(v)
+		sphere(v[4])
+	end
+
+	color(crayola.rgba("Asparagus", 0.75))
+	blobs(triballs, radius, 180, 180, beamsteps)
+end
+
+function deciballs(theballs)
+	searchvolume = {60,80,60}	-- Describes the search volume.  
+	resolution = {2,2,2}			-- How many blocks per unit of measure
+	dotradius = 1/resolution[1]	-- The size of each of the blocks
+
+	for v in IterateMetaballs(theballs, searchvolume, resolution) do
+		color({v[1]/30,v[2]/10,v[3]/20,1})	-- Create some interesting color
+		translate(v)
+		--tetrahedron(dotradius)
+		hexahedron(dotradius)	-- This sould be 1/resolution for a water tight print
+	end
+end
+
+
+
+--fingers()
+--balls()
+--tripod()
+--deciballs(triballs)
+--boundingballs()
+ringballs()
