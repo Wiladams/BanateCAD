@@ -1,120 +1,135 @@
+local class = require "pl.class"
 
--- This is the cheapest way to setup a 'class'
-Point3D = {}
-Point3D_mt = {}
+class.Point3D()
 
-function Point3D.new(...)
-	local this = {}
-	setmetatable(this, Point3D_mt)
 
-	if arg.n == 3 then
+function Point3D:_init(...)
+	if arg.n == 0 then
+		-- default constructor
+		self[1] = 0
+		self[2] = 0
+		self[3] = 0
+		self[4] = 1
+	elseif arg.n == 2 then
 		-- Three discreet arguments
-		this[1] = arg[1]
-		this[2] = arg[2]
-		this[3] = arg[3]
+		self[1] = arg[1]
+		self[2] = arg[2]
+		self[3] = 0
+		self[4] = 1
+	elseif arg.n == 3 then
+		-- Three discreet arguments
+		self[1] = arg[1]
+		self[2] = arg[2]
+		self[3] = arg[3]
+		self[4] = 1
 	elseif arg.n == 1 and type(arg[1]) == "table" then
 		-- Single argument that is a table
-		this[1] = arg[1][1];
-		this[2] = arg[1][2];
-		this[3] = arg[1][3];
+		self[1] = arg[1][1];
+		self[2] = arg[1][2];
+		self[3] = arg[1][3];
+		self[4] = 1
 	end
-
-	return this
 end
 
-function Point3D.clone(this)
-	local new_inst = Point3D.new(this)
+function Point3D.clone(self)
+	local new_inst = Point3D(self)
 
 	return new_inst
 end
 
+function Point3D.x(self)
+	return self[1]
+end
+
+function Point3D.y(self)
+	return self[2]
+end
+
+function Point3D.z(self)
+	return self[3]
+end
+
 -- Arithmetic overloads
-function Point3D.add(a, b)
+function Point3D.__add(a, b)
 	if type(a) == "table" and type(b) == "table" then
-		return Point3D.new{a[1]+b[1], a[2]+b[2], a[3]+b[3]}
+		return Point3D(a[1]+b[1], a[2]+b[2], a[3]+b[3])
 	end
 
 	return nil
 end
 
-function Point3D.sub(a, b)
+function Point3D.__sub(a, b)
 	if type(a) == "table" and type(b) == "table" then
-		return Point3D.new{a[1]-b[1], a[2]-b[2], a[3]-b[3]}
+		return Point3D(a[1]-b[1], a[2]-b[2], a[3]-b[3])
 	end
 
 	return nil
 end
 
 function Point3D.mults(v,s)
-	local res = Point3D.new({v[1]*s, v[2]*s, v[3]*s})
+	local res = Point3D(v[1]*s, v[2]*s, v[3]*s)
 
 	return res
 end
 
-function Point3D.mul(a, b)
-	local res = Point3D.new{}
+function Point3D.__mul(a, b)
+	local res = Point3D()
 	local bnumber = type(b) == 'number'
 	local anumber = type(a) == 'number'
 
 	if bnumber then
-		for i=1,#a do
-			local f = a[i] * b
-			table.insert(res, f)
-		end
+		res[1] = a[1] * b
+		res[2] = a[2] * b
+		res[3] = a[3] * b
 	elseif anumber then
-		for i=1,#b do
-			local f = b[i] * a
-			table.insert(res, f)
-		end
+		res[1] = b[1] * a
+		res[2] = b[2] * a
+		res[3] = b[3] * a
 	else
-		for i=1,#a do
-			local f = a[i] * b[i]
-			table.insert(res, f)
-		end
+		res[1] = a[1] * b[1]
+		res[2] = a[2] * b[2]
+		res[3] = a[3] * b[3]
 	end
 
 	return res
 end
 
-function Point3D.div(a, b)
-	local res = Point3D.new{}
+function Point3D.__div(a, b)
+	local res = Point3D()
 	local bnumber = type(b) == 'number'
 	local anumber = type(a) == 'number'
 
 	if bnumber then
-		for i=1,#a do
-			local f = a[i] / b
-			table.insert(res, f)
-		end
+		res[1] = a[1] / b
+		res[2] = a[2] / b
+		res[3] = a[3] / b
 	elseif anumber then
-		for i=1,#b do
-			local f = b[i] / a
-			table.insert(res, f)
-		end
+		res[1] = b[1] / a
+		res[2] = b[2] / a
+		res[3] = b[3] / a
 	else
-		for i=1,#a do
-			local f = a[i] / b[i]
-			table.insert(res, f)
-		end
+		res[1] = a[1] / b[1]
+		res[2] = a[2] / b[2]
+		res[3] = a[3] / b[3]
 	end
 
 	return res
 end
 
-function Point3D.neg(this)
-	local res = Point3D.new({-this[1], -this[2], -this[3]})
+function Point3D.__unm(self)
+	local res = Point3D(-self[1], -self[2], -self[3])
 
 	return res
 end
 
 -- Linear Algebra Functions
 
-function Point3D.lerp(this, a, t)
-    return this + ((a - this) * t)
+function Point3D.lerp(self, a, t)
+    return self + ((a - self) * t)
 end
 
 -- Convenience functions
-function Point3D.tostring (self)
+function Point3D.__tostring (self)
       local s = "{"
       local sep = ""
       for i=1,#self do
@@ -166,40 +181,26 @@ function Point3D_swizzler(t, key)
 	return nil
 end
 
-
 -- Setup the meta methods
-Point3D_mt.__index = Point3D_swizzler
---Point3D.mt.__index = Point3D
-Point3D_mt.__add = Point3D.add
-Point3D_mt.__div = Point3D.div
-Point3D_mt.__sub = Point3D.sub
-Point3D_mt.__mul = Point3D.mul
-Point3D_mt.__unm = Point3D.neg
-Point3D_mt.__tostring = Point3D.tostring
+--Point3D_mt.__index = Point3D_swizzler
 
-Point3D.Zero = Point3D.new({0,0,0})
+Point3D.Zero = Point3D()
 
 
 
 
 
 
-
---[[
+---[[
 print("Point3D.lua")
 --Quick Tests
-v1 = Point3D.new{1,0,0}
-v2 = Point3D.new{2,3, 4}
-vX = Point3D.new{1, 0, 0}
-vY = Point3D.new{0,1,0}
+v1 = Point3D(1,0,0)
+v2 = Point3D(2,3, 4)
+vX = Point3D(1, 0, 0)
+vY = Point3D(0,1,0)
 
-print(v1.x, v1.y, v1.z)
+print(v1[1], v1[2], v1[3])
 
-print("Length v1: ", v1:length())
-print("Length v2: ", v2:length())
-
-print("Unit v1: ", v1:unit())
-print("Unit v2: ", v2:unit())
 
 v3 = v1 + v2
 v4 = v1 - v2
@@ -217,11 +218,10 @@ print(v6/2)
 
 print(-v2)
 
-local vZ = vX:cross(vY)
-print("Cross: ", vZ)
 
-print("Lerp: ", vZ:lerp(vX, 0.5))
+print("Lerp: ", v1:lerp(v2, 0.5))
 
 print("Homogenous: ", v1[4])
 --]]
 
+return Point3D
