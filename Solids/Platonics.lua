@@ -3,6 +3,8 @@
 -- BanateCAD
 -- Copyright (c) 2011  William Adams
 --
+require "maths"
+local class = require "pl.class"
 
 --[[
 
@@ -150,13 +152,11 @@ tetra_edges = {
 	};
 
 --function tetrahedron(rad=1) = [tetra_unit(rad), tetrafaces, tetra_edges];
-shape_tetrahedron = {}
-function shape_tetrahedron:new(o)
+class.shape_tetrahedron()
+function shape_tetrahedron:_init(o)
 	o = o or {}		-- create object if user does not provide one
-	setmetatable(o, self)
-	self.__index = self
 
-	return o
+	self.radius = o.radius or 1
 end
 
 function shape_tetrahedron.GetMesh(self)
@@ -249,13 +249,11 @@ hexa_edges = [
 
 --function hexahedron(rad=1) =[hexa_unit(rad), hexafaces, hexa_edges];
 
-shape_hexahedron = {}
-function shape_hexahedron:new(o)
+class.shape_hexahedron()
+function shape_hexahedron:_init(o)
 	o = o or {}		-- create object if user does not provide one
-	setmetatable(o, self)
-	self.__index = self
 
-	return o
+	self.radius = o.radius or 1
 end
 
 function shape_hexahedron.GetMesh(self)
@@ -332,13 +330,11 @@ octa_edges = [
 
 function octahedron(rad=1) = [octa_unit(rad), octafaces, octa_edges];
 --]]
-shape_octahedron = {}
-function shape_octahedron:new(o)
+class.shape_octahedron()
+function shape_octahedron:_init(o)
 	o = o or {}		-- create object if user does not provide one
-	setmetatable(o, self)
-	self.__index = self
 
-	return o
+	self.radius = o.radius or 1
 end
 
 function shape_octahedron.GetMesh(self)
@@ -541,13 +537,11 @@ dodeca_edges=[
 function dodecahedron(rad=1) = [dodeca_unit(rad), dodeca_faces, dodeca_edges];
 --]]
 
-shape_dodecahedron = {}
-function shape_dodecahedron:new(o)
+class.shape_dodecahedron()
+function shape_dodecahedron:_init(o)
 	o = o or {}		-- create object if user does not provide one
-	setmetatable(o, self)
-	self.__index = self
 
-	return o
+	self.radius = o.radius or 1
 end
 
 function shape_dodecahedron.GetMesh(self)
@@ -691,13 +685,11 @@ icosa_edges = [
 
 function icosahedron(rad=1) = [icosa_unit(rad), icosa_faces, icosa_edges];
 --]]
-shape_icosahedron = {}
-function shape_icosahedron:new(o)
+class.shape_icosahedron()
+function shape_icosahedron:_init(o)
 	o = o or {}		-- create object if user does not provide one
-	setmetatable(o, self)
-	self.__index = self
 
-	return o
+	self.radius = o.radius or 1
 end
 
 function shape_icosahedron.GetMesh(self)

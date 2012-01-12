@@ -12,7 +12,7 @@ for v in pairs(crayola) do
 		--print(v)
 		color(crayola.rgb(v))
 		translate({column*size, row*size, 0})
-		sphere(3)
+		dodecahedron(3)
 		column = column + 1
 		if column > width then
 			column = 1

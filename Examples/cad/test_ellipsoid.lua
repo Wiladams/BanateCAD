@@ -55,7 +55,7 @@ function bumpy_ellipse()
 		MaxPhi = math.rad(360),
 	})
 
-	local dispSampler = DisplacementSampler.new({
+	local dispSampler = DisplacementSampler({
 			VertexSampler = vertsampler,
 			HeightSampler = checksampler,
 			MaxHeight = 1,

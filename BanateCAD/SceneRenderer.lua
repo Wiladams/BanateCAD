@@ -8,6 +8,7 @@
 
 require ("luagl")
 require ("luaglu")
+
 --
 -- Display the Scene
 --
@@ -25,7 +26,8 @@ class.SceneRenderer()
 function SceneRenderer:_init(o)
 	o = o or {}		-- create object if user does not provide one
 
-	o.transform = {}
+	self.transform = {}
+	--self.GraphPort = GLRenderer()
 end
 
 function SceneRenderer.ClearCachedObjects(self, ascene)
@@ -48,14 +50,21 @@ end
 --	TRANSFORM PRIMITIVES
 --=========================================
 function SceneRenderer.SaveTransform(self)
+	--self.GraphPort:SaveTransform()
+
 	gl.PushMatrix()
 end
 
 function SceneRenderer.RestoreTransform(self)
+	--self.GraphPort:RestoreTransform()
+
 	gl.PopMatrix()
 end
 
 function SceneRenderer.Translate(self, atrans)
+	--self.GraphPort:Translate(atrans)
+
+---[[
 	if atrans == nil then return end
 
 	gl.Translate(
@@ -63,14 +72,19 @@ function SceneRenderer.Translate(self, atrans)
 		atrans[2],
 		atrans[3]
 		);
+--]]
 end
 
 function SceneRenderer.Scale(self, atrans)
+	--self.GraphPort:Scale(atrans)
+
+---[[
 	gl.Scale(
 		atrans[1],
 		atrans[2],
 		atrans[3]
 		);
+--]]
 end
 --=========================================
 --	MATERIAL PRIMITIVES
@@ -85,6 +99,9 @@ end
 	Face
 --]]
 function SceneRenderer.ApplyMaterial(self, mat)
+	--self.GraphPort:ApplyMaterial(mat)
+
+---[[
 	gl.ColorMaterial(gl.FRONT_AND_BACK, gl.AMBIENT_AND_DIFFUSE)
 	gl.Enable(gl.COLOR_MATERIAL)
 
@@ -109,19 +126,26 @@ function SceneRenderer.ApplyMaterial(self, mat)
 	if mat.Emission ~= nil then
 		gl.Material(face, gl.EMISSION, mat.Emission)
 	end
+--]]
 end
 
-function SceneRenderer.SetAntiAlias(antialiasing)
+function SceneRenderer.SetAntiAlias(self, antialiasing)
+	--self.GraphPort:SetAntiAlias(antialiasing)
+
+---[[
 	if antialiasing then
 		gl.Enable(gl.POINT_SMOOTH)
 	else
 		gl.Disable(gl.POINT_SMOOTH)
 	end
+--]]
 end
 --=========================================
 --	DRAWING PRIMITIVES
 --=========================================
 function SceneRenderer.vertex(self, vert)
+	--self.GraphPort:vertex(vert)
+
 	gl.Vertex (vert)
 end
 
@@ -264,6 +288,11 @@ end
 
 
 function SceneRenderer.DisplayScene(self, ascene)
+	if not ascene then
+		print("SceneRenderer.DisplayScene, nil ascene")
+		return
+	end
+
 	if (ascene.commands == nil or #ascene.commands == 0) then
 		--print("no commands")
 		return

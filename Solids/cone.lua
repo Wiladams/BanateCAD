@@ -7,14 +7,19 @@
 --require ("trimesh")
 
 -- Create the prototypical cone
-shape_cone = {}
+local class = require "pl.class"
 
-function shape_cone:new(o)
+class.shape_cone()
+
+function shape_cone:_init(o)
 	o = o or {}		-- create object if user does not provide one
-	setmetatable(o, self)
-	self.__index = self
 
-	return o
+	self.anglesteps = o.anglesteps
+	self.stacksteps = o.stacksteps
+	self.baseradius = o.baseradius
+	self.topradius = o.topradius
+	self.heigh = o.height
+
 end
 
 -- Returns a point on the surface given the angle and the position along the line

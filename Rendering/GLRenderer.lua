@@ -8,7 +8,8 @@
 
 require ("luagl")
 require ("luaglu")
-
+--require "Color"
+local class = require "pl.class"
 
 RenderMode = {
 	POINT=1,
@@ -17,15 +18,20 @@ RenderMode = {
 	SOLID=4,
 	}
 
-GLRenderer = {}
-function GLRenderer.new(self, o)
-	o = o or {}		-- create object if user does not provide one
-	setmetatable(o, self)
-	self.__index = self
+class.GLRenderer()
+function GLRenderer:_init(params)
+	params = params or {}		-- create object if user does not provide one
 
-	o.transform = {}
+	self.transform = {}
 
-	return o
+	local black = Color(0,0,0,255)
+	local white = Color(255, 255, 255, 255)
+	local gray = Color(53, 53, 53, 255)
+
+	self:SetStrokeColor(black)
+	self:SetFillColor(white)
+	self:SetBackgroundColor(gray)
+
 end
 
 --=========================================
@@ -108,7 +114,7 @@ function GLRenderer.ApplyMaterial(self, mat)
 	end
 end
 
-function GLRenderer.SetAntiAlias(antialiasing)
+function GLRenderer.SetAntiAlias(self, antialiasing)
 	if antialiasing then
 		gl.Enable(gl.POINT_SMOOTH)
 		gl.Enable(gl.LINE_SMOOTH)
@@ -129,11 +135,33 @@ function GLRenderer.SetAntiAlias(antialiasing)
 end
 
 function GLRenderer.SetPointSize(self, ptsize)
+	self.PointSize = ptsize
 	gl.PointSize(ptsize)
 end
 
+function GLRenderer.SetLineCap(self, cap)
+	self.LineCap = cap	self.canvas:LineCap(cap)
+end
+
+function GLRenderer.SetLineJoin(self, join)
+	self.LineJoin = join
+end
+
 function GLRenderer.SetLineWidth(self, lwidth)
+	self.LineWidth = lwidth
 	gl.LineWidth(lwidth)
+end
+
+function GLRenderer.SetStrokeColor(self, acolor)
+	self.StrokeColor = acolor;
+end
+
+function GLRenderer.SetFillColor(self, acolor)
+	self.FillColor = acolor;
+end
+
+function GLRenderer.SetBackgroundColor(self, acolor)
+	self.BackgroundColor = acolor;
 end
 
 --=========================================
@@ -148,20 +176,21 @@ function GLRenderer.DrawPoint(self, apt)
 		gl.Color(self.StrokeColor[1],self.StrokeColor[2],self.StrokeColor[3],self.StrokeColor[4])
 	end
 
+	if self.PointSize ~= nil then
+		gl.PointSize(self.PointSize)
+	end
 
 	gl.Begin(gl.POINTS)
 		gl.Vertex(apt)
 	gl.End()
 end
 
-function GLRenderer.DrawLine(self, aline, width)
-	width = width or 1
-
+function GLRenderer.DrawLine(self, aline)
 	if self.StrokeColor ~= nil then
 		gl.Color(self.StrokeColor[1],self.StrokeColor[2],self.StrokeColor[3],self.StrokeColor[4])
 	end
 
-	gl.LineWidth(width)
+	--gl.LineWidth(width)
 	gl.Begin(gl.LINES)
 		gl.Vertex(aline[1])
 		gl.Vertex(aline[2])
@@ -169,8 +198,6 @@ function GLRenderer.DrawLine(self, aline, width)
 end
 
 function GLRenderer.DrawPolygon(self, pts, mode)
---print("GLRenderer.DrawPolygon",pts)
-
 	mode = mode or RenderMode.SOLID
 
 	if mode == RenderMode.LOOP then
@@ -219,10 +246,29 @@ function GLRenderer.DrawTriangle(self, tri, mode)
 	gl.End()
 end
 
+--[[
+	TYPOGRAPHY
+--]]
+
+
+function GLRenderer.SetFont(self, fontname, style, points)
+end
+
+function GLRenderer.SetTextAlignment(self, alignment)
+end
+
+function GLRenderer.DrawText(self, x, y, txt)
+end
+
+function GLRenderer.MeasureString(self, txt)
+	return {0, 0}
+end
 
 
 
-
+function GLRenderer.Clear(self)
+	self:ClearCanvas(self.BackgroundColor)
+end
 
 function GLRenderer.ClearCanvas(self, acolor)
 	-- Set the background color

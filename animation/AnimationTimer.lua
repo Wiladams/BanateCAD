@@ -60,7 +60,7 @@ function AnimationTimer.Tick(self)
 --print("AnimationTimer.Tick")
 	self.TickCount = self.TickCount + 1
 	defaultscene:Update(self.TickCount)
-	iup.Update(glcanvas);
+	iup.Update(defaultglcanvas);
 end
 
 function AnimationTimer.Reset(self)

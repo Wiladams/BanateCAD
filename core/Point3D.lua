@@ -4,6 +4,8 @@ class.Point3D()
 
 
 function Point3D:_init(...)
+	--self:delegate(Point3D)
+
 	if arg.n == 0 then
 		-- default constructor
 		self[1] = 0
@@ -37,6 +39,7 @@ function Point3D.clone(self)
 	return new_inst
 end
 
+--[[
 function Point3D.x(self)
 	return self[1]
 end
@@ -48,6 +51,7 @@ end
 function Point3D.z(self)
 	return self[3]
 end
+--]]
 
 -- Arithmetic overloads
 function Point3D.__add(a, b)
@@ -129,6 +133,7 @@ function Point3D.lerp(self, a, t)
 end
 
 -- Convenience functions
+--[[
 function Point3D.__tostring (self)
       local s = "{"
       local sep = ""
@@ -138,6 +143,7 @@ function Point3D.__tostring (self)
       end
       return s .. "}"
 end
+--]]
 
 --[[
 	The natural storage of the Point information is
@@ -151,10 +157,13 @@ end
 	more interesting names to fields, while maintaining
 	their simple storage mechanism.
 --]]
-function Point3D_swizzler(t, key)
+function Point3D_swizzler(tbl, key)
+print(tbl, key, type(key))
+print(#tbl)
 	-- Most of the time, we'll be doing lookup
 	-- based on a numeric index value.  So,
 	-- We'll try that first
+--[[
 	if type(key) == "number" then
 		-- for Homogenous coordinates
 		-- The 4th entry of a point is always '1'
@@ -164,25 +173,21 @@ function Point3D_swizzler(t, key)
 
 		return rawget(t, key)
 	end
-
-	-- Next, we'll see if it's a function
-	-- If it is, then we'll just return that function
-	local func = Point3D[key]
-	if func ~= nil then return func end
+--]]
 
 
 	-- If it wasn't an index lookup, and it wasn't a function
 	-- It must be a lookup of a field by field name
-	if key == "x" then return rawget(t, 1) end
-	if key == "y" then return rawget(t, 2) end
-	if key == "z" then return rawget(t, 3) end
+	if key == "x" then return rawget(tbl, 1) end
+	if key == "y" then return rawget(tbl, 2) end
+	if key == "z" then return rawget(tbl, 3) end
 	if key == "w" then return 1 end
 
 	return nil
 end
 
 -- Setup the meta methods
---Point3D_mt.__index = Point3D_swizzler
+--Point3D.catch(Point3D_swizzler)
 
 Point3D.Zero = Point3D()
 
@@ -191,8 +196,17 @@ Point3D.Zero = Point3D()
 
 
 
----[[
+--[[
 print("Point3D.lua")
+local pt = Point3D(10,20, 30)
+
+--print(pt.x)
+print("pt: ", pt)
+print(#pt)
+print("1: ", pt[1])
+
+local x = pt.x
+
 --Quick Tests
 v1 = Point3D(1,0,0)
 v2 = Point3D(2,3, 4)

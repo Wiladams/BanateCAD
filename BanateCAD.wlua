@@ -30,10 +30,9 @@ local appctx = BAppContext({
 
 local AppName = "Banate CAD";
 
---require("BGameApplication")
 require("BApplication")
 require("BWindow")
-
+require "BCADLanguage"
 
 Application = BApplication({
 	AppContext = appctx,

@@ -5,7 +5,8 @@
 --
 --require ("trimesh")
 --require ("Shape")
---require ("BiParametric")
+require ("BiParametric")
+local class = require "pl.class"
 
 
 -- USteps
@@ -14,16 +15,10 @@
 -- Resolution
 -- VertexSampler - GetVertex
 
-RubberSheet = inheritsFrom(BiParametric)
-function RubberSheet.new(params)
-	local new_inst = RubberSheet.create()
-	new_inst:Init(params)
-
-	return new_inst
-end
-
-function RubberSheet.Init(self, params)
+class.RubberSheet(BiParametric)
+function RubberSheet:_init(params)
 	params = params or {}
+	self:super(params)
 
 	self.Thickness = params.Thickness
 
@@ -35,9 +30,6 @@ function RubberSheet.Init(self, params)
 
 	self.VertexSampler = params.VertexSampler or nil
 	self.ColorSampler = params.ColorSampler or nil
-
-
-	return self
 end
 
 function RubberSheet.GetVertex(self, u, w)

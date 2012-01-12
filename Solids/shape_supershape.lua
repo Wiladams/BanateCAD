@@ -4,7 +4,8 @@
 -- Copyright (c) 2011  William Adams
 --
 
---require ("CADVM")
+local class = require "pl.class"
+
 --require ("trimesh")
 
 -- Helpful math routines
@@ -34,14 +35,16 @@ function supershape(m,n1,n2, n3, a, b)
 end
 --]]
 
-superformula = {}
+class.superformula()
 
-function superformula:new(o)
+function superformula:_init(o)
 	o = o or {}		-- create object if user does not provide one
-	setmetatable(o, self)
-	self.__index = self
-
-	return o
+	self.m = o.m
+	self.n1 = o.n1
+	self.n2 = o.n2
+	self.n3 = o.n3
+	self.a = o.a
+	self.b = o.b
 end
 
 
@@ -71,17 +74,20 @@ end
 --]]
 
 
-shape_supershape={}
-function shape_supershape:new(o)
+class.shape_supershape()
+function shape_supershape:_init(o)
 	o = o or {}		-- create object if user does not provide one
-	setmetatable(o, self)
-	self.__index = self
 
-	return o
+	self.name = o.name
+	self.phisteps = o.phisteps
+	self.thetasteps = o.thetasteps
+	self.shape1 = superformula(o.shape1)
+	self.shape2 = superformula(o.shape2)
 end
 
 function shape_supershape.meshindex(self, col, row, width)
 	local index = ((row-1)*width)+col;
+
 	return index;
 end
 
@@ -159,3 +165,4 @@ function shape_supershape.GetMesh(self)
 
 	return mesh
 end
+

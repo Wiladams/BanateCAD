@@ -1,36 +1,33 @@
---local class = require "pl.class"
+local class = require "pl.class"
 
 -- This is the cheapest way to setup a 'class'
-Vector3D = {}
-Vector3D_mt = {}
+class.Vector3D()
 
-function Vector3D.new(...)
-	local this = {}
-	setmetatable(this, Vector3D_mt)
+function Vector3D:_init(...)
 
 	if arg.n == 3 then
 		-- Three discreet arguments
-		this[1] = arg[1]
-		this[2] = arg[2]
-		this[3] = arg[3]
+		self[1] = arg[1]
+		self[2] = arg[2]
+		self[3] = arg[3]
+		self[4] = 0
 	elseif arg.n == 1 and type(arg[1]) == "table" then
 		-- Single argument that is a table
-		this[1] = arg[1][1];
-		this[2] = arg[1][2];
-		this[3] = arg[1][3];
+		self[1] = arg[1][1];
+		self[2] = arg[1][2];
+		self[3] = arg[1][3];
+		self[4] = 0
 	end
-
-	return this
 end
 
-function Vector3D.clone(this)
-	local new_inst = Vector3D.new(this)
+function Vector3D.clone(self)
+	local new_inst = Vector3D(self)
 
 	return new_inst
 end
 
 -- Arithmetic overloads
-function Vector3D.add(a, b)
+function Vector3D.__add(a, b)
 	if type(a) == "table" and type(b) == "table" then
 		return Vector3D.new{a[1]+b[1], a[2]+b[2], a[3]+b[3]}
 	end
@@ -38,7 +35,7 @@ function Vector3D.add(a, b)
 	return nil
 end
 
-function Vector3D.sub(a, b)
+function Vector3D.__sub(a, b)
 	if type(a) == "table" and type(b) == "table" then
 		return Vector3D.new{a[1]-b[1], a[2]-b[2], a[3]-b[3]}
 	end
@@ -52,8 +49,8 @@ function Vector3D.mults(v,s)
 	return res
 end
 
-function Vector3D.mul(a, b)
-	local res = Vector3D.new{}
+function Vector3D.__mul(a, b)
+	local res = {}
 	local bnumber = type(b) == 'number'
 	local anumber = type(a) == 'number'
 
@@ -74,11 +71,11 @@ function Vector3D.mul(a, b)
 		end
 	end
 
-	return res
+	return Vector3D(res)
 end
 
-function Vector3D.div(a, b)
-	local res = Vector3D.new{}
+function Vector3D.__div(a, b)
+	local res = {}
 	local bnumber = type(b) == 'number'
 	local anumber = type(a) == 'number'
 
@@ -99,11 +96,11 @@ function Vector3D.div(a, b)
 		end
 	end
 
-	return res
+	return Vector3D(res)
 end
 
-function Vector3D.neg(this)
-	local res = Vector3D.new({-this[1], -this[2], -this[3]})
+function Vector3D.__unm(this)
+	local res = Vector3D(-this[1], -this[2], -this[3])
 
 	return res
 end
@@ -154,7 +151,7 @@ function Vector3D.lerp(this, a, t)
 end
 
 -- Convenience functions
-function Vector3D.tostring (self)
+function Vector3D.__tostring (self)
       local s = "{"
       local sep = ""
       for i=1,#self do
@@ -193,16 +190,12 @@ end
 
 
 -- Setup the meta methods
-Vector3D_mt.__index = Vector3D_swizzler
+--Vector3D_mt.__index = Vector3D_swizzler
 --Vector3D.mt.__index = Vector3D
-Vector3D_mt.__add = Vector3D.add
-Vector3D_mt.__div = Vector3D.div
-Vector3D_mt.__sub = Vector3D.sub
-Vector3D_mt.__mul = Vector3D.mul
-Vector3D_mt.__unm = Vector3D.neg
-Vector3D_mt.__tostring = Vector3D.tostring
+--Vector3D_mt.__unm = Vector3D.neg
+--Vector3D_mt.__tostring = Vector3D.tostring
 
-Vector3D.Zero = Vector3D.new({0,0,0})
+Vector3D.Zero = Vector3D(0,0,0)
 
 
 
@@ -250,3 +243,4 @@ print("Lerp: ", vZ:lerp(vX, 0.5))
 print("Homogenous: ", v1[4])
 --]]
 
+return Vector3D

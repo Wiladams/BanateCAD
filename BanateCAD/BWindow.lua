@@ -1,7 +1,7 @@
 --
--- FabuWindow.lua
+-- BWindow.lua
 --
--- The primary window for BanateCAD
+-- The primary window for HeadsUp
 --
 -- Copyright (c) 2011  William Adams
 --
@@ -10,9 +10,61 @@ require "iuplua"
 
 require "MenuManager"
 require "MenuController"
-require "Layout"
+require "FileManager"
+require "SceneViewer"
+require "defaultglcanvas"
+require "Scene"
+require "SceneBuilder"
 
 local class = require "pl.class"
+
+--[[
+defaultviewer = SceneViewer({
+		colorscheme = colorschemes.Cornfield;
+		wireframe = true;
+		orthomode = true;
+		viewer_distance = 500;
+		obj_rot = {35, 0, -25};
+		obj_trans = {0, 0, 0};
+		showaxes = true;
+		showcrosshairs = false;
+		mouse_drag_active = false;
+		Renderer = SceneRenderer();
+		PrimaryAxesGraphic = PrimaryAxes:new();
+		AxesBugGraphic = AxesBug:new();
+		});
+--]]
+
+defaultfilemanager = FileManager();
+defaultscene = Scene()
+defaultviewer = SceneViewer()
+
+defaultviewer:SetCanvas(defaultglcanvas);
+
+
+-- The layout for the window
+intext = iup.text({
+	expand = 'YES',
+	MULTILINE = 'YES',
+	TABSIZE = "4",
+	WORDWRAP = "YES",
+	FONTFACE = "MS Shell Dlg 2",
+	FONTSIZE = 8,
+	})
+
+--
+viewinsplit = iup.split({
+	defaultglcanvas,
+	intext;
+	orientation = "HORIZONTAL",
+	showgrip = "FALSE",
+	VALUE = "800",
+})
+
+
+
+
+
 class.BWindow()
 
 function BWindow:_init(o)
@@ -31,7 +83,7 @@ function BWindow:_init(o)
 		SHRINK="YES",
 		})
 
-	self.menucontrol = MenuController({window=self})
+	self.menucontrol = MenuController({Window=self})
 	self.Window.MENU = self.menuman:GetMainMenu(self.menucontrol)
 end
 

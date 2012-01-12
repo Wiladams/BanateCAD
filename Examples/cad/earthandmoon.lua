@@ -3,7 +3,7 @@ function displayearth()
 	res = {1,1}
 
 
-	local texturesampler = ImageSampler.new({
+	local texturesampler = ImageSampler({
 		--Filename='moonbumpmap2_720_360.png',
 		Filename='earthcolor_800_400.png',
 		Size = size,
@@ -11,7 +11,7 @@ function displayearth()
 		MaxHeight=16,
 	})
 
-	local heightsampler = ImageSampler.new({
+	local heightsampler = ImageSampler({
 		--Filename='moonbumpmap2_720_360.png',
 		Filename='earthheight_800_400.png',
 		Size = size,
@@ -19,20 +19,20 @@ function displayearth()
 		MaxHeight=16,
 	})
 
-	local vertsampler = shape_ellipsoid.new({
+	local vertsampler = shape_ellipsoid({
 		XRadius=60, 
 		ZRadius = 60,
 		MaxTheta = math.rad(360),
 		MaxPhi = math.rad(180),
 	})
 
-	local dispSampler = DisplacementSampler.new({
+	local dispSampler = DisplacementSampler({
 			VertexSampler = vertsampler,
 			HeightSampler = heightsampler,
 			MaxHeight = 4,
 		})
 
-	local lshape =  BiParametric.new({
+	local lshape =  BiParametric({
 		USteps = 800/2,
 		WSteps = 400/2,
 		ColorSampler = texturesampler,
@@ -49,27 +49,27 @@ function displayMoon()
 	res = {1,1}
 
 
-	local heightsampler = ImageSampler.new({
+	local heightsampler = ImageSampler({
 		Filename='moonbumpmap2_720_360.png',
 		Size = size,
 		Resolution = res,
 		MaxHeight=16,
 	})
 
-	local vertsampler = shape_ellipsoid.new({
+	local vertsampler = shape_ellipsoid({
 		XRadius=30, 
 		ZRadius = 30,
 		MaxTheta = math.rad(360),
 		MaxPhi = math.rad(180),
 	})
 
-	local dispSampler = DisplacementSampler.new({
+	local dispSampler = DisplacementSampler({
 			VertexSampler = vertsampler,
 			HeightSampler = heightsampler,
 			MaxHeight = .75,
 		})
 
-	local lshape =  BiParametric.new({
+	local lshape =  BiParametric({
 		USteps = 720/2,
 		WSteps = 360/2,
 		ColorSampler = heightsampler,

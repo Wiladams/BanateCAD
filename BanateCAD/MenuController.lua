@@ -7,9 +7,9 @@
 
 require ("iuplua")
 
---require ("CADVM")
+require ("CADVM")
 
---require ("FileManager")
+require ("FileManager")
 require ("test_lpeg")
 --require ("SceneBuilder")
 
@@ -17,6 +17,9 @@ local class = require "pl.class"
 
 class.MenuController()
 function MenuController:_init(params)
+	params = params or {}
+
+	self.Window = params.Window
 end
 
 -- Create the main window menu
@@ -85,7 +88,7 @@ function MenuController.do_import_stl(self)
 	defaultscene:clear()
 	defaultscene:appendCommand(CADVM.mesh(tmesh))
 
-	iup.Update(glcanvas)
+	iup.Update(defaultglcanvas)
 end
 
 --	filehandle = io.open(filename, "w+")
@@ -183,7 +186,7 @@ function MenuController.do_collab_render(self)
 
 	intext.value = ''
 
-	iup.Update(glcanvas)
+	iup.Update(defaultglcanvas)
 end
 
 function MenuController.do_compile_and_render(self)
@@ -196,7 +199,7 @@ function MenuController.do_compile_and_render(self)
 	local f = loadstring(inputtext)
 	f()
 
-	iup.Update(glcanvas)
+	iup.Update(defaultglcanvas)
 end
 
 function MenuController.do_paste(self)

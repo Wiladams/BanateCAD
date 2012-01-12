@@ -1,19 +1,13 @@
 require("gd")
-require ("openscad_print")
+--require ("openscad_print")
 --require ("Class")
 --require ("maths")
 
-ImageSampler = inheritsFrom(nil);
+local class = require "pl.class"
 
-function ImageSampler.new(params)
-	local new_inst = ImageSampler.create()
+class.ImageSampler();
 
-	new_inst:Init(params)
-
-	return new_inst
-end
-
-function ImageSampler.Init(self, params)
+function ImageSampler:_init(params)
 	params = params or {}
 
 	self.Image = params.Image or nil
@@ -33,8 +27,6 @@ function ImageSampler.Init(self, params)
 	self.Size = params.Size
 	self.Resolution = params.Resolution
 	self.MaxHeight = params.MaxHeight or 1
-
-	return self
 end
 
 function ImageSampler.GetColor(self, u, w)

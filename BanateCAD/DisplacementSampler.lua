@@ -1,15 +1,15 @@
---require ("Class")
+local class = require "pl.class"
 --require ("maths")
 
-DisplacementSampler = inheritsFrom(nil)
-function DisplacementSampler.new(params)
-	local new_inst = DisplacementSampler.create()
 
-	new_inst.VertexSampler = params.VertexSampler
-	new_inst.HeightSampler = params.HeightSampler
-	new_inst.MaxHeight = params.MaxHeight or 1
+class.DisplacementSampler()
 
-	return new_inst
+function DisplacementSampler:_init(params)
+
+	self.VertexSampler = params.VertexSampler
+	self.HeightSampler = params.HeightSampler
+	self.MaxHeight = params.MaxHeight or 1
+
 end
 
 

@@ -2,32 +2,32 @@ function peanut_bumped()
 	--local pballs = {{0, -2, -13,4}, {0,0,0,3}, {0, 1, 14, 4}}
 	local pballs = {{0,0,0,5}, {0, 1, 16, 5}}
 
-	local texturesampler = ImageSampler.new({
+	local texturesampler = ImageSampler({
 		Filename='PeanutTexture_200_200.png',
 		Size = size,
 		Resolution = res,
 		MaxHeight=16,
 	})
 
-	local heightsampler = ImageSampler.new({
+	local heightsampler = ImageSampler({
 		Filename='PeanutTexture_200_200.png',
 		Size = {200,200},
 		Resolution = {1,1},
 		MaxHeight=16,
 	})
 
-	local vertsampler = shape_metaball.new({
+	local vertsampler = shape_metaball({
 		balls = pballs,
 		radius = 60,
 	})
 
-	local dispSampler = DisplacementSampler.new({
+	local dispSampler = DisplacementSampler({
 			VertexSampler = vertsampler,
 			HeightSampler = heightsampler,
 			MaxHeight = 1.5,
 		})
 
-	local lshape =  BiParametric.new({
+	local lshape =  BiParametric({
 		USteps = 200,
 		WSteps = 200,
 		ColorSampler = texturesampler,
@@ -45,7 +45,7 @@ end
 function peanut_textured()
 	local pballs = {{0, -2, -13,4}, {0,0,0,3}, {0, 1, 14, 4}}
 
-	local texturesampler = ImageSampler.new({
+	local texturesampler = ImageSampler({
 		Filename='PeanutTexture_200_200.png',
 		Size = size,
 		Resolution = res,
@@ -53,7 +53,7 @@ function peanut_textured()
 	})
 
 
-	local apeanut = shape_metaball.new({
+	local apeanut = shape_metaball({
 		balls = pballs,
 		radius = 60,
 

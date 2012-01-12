@@ -21,7 +21,7 @@ local balls = {
 --	{0,0,5,3}
 --}
 
-local lshape = shape_metaball.new({
+local lshape = shape_metaball({
 		balls = balls,
 		radius = 200,
 		Threshold = 0.00001,

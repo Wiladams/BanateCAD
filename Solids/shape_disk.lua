@@ -2,18 +2,14 @@
 local class = require "pl.class"
 
 class.shape_disk()
-function shape_disk:new(o)
+function shape_disk:_init(o)
 	o = o or {}		-- create object if user does not provide one
-	setmetatable(o, self)
-	self.__index = self
 
-	o.InnerRadius = o.InnerRadius or 0
-	o.Radius = o.Radius or 1
-	o.Offset = o.Offset or 0
-	o.PhiMax = o.PhiMax or 2*math.pi
-	o.Resolution = o.Resolution or {36,2}
-
-	return o
+	self.InnerRadius = o.InnerRadius or 0
+	self.Radius = o.Radius or 1
+	self.Offset = o.Offset or 0
+	self.PhiMax = o.PhiMax or 2*math.pi
+	self.Resolution = o.Resolution or {36,2}
 end
 
 function shape_disk.vindex(self, col, row)

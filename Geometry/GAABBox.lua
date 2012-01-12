@@ -5,8 +5,8 @@
 -- Copyright (c) 2011  William Adams
 --
 
---require ("Class")
---require ("Shape")
+local class = require "pl.class"
+require ("Shape")
 
 
 -- An Axis Aligned Bounding Box is a simple construction
@@ -24,7 +24,8 @@
 -- class.  At that point we have an empty subclass, that
 -- inherits all the methods of the base class.
 
-GAABBox = inheritsFrom(Shape)
+
+class.GAABBox(Shape)
 GAABBox.Edges = {
 		{1,2},
 		{2,3},
@@ -48,16 +49,14 @@ GAABBox.Edges = {
 -- At the end we return 'self' to retain the metatable
 -- That was set when we subclassed Shape.
 
-function GAABBox.new(params)
-	local new_inst = GAABBox:create()
+function GAABBox:_init(params)
 
 	local v1 = params[1] or vec3(0,0,0)
 	local v2 = params[2] or vec3(0,0,0)
 	v1, v2 = sortvertices(v1, v2)
 
-	new_inst:SetBounds(v1, v2)
+	self:SetBounds(v1, v2)
 
-	return new_inst
 end
 
 
@@ -95,7 +94,8 @@ function GAABBox.Union(self, pt)
 	self:SetBounds(newlow, newhigh)
 end
 
-function GAABBox.ToString(self)
+function GAABBox.__tostring(self)
 	return "<Dimensions>"..self.Dimensions[1]..','..self.Dimensions[2]..','..self.Dimensions[3]
 end
 
+return BAABBox

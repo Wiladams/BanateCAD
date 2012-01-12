@@ -1,7 +1,7 @@
 --
 -- SceneBuilder.lua
 --
--- Building scenes for FabuCAD
+-- Building scenes for BanateCAD
 -- Copyright (c) 2011  William Adams
 --
 --[[
@@ -14,44 +14,7 @@ Multiples of:
 
 --]]
 
--- dependant modules
---require ("CADVM")
---require ("glsl")
---require ("Scene")
-
-require ("checkerboard")
-require ("cone")
-require ("crayola")
-require ("DisplacementSampler")
-require ("GAABBox")
-require ("ImageSampler")
-require ("BMaterial")
-require ("metaball")
---require ("param_superellipse")
-require ("Platonics")
-require ("RubberSheet")
---require ("shape_bicubicsurface")
---require ("shape_disk")
---require ("shape_ellipsoid")
---require ("shape_hyperboloid")
---require ("shape_line")
---require ("shape_metaball")
---require ("shape_paraboloid")
---require ("shape_polyhedron")
---require ("shape_torus")
-require ("ShapeAnimator")
---require ("supershape")
-
-
-
-SceneBuilder = {}
-function SceneBuilder:new(o)
-	o = o or {}		-- create object if user does not provide one
-	setmetatable(o, self)
-	self.__index = self
-
-	return o
-end
+require "BCADLanguage"
 
 
 --===========================
@@ -70,35 +33,35 @@ end
 --===========================
 function tetrahedron(radius)
 	radius = radius or 1
-	local lshape = shape_tetrahedron:new({radius=radius});
+	local lshape = shape_tetrahedron({radius=radius});
 
 	addmesh(lshape:GetMesh())
 end
 
 function hexahedron(radius)
 	radius = radius or 1
-	local lshape = shape_hexahedron:new({radius=radius});
+	local lshape = shape_hexahedron({radius=radius});
 
 	addmesh(lshape:GetMesh())
 end
 
 function octahedron(radius)
 	radius = radius or 1
-	local lshape = shape_octahedron:new({radius = radius})
+	local lshape = shape_octahedron({radius = radius})
 
 	addmesh(lshape:GetMesh())
 end
 
 function dodecahedron(radius)
 	radius = radius or 1
-	local lshape = shape_dodecahedron:new({radius = radius})
+	local lshape = shape_dodecahedron({radius = radius})
 
 	addmesh(lshape:GetMesh())
 end
 
 function icosahedron(radius)
 	radius = radius or 1
-	local lshape = shape_icosahedron:new({radius = radius})
+	local lshape = shape_icosahedron({radius = radius})
 
 	addmesh(lshape:GetMesh())
 end
@@ -120,7 +83,7 @@ end
 --	GRAPHICS
 --===========================
 function aabbox(v1, v2)
-	local lshape = GAABBox.new({v1,v2})
+	local lshape = GAABBox({v1,v2})
 
 	addshape(lshape)
 end
@@ -130,7 +93,7 @@ end
 --===========================
 
 function polyhedron(vertices, faces)
-	local lshape = shape_polyhedron:new({
+	local lshape = shape_polyhedron({
 		vertices = vertices,
 		faces = faces
 		})
@@ -141,7 +104,7 @@ end
 function bicubicsurface(mesh, thickness, usteps, wsteps)
 	usteps = usteps or 10
 	wsteps = wsteps or 10
-	local lshape = shape_bicubicsurface.new({
+	local lshape = shape_bicubicsurface({
 		M=cubic_bezier_M(),
 		UMult=1,
 		Mesh = mesh,
@@ -153,7 +116,7 @@ function bicubicsurface(mesh, thickness, usteps, wsteps)
 end
 
 function rubbersheet(params)
-	local lshape = RubberSheet.new(params)
+	local lshape = RubberSheet(params)
 
 	addshape(lshape)
 end
@@ -175,7 +138,7 @@ end
 function ellipsoid(xradius, zradius)
 xradius = xradius or 1
 zradius = zradius or 1
-local lshape = shape_ellipsoid.new({
+local lshape = shape_ellipsoid({
 	XRadius=xradius,
 	ZRadius=zradius,
 	USteps=360/8,
@@ -191,7 +154,7 @@ function cone(baseradius, topradius, height, resolution)
 	height = height or 1
 	resolution = resolution or {26,10}
 
-	local lshape = shape_cone:new({
+	local lshape = shape_cone({
 		baseradius=baseradius,
 		topradius=topradius,
 		height=height,
@@ -209,7 +172,7 @@ function disk(radius, iradius, maxangle, resolution, offset)
 	resolution = resolution or 36
 	offset = offset or 0
 
-	local lshape = shape_disk:new({
+	local lshape = shape_disk({
 		Offset=offset,
 		Radius=radius,
 		InnerRadius=iradius,
@@ -221,19 +184,19 @@ function disk(radius, iradius, maxangle, resolution, offset)
 end
 
 function hyperboloid(params)
-	local lshape = shape_hyperboloid.new(params)
+	local lshape = shape_hyperboloid(params)
 
 	addshape(lshape)
 end
 
 function paraboloid(params)
-	local lshape = shape_paraboloid.new(params)
+	local lshape = shape_paraboloid(params)
 
 	addshape(lshape)
 end
 
 function torus(params)
-	local lshape = shape_torus.new(params)
+	local lshape = shape_torus(params)
 
 	addshape(lshape)
 end
@@ -252,9 +215,9 @@ end
 --===========================
 
 function supershape(params)
-	local lshape = shape_supershape:new({
-		shape1 = superformula:new(params.shape1),
-		shape2 = superformula:new(params.shape2),
+	local lshape = shape_supershape({
+		shape1 = superformula(params.shape1),
+		shape2 = superformula(params.shape2),
 		thetasteps = params.thetasteps,
 		phisteps = params.phisteps})
 
@@ -265,7 +228,7 @@ end
 -- Blobs
 --===========================
 function blobs(balls, radius, stacksteps, anglesteps)
-	local lshape = shape_metaball.new({
+	local lshape = shape_metaball({
 		balls = balls,
 		radius = radius,
 		WSteps = stacksteps,

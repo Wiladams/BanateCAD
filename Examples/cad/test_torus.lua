@@ -11,15 +11,15 @@ size = 6
 usteps = 8	-- The is the resolution around the cross section
 wsteps = 8	-- The resolution around the great ring
 
-local colorSampler2 = ImageSampler.new({Filename='profile_1024_768.png'})
-local colorSampler1 = checkerboard:new({Columns=usteps, Rows=wsteps})
+local colorSampler2 = ImageSampler({Filename='profile_1024_768.png'})
+local colorSampler1 = checkerboard({Columns=usteps, Rows=wsteps})
 
 function test_textured_torus()
 torus({Offset=offset,
 	ProfileRadius=size,
 	USteps = usteps,
 	WSteps = wsteps,
-	ColorSampler = checkerboard:new({Columns=usteps, Rows=wsteps})
+	ColorSampler = checkerboard({Columns=usteps, Rows=wsteps})
 	})
 end
 
@@ -30,10 +30,10 @@ torus({Offset=offset,
 	ProfileRadius=size,
 	USteps = usteps*10,
 	WSteps = wsteps*10,
-	ColorSampler = ImageSampler.new({Filename='profile_1024_768.png'})
+	ColorSampler = ImageSampler({Filename='profile_1024_768.png'})
 	})
 
-local lshape = shape_torus.new({Offset=offset,
+local lshape = shape_torus({Offset=offset,
 	ProfileRadius=size,
 	USteps = usteps*8,
 	WSteps = wsteps*6,
@@ -47,18 +47,18 @@ end
 function test_partial_torus()
 	color(crayola.rgb("Blue Bell"))
 
-	local profiler = shape_ellipsoid.new({
+	local profiler = shape_ellipsoid({
 		XRadius = 6,
 		ZRadius = 7,
 		})
 
-	local seprofiler = param_superellipse.new({
+	local seprofiler = param_superellipse({
 		XRadius = 6,
 		ZRadius = 3,
 		N = 1.4,
 		})
 
-	local lshape = shape_torus.new({
+	local lshape = shape_torus({
 		HoleRadius = offset,
 		ProfileRadius = offset/4,
 		--ProfileSampler = seprofiler,

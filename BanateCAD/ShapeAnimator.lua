@@ -1,15 +1,13 @@
 --require ("Class")
 --require ("Shape")
+local class = require "pl.class"
 
-ShapeAnimator = inheritsFrom(Shape)
-function ShapeAnimator.new(params)
-	local new_inst = ShapeAnimator.create()
+class.ShapeAnimator(Shape)
 
-	new_inst.Shape = params.Shape
-	new_inst.Transformer = params.Transformer
-	new_inst.Period = params.Period or 30
-
-	return new_inst
+function ShapeAnimator:_init(params)
+	self.Shape = params.Shape
+	self.Transformer = params.Transformer
+	self.Period = params.Period or 30
 end
 
 function ShapeAnimator.RenderSelf(self, renderer)

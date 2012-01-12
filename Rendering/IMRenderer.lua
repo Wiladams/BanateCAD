@@ -1,6 +1,6 @@
-require"imlua"
-require"cdlua"
-require"cdluaim"
+require "imlua"
+require "cdlua"
+require "cdluaim"
 
 --require "color"
 --require "Texture"

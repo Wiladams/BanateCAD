@@ -1,6 +1,6 @@
-require"imlua"
-require"cdlua"
-require"cdluaim"
+require "imlua"
+require "cdlua"
+require "cdluaim"
 
 --require "color"
 --require "Texture"
@@ -34,8 +34,6 @@ function Renderer:_init(awidth, aheight)
 	self:SetStrokeColor(black)
 	self:SetFillColor(white)
 	self:SetBackgroundColor(gray)
-
-	--return self
 end
 
 function Renderer.ApplyAttributes(self)
@@ -59,6 +57,9 @@ end
 --[[
 	ATTRIBUTES
 --]]
+function Renderer.SetPointSize(self, asize)
+end
+
 function Renderer.SetLineCap(self, cap)
 	self.LineCap = cap
 end
@@ -124,12 +125,8 @@ function Renderer.DrawRect(self, x, y, w, h)
 	self:DrawPolygon(pts)
 end
 
-function Renderer.DrawTriangle(self, x1, y1, x2, y2, x3, y3)
-	local pts = {
-		Vector3D.new{x1, y1, 0},
-		Vector3D.new{x3, y3, 0},
-		Vector3D.new{x2, y2, 0},
-	}
+function Renderer.DrawTriangle(self, pt1, pt2, pt3)
+	local pts = {pt1, pt2, pt3}
 
 	self:DrawPolygon(pts)
 end

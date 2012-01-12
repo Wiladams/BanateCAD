@@ -1,21 +1,16 @@
 --require "Vector3D"
+local class = require "pl.class"
 
-Vertex = {}
-Vertex_mt = {__index = Vertex}
+class.Vertex()
 
 
-function Vertex.new(pos, normal)
-	local this = {}
-	setmetatable(this, Vertex_mt)
-
-	this.pos = Vector3D.new(pos)
-	this.normal = Vector3D.new(normal)
-
- 	return this
+function Vertex:_init(pos, normal)
+	self.pos = Vector3D.new(pos)
+	self.normal = Vector3D.new(normal)
 end
 
-function Vertex.clone(this)
-    return Vertex.new(this.pos:clone(), this.normal:clone())
+function Vertex.clone(self)
+    return Vertex(this.pos:clone(), this.normal:clone())
 end
 
 -- Invert all orientation-specific data (e.g. vertex normal). Called when the

@@ -17,7 +17,7 @@ require "luaglu"
 require "MenuManager"
 require "MenuController"
 require "FileManager"
-require "Processing"
+require "HeadsUpLanguage"
 
 intext = iup.text({
 	expand = 'YES',

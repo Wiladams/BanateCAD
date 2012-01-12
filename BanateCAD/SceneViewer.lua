@@ -5,18 +5,18 @@
 -- Copyright (c) 2011  William Adams
 --
 
-require ("iuplua")
-require ("iupluagl")
-require ("luagl")
-require ("luaglu")
+require "iuplua"
+require "iupluagl"
+require "luagl"
+require "luaglu"
 
-require ("BLight")
-require ("BLighting")
-require ("colorschemes")
+require "BLight"
+require "BLighting"
+require "colorschemes"
 
-require ("SceneRenderer")
-require ("PrimaryAxes")
-require ("AxesBug")
+require "SceneRenderer"
+require "PrimaryAxes"
+require "AxesBug"
 
 
 FARAWAY = 100000;

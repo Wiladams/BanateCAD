@@ -37,7 +37,7 @@ function ringballs()
 		{0,0,OR*3, influence*1.75/3},
 		}
 
-	local ablob = shape_metaball.new({
+	local ablob = shape_metaball({
 		balls = ring,
 		radius = 60,
 		USteps = 60,
@@ -58,7 +58,7 @@ end
 
 -- Show the isosurface, as well as the bounding box
 function boundingballs()
-	local blobula = shape_metaball.new({
+	local blobula = shape_metaball({
 		balls = someballs,
 		radius = 60,
 		stacksteps = 180,

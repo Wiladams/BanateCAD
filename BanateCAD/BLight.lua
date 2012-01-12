@@ -22,6 +22,11 @@ function BLight:_init(o)
 
 	self.ID = o.ID or gl.LIGHT0
 	self.Enabled = o.Enabled or true
+
+	self.Ambient = o.Ambient
+	self.Diffuse = o.Diffuse
+	self.Position = o.Position
+
 end
 
 function BLight.Enable(self)

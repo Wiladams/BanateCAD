@@ -84,7 +84,7 @@ function shape_metaball:_init(params)
 	self.radius = params.radius or 100
 	self.Threshold = params.Threshold or 0.001
 
-	self.Bounds = GAABBox.new({})
+	self.Bounds = GAABBox({})
 
 
 	self.MaxThreshold = self.Threshold + 1

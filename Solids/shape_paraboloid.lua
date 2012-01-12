@@ -27,7 +27,6 @@ function shape_paraboloid:_init(params)
 	self.RadiusMax = params.RadiusMax or 1
 	self.PhiMax = math.rad(params.PhiMax)
 	self.Thickness = params.Thickness
-
 end
 
 

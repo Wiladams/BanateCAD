@@ -5,25 +5,23 @@
 require ("iuplua")
 require ("lfs")
 
-FileManager = {}
-function FileManager:new(o)
+local class = require "pl.class"
+
+class.FileManager()
+function FileManager:_init(o)
 	o = o or {}		-- create object if user does not provide one
-	setmetatable(o, self)
-	self.__index = self
 
-	o.NAME = "NewModel.fab"
-	o.fileopener = iup.filedlg{
+	self.NAME = "NewModel.lua"
+	self.fileopener = iup.filedlg{
 		DIALOGTYPE="OPEN",
-		EXTFILTER="FabuCAD Files|*.fab|Lua Files|*.lua|STL Files|*.stl|",
-		TITLE="FabuCAD Files",
+		EXTFILTER="Lua Files|*.lua|STL Files|*.stl|",
+		TITLE="BanateCAD Files",
 		}
-	o.filesaver = iup.filedlg{
+	self.filesaver = iup.filedlg{
 		DIALOGTYPE="SAVE",
-		EXTFILTER="FabuCAD Files|*.fab|Lua Files|*.lua|STL Files|*.stl|",
-		TITLE="FabuCAD Files",
+		EXTFILTER="Lua Files|*.lua|STL Files|*.stl|",
+		TITLE="BanateCAD Files",
 		}
-
-	return o
 end
 
 function FileManager.GetOpenFileName(self)
@@ -53,5 +51,5 @@ function FileManager.SetFileName(self, aname)
 	self.NAME = aname;
 end
 
-defaultfilemanager = FileManager:new();
 
+return FileManager

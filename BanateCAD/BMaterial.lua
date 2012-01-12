@@ -1,4 +1,6 @@
---require ("Class")
+
+local class = require "pl.class"
+
 
 --[[
 	Ambient
@@ -9,24 +11,23 @@
 
 	Face
 --]]
-BMaterial = inheritsFrom(nil)
+
+class.BMaterial()
 
 -- Definitions of faces
 BMaterial.Front = 1
 BMaterial.Back = 2
 BMaterial.FrontAndBack = 3
 
-function BMaterial.new(params)
-	local new_inst = BMaterial.create()
+function BMaterial:_init(params)
 
-	new_inst.Ambient = params.Ambient or nil
-	new_inst.Diffuse = params.Diffuse or nil
-	new_inst.Specular = params.Specular or nil
-	new_inst.Shininess = params.Shininess or nil
-	new_inst.Emission = params.Emission or nil
-	new_inst.Face = params.Face or BMaterial.Front
+	self.Ambient = params.Ambient or nil
+	self.Diffuse = params.Diffuse or nil
+	self.Specular = params.Specular or nil
+	self.Shininess = params.Shininess or nil
+	self.Emission = params.Emission or nil
+	self.Face = params.Face or BMaterial.Front
 
-	return new_inst
 end
 
 function BMaterial.SetDefaults()

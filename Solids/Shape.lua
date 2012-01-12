@@ -7,7 +7,7 @@ class.Shape()
 -- The primary function of a shape
 function Shape.RenderBegin(self, renderer)
 	if self.Transform ~= nil then
-		Renderer:SaveTransform()
+		renderer:SaveTransform()
 
 		if self.Transform.Translation ~= nil then
 			renderer:Translate(self.Transform.Translation)
@@ -37,7 +37,7 @@ end
 
 function Shape.RenderEnd(self, renderer)
 	if self.Transform ~= nil then
-		Renderer:RestoreTransform()
+		renderer:RestoreTransform()
 	end
 end
 
