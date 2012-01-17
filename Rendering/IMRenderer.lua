@@ -5,6 +5,7 @@ require "cdluaim"
 --require "color"
 --require "Texture"
 --local Renderer = require "Renderer"
+require "Transformer"
 
 local class = require "pl.class"
 
@@ -14,19 +15,18 @@ function IMRenderer:_init(awidth, aheight)
 	self.width = awidth;
 	self.height = aheight;
 
+	self.YScale = 1
+	self.Transformer = Transformer();
+
 	-- Create the basic image
 	self.Image = im.ImageCreate(awidth, aheight, im.RGB, im.BYTE)
 	self.Image:AddAlpha();
-
-	-- Copy the data to the actual texture object
-	--self:CreateTexture()
 
 	-- Create canvas for drawing commands
 	self.canvas = self.Image:cdCreateCanvas()  -- Creates a CD_IMAGERGB canvas
 
 	-- Activate the canvas so we can draw into it
 	self.canvas:Activate();
-	self.canvas:YAxisMode(1)	-- Invert the y-axis
 
 	local black = Color(0,0,0,255)
 	local white = Color(255, 255, 255, 255)
@@ -35,8 +35,6 @@ function IMRenderer:_init(awidth, aheight)
 	self:SetStrokeColor(black)
 	self:SetFillColor(white)
 	self:SetBackgroundColor(gray)
-
-	--return self
 end
 
 function IMRenderer.ApplyAttributes(self)
@@ -213,10 +211,10 @@ end
 
 function IMRenderer.DrawRect(self, x, y, w, h)
 	local pts = {
-		Vector3D.new{x, y, 0},
-		Vector3D.new{x, y+h, 0},
-		Vector3D.new{x+w, y+h, 0},
-		Vector3D.new{x+w, y, 0},
+		Point3D(x, y, 0),
+		Point3D(x, y+h, 0),
+		Point3D(x+w, y+h, 0),
+		Point3D(x+w, y, 0),
 	}
 
 	self:DrawPolygon(pts)
@@ -224,9 +222,9 @@ end
 
 function IMRenderer.DrawTriangle(self, x1, y1, x2, y2, x3, y3)
 	local pts = {
-		Vector3D.new{x1, y1, 0},
-		Vector3D.new{x3, y3, 0},
-		Vector3D.new{x2, y2, 0},
+		Point3D(x1, y1, 0),
+		Point3D(x3, y3, 0),
+		Point3D(x2, y2, 0),
 	}
 
 	self:DrawPolygon(pts)
@@ -247,11 +245,13 @@ function IMRenderer.SetTextAlignment(self, alignment)
 end
 
 function IMRenderer.DrawText(self, x, y, txt)
-	local row = self.height-1 - y
+	--local row = self.height-1 - y
+	--local y = -y
 
-	self.canvas:YAxisMode(0)	-- Normal y-axis
-	self.canvas:Text(x, row, txt)
-	self.canvas:YAxisMode(1)	-- Invert the y-axis
+	--self.canvas:YAxisMode(0)	-- Normal y-axis
+	--self:Scale(1, -1)
+	self.canvas:Text(x, y, txt)
+	--self:Scale(1, -1)
 end
 
 function IMRenderer.MeasureString(self, txt)
@@ -261,6 +261,84 @@ function IMRenderer.MeasureString(self, txt)
 end
 
 
+--[==============================[
+	TRANSFORMATION
+--]==============================]
+function IMRenderer.ResetTransform(self)
+	self.Transformer:Reset()
+	self.YScale = 1
+
+	local tfm = self.Transformer:Get2DMatrix()
+	self.canvas:Transform(tfm)
+end
+
+function IMRenderer.FlipYAxis(self)
+	self.YScale = -self.YScale;
+
+	self.Transformer:Scale(1, self.YScale, 1)
+	self.Transformer:Translate(0, self.height-1, 0)
+
+	local tfm = self.Transformer:Get2DMatrix()
+	self.canvas:Transform(tfm)
+
+	--self.canvas:TransformTranslate(0, self.height-1)
+	--self.canvas:TransformScale(1, -1)
+end
+
+function IMRenderer.RestoreYAxis(self)
+	--self.YScale = 1
+	--self.canvas:TransformScale(sx, sy)
+end
+
+function IMRenderer.ApplyYScale(self)
+	--self:Scale(1, self.YScale, 1)
+end
+
+function IMRenderer.Translate(self, dx, dy, dz)
+	dz = dz or 0
+	dy = dy * self.YScale
+
+	--self.canvas:TransformTranslate(dx, dy)
+	self.Transformer:Translate(dx, dy, dz)
+
+	local tfm = self.Transformer:Get2DMatrix()
+	self.canvas:Transform(tfm)
+end
+
+function IMRenderer.Rotate(self, ax,ay,az)
+	--self.canvas:TransformRotate(degrees(az))
+	self.Transformer:Rotate(ax, ay, az)
+
+	local tfm = self.Transformer:Get2DMatrix()
+	self.canvas:Transform(tfm)
+end
+
+function IMRenderer.Scale(self, sx, sy, sz)
+	--self.canvas:TransformScale(sx, sy)
+	self.Transformer:Scale(sx, sy, sz)
+
+	local tfm = self.Transformer:Get2DMatrix()
+	self.canvas:Transform(tfm)
+end
+
+function IMRenderer.PushMatrix(self)
+	self.Transformer:PushMatrix()
+
+	--local tfm = self.canvas:GetTransform()
+	--table.insert(self.TransformStack, tfm)
+end
+
+function IMRenderer.PopMatrix(self)
+	self.Transformer:PopMatrix()
+
+	local tfm = self.Transformer:Get2DMatrix()
+	self.canvas:Transform(tfm)
+
+	--if #self.TransformStack > 0 then
+	--	local tfm = table.remove(self.TransformStack)
+	--	self.canvas:Transform(tfm);
+	--end
+end
 
 
 

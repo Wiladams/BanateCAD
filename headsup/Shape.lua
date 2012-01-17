@@ -83,42 +83,74 @@ end
 
 
 function point(x,y,z)
-	Processing.DrawPoint(x,y,z)
+	y = Processing.Renderer.height - y
+
+	Processing.Renderer:DrawPoint(x,y)
 end
-
-
 
 function line(...)
-	-- We either have 4, or 5 parameters
-	local startPoint = nil
-	local endPoint = nil
+	-- We either have 4, or 6 parameters
+	local x1, y1, z1, x2, y2, z2
+	local hgt = Processing.Renderer.height
 
 	if arg.n == 4 then
-		startPoint = Vector3D.new(arg[1],arg[2], 0)
-		endPoint = Vector3D.new(arg[3], arg[4], 0)
+		x1 = arg[1]
+		y1 = arg[2]
+		x2 = arg[3]
+		y2 = arg[4]
 	elseif arg.n == 6 then
-		startPoint = Vector3D.new(arg[1],arg[2], arg[3])
-		endPoint = Vector3D.new(arg[4], arg[5], arg[6])
+		x1 = arg[1]
+		y1 = arg[2]
+		z1 = arg[3]
+		x2 = arg[4]
+		y2 = arg[5]
+		z2 = arg[6]
 	end
 
---print("Shape.line : ", startPoint, endPoint)
-	Processing.DrawLine(startPoint, endPoint)
+	Processing.Renderer:DrawLine(x1, y1, x2, y2)
 end
 
-function rect(x, y, width, height)
-	Processing.DrawRect(x,y, width, height)
+function rect(x, y, w, h)
+
+	Processing.Renderer:DrawRect(x, y, w, h)
 end
 
 function triangle(x1, y1, x2, y2, x3, y3)
-	Processing.DrawTriangle(x1, y1, x2, y2, x3, y3)
+	Processing.Renderer:DrawTriangle(x1, y1, x2, y2, x3, y3)
+end
+
+function polygon(pts)
+	Processing.Renderer:DrawPolygon(pts)
 end
 
 function quad(x1, y1, x2, y2, x3, y3, x4, y4)
-	Processing.DrawQuad(x1, y1, x2, y2, x3, y3, x4, y4)
+	local pts = {
+		Point3D(x1, y1, 0),
+		Point3D(x2, y2, 0),
+		Point3D(x3, y3, 0),
+		Point3D(x4, y4, 0),
+	}
+
+	polygon(pts)
+
+	--Processing.DrawQuad(x1, y1, x2, y2, x3, y3, x4, y4)
 end
 
 function ellipse(centerx, centery, awidth, aheight)
-	Processing.DrawEllipse(centerx, centery, awidth, aheight)
+	local steps = 30
+	local pts = {}
+
+	for i = 0, steps do
+		local u = i/steps
+		local angle = u * 2*PI
+		local x = awidth/2 * cos(angle)
+		local y = aheight/2 * sin(angle)
+		local pt = Point3D(x+centerx, y+centery, 0)
+		table.insert(pts, pt)
+	end
+
+	polygon(pts)
+	--Processing.DrawEllipse(centerx, centery, awidth, aheight)
 end
 
 --[====================================[
@@ -284,3 +316,26 @@ function vertex(...)
 
 end
 
+
+
+
+
+
+
+--[[
+	Scene
+--]]
+function addactor(actor)
+	if not actor then return end
+
+	table.insert(Processing.Actors, actor)
+	if actor.Render then
+		addgraphic(actor)
+	end
+end
+
+function addgraphic(agraphic)
+	if not agraphic then return end
+
+	table.insert(Processing.Graphics, agraphic)
+end

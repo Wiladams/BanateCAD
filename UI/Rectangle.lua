@@ -150,7 +150,7 @@ function Rectangle.__tostring(self)
 	return '{'..self.Left..','..self.Top..','..self.Right..','..self.Bottom..'}';
 end
 
-EmptyRect = Rectangle();
+Rectangle.Empty = Rectangle();
 
 
 --[[

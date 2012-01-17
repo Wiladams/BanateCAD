@@ -5,6 +5,7 @@ vec.mt = {}
 vec.mt.__index = vec
 
 function vec.new(params)
+	params = params or {}
 	local _vec = {}
 	setmetatable(_vec, vec.mt)
 
@@ -74,6 +75,16 @@ function vec.mul(a, b)
 	end
 
 	return res
+end
+
+function vec.dot(self, b)
+	local sum = 0
+
+	for i=1,#self do
+		sum = sum + self[i] * b[i]
+	end
+
+	return sum
 end
 
 function vec.div(a, b)

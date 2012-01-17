@@ -179,7 +179,12 @@ function Graphic.Invalidate(self)
 	self:Invalidate(self.ClientRectangle);
 end
 
-function Graphic.UpdateBoundaryState(self)
+function Graphic.Update(self, toTime)
+	UpdateGeometryState(toTime)
+	UpdateBoundaryState(toTime)
+end
+
+function Graphic.UpdateBoundaryState(self, toTime)
 end
 
 --[[
@@ -190,7 +195,7 @@ end
 /// By default, the container is queried for its transform.
 /// </summary>
 --]]
-function Graphic.UpdateGeometryState(self)
+function Graphic.UpdateGeometryState(self, toTime)
 	-- Since we are a part of a container, we will create
 	-- our own transform, starting with Identity
 	local myTransform = Transformation();
@@ -216,6 +221,11 @@ function Graphic.UpdateGeometryState(self)
 end
 
 function Graphic.OnUpdateGeometryState(self)
+end
+
+function Graphic.Render(self, renderer)
+	local devent = DrawEvent(renderer, self.Frame)
+	self:Draw(devent)
 end
 
 -- Drawable things
