@@ -140,6 +140,9 @@ function Matrix.Transpose(self)
 	return ma;
 end
 
+--[=====[
+	Operator Overloads
+--]=====]
 function Matrix.__mul(a, c)
 	b = Matrix(a.RowDimension, c.ColumnDimension);
 
@@ -156,6 +159,9 @@ function Matrix.__mul(a, c)
 	return b;
 end
 
+--[[
+	Utility Routines
+--]]
 function Matrix.Print(self)
 	print("Matrix")
 	print("Rows: ", self.RowDimension)

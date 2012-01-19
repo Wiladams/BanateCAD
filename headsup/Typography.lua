@@ -12,10 +12,9 @@ function loadFont()
 end
 
 function text(x, y, txt)
-	y = -y
-	Processing.Renderer:Scale(1, -1)
+	--Processing.Renderer:Scale(1, -1)
 	Processing.Renderer:DrawText(x, y, txt)
-	Processing.Renderer:Scale(1, -1)
+	--Processing.Renderer:Scale(1, -1)
 end
 
 

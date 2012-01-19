@@ -1,8 +1,9 @@
 function setup()
-	size(600, 400);
-end
+	Processing.Renderer:ResetTransform()
+	size(640, 480);
+--end
 
-function draw()
+--function draw()
 	background(210, 177, 68);
 
 	stroke(0)

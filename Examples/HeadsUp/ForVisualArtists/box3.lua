@@ -1,9 +1,11 @@
 function setup()
+	Processing.Renderer:ResetTransform()
 	size(600, 400);
-end
-
-function draw()
 	background(210, 177, 68);
+--end
+
+--function draw()
+
 
 	fill(149, 93, 13, 128);
 	rect(150, 100, 250, 150);

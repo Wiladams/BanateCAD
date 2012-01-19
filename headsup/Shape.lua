@@ -91,7 +91,6 @@ end
 function line(...)
 	-- We either have 4, or 6 parameters
 	local x1, y1, z1, x2, y2, z2
-	local hgt = Processing.Renderer.height
 
 	if arg.n == 4 then
 		x1 = arg[1]
@@ -111,7 +110,6 @@ function line(...)
 end
 
 function rect(x, y, w, h)
-
 	Processing.Renderer:DrawRect(x, y, w, h)
 end
 
@@ -132,8 +130,6 @@ function quad(x1, y1, x2, y2, x3, y3, x4, y4)
 	}
 
 	polygon(pts)
-
-	--Processing.DrawQuad(x1, y1, x2, y2, x3, y3, x4, y4)
 end
 
 function ellipse(centerx, centery, awidth, aheight)
@@ -150,7 +146,6 @@ function ellipse(centerx, centery, awidth, aheight)
 	end
 
 	polygon(pts)
-	--Processing.DrawEllipse(centerx, centery, awidth, aheight)
 end
 
 --[====================================[

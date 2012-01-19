@@ -1,9 +1,9 @@
 function setup()
 	size(600, 400);
 	background(210, 177, 68);
-end
+--end
 
-function draw()
+--function draw()
 	stroke(255, 0, 0);
 	noFill();
 

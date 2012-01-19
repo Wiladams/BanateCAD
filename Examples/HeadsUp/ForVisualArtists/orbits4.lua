@@ -20,14 +20,18 @@ local Moon = HeavenlyBody(10, 50, color(192,192,180))
 local Nem = HeavenlyBody(20, 40, color(220,75,75))
 
 function setup()
-	size(600, 400);
+	size(1024, 768);
+	background(0);
+
+	-- Translate origin to center of screen
+	translate(width/2, height/2);
+
 end
 
 function draw()
 	background(0);
 
-	-- Translate origin to center of screen
-	translate(300, 200);
+	--pushMatrix();
 
 	Sun:Render();
 
@@ -39,4 +43,6 @@ function draw()
 
 	Earth.Angle = Earth.Angle + radians(1);
 	Moon.Angle = Moon.Angle + 0.4;
+
+	--popMatrix();
 end

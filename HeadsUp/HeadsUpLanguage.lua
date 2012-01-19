@@ -161,7 +161,13 @@ end
 
 
 --defaultrenderer = GLRenderer:new()
-defaultrenderer = IMRenderer(1920, 1080)
+--local canvas_width = 1920
+--local canvas_height = 1080
+local canvas_width = 1028
+local canvas_height = 768
+
+defaultrenderer = IMRenderer(canvas_width, canvas_height)
+
 
 -- Initial Processing State
 Processing = {
@@ -328,7 +334,7 @@ function Processing.Compile(inputtext)
 
 	Processing.ClearGlobalFunctions();
 	Processing.Renderer:ResetTransform();
-	Processing.Renderer:FlipYAxis()
+	--Processing.Renderer:FlipYAxis()
 	Processing.Renderer:Clear();
 
 	-- Compile the code
@@ -549,7 +555,7 @@ function translate(x, y, z)
 end
 
 function rotate(rads)
-	Processing.Renderer:Rotate(0,0,rads)
+	Processing.Renderer:Rotate(rads)
 end
 
 function rotateX(rad)

@@ -114,7 +114,7 @@ function LUdcmp:_init(double[,] a)   -- a input
 end
 
 -- for one dimensional array
-function LUdcmp.solve(double[] b, double[] x) -- b input and x output
+function LUdcmp.solve1D(double[] b, double[] x) -- b input and x output
         {
             int i, ii = 0, ip, j;
             double sum;
@@ -147,7 +147,7 @@ function LUdcmp.solve(double[] b, double[] x) -- b input and x output
         }
 
 -- for 2D array
-function LUdcmp.solve(double[,] b, double[,] x) -- b input and x output
+function LUdcmp.solve2D(double[,] b, double[,] x) -- b input and x output
         {
             int i, j, m = b.GetLength(1);
             if (b.GetLength(0) != n || x.GetLength(0) != n || b.GetLength(1) != x.GetLength(1))

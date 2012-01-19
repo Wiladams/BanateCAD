@@ -1,51 +1,46 @@
 local class = require "pl.class"
 
 require "MatrixSquare"
+require "Transform"
 
 -- Linear Transformations
 class.Transformer()
 
 
 function Transformer:_init()
-	self.CurrentMatrix = Matrix4()
 	self.TransformStack = {}
+	self:MakeIdentity()
 end
 
-function Transformer.Reset(self)
-	self.CurrentMatrix = Matrix4()
+function Transformer.MakeIdentity(self)
+	self.Transform = Transform()
+end
+
+function Transformer.Clear(self)
 	self.TransformStack = {}
+	self:MakeIdentity()
 end
 
 function Transformer.PushMatrix(self)
-	table.insert(self.TransformStack, self.CurrentMatrix);
+	local tfm = Transform(self.CurrentTransform)
+	table.insert(self.TransformStack, tfm)
+
 end
 
 function Transformer.PopMatrix(self)
 	if #self.TransformStack < 1 then
-		return
+		return self.CurrentMatrix
 	end
 
-	self.CurrentMatrix = table.remove(self.TransformStack)
+	self.CurrentTransform = table.remove(self.TransformStack)
 
-	return self.CurrentMatrix
+	return self.CurrentTransform
 end
 
-function Transformer.Get2DMatrix(self)
-	local res = {}
-	res[1] = self.CurrentMatrix[1][1]	-- sx
-	res[2] = 0 -- self.CurrentMatrix[2][1]	-- rot
 
-	res[3] = 0 -- self.CurrentMatrix[1][2]	-- rot
-	res[4] = self.CurrentMatrix[2][2]	-- sy
-
-	res[5] = self.CurrentMatrix[4][1]	-- dx
-	res[6] = self.CurrentMatrix[4][2]	-- dy
-
-	return res;
-end
 
 function Transformer.AppendMatrix(self, mat)
-	self.CurrentMatrix = self.CurrentMatrix * mat;
+	self.CurrentMatrix = self.CurrentMatrix *mat;
 	return self.CurrentMatrix;
 end
 
@@ -92,11 +87,19 @@ function Transformer.Translate(self, dx, dy, dz)
 	dz = dz or 0
 --print("Transformer.Translate: ", dx, dy, dz)
 
-	self.CurrentMatrix[4][1] = self.CurrentMatrix[4][1] + dx;
-	self.CurrentMatrix[4][2] = self.CurrentMatrix[4][2] + dy;
-	self.CurrentMatrix[4][3] = self.CurrentMatrix[4][3] + dz;
+	--self.CurrentMatrix[4][1] = self.CurrentMatrix[4][1] + dx;
+	--self.CurrentMatrix[4][2] = self.CurrentMatrix[4][2] + dy;
+	--self.CurrentMatrix[4][3] = self.CurrentMatrix[4][3] + dz;
 
-	return self.CurrentMatrix;
+	--return self.CurrentMatrix;
+
+	local mat = Matrix4()
+	mat[4][1] = dx;
+	mat[4][2] = dy;
+	mat[4][3] = dz;
+
+	return self:AppendMatrix(mat);
+
 end
 
 -- 	Scale
@@ -162,6 +165,34 @@ function  Transformer.RotateY(self, rad)
 	}
 
 	return self:AppendMatrix(mat)
+end
+
+--
+-- Function: Iter_matm4_mult_Matrix4
+--
+-- Description: Given a matrix of homogenized input
+--	points, multiply then by the transform matrix, and
+--	return them one by one as an iterator.
+function Iter_matm4_mult_Matrix4(m4, Tm)
+	local row=0;
+
+	return function()
+		row = row+1;
+		if row > #m4 then	-- If we've run out of rows
+			return nil;	-- we are done
+		else
+			return vec4_mult_Matrix4(m4[row], Tm);
+		end
+	end
+end
+
+
+function vec4_mult_mat34(vec, mat)
+	return {
+	vec4_dot(vec, Matrix4_col(mat,1)),
+	vec4_dot(vec, Matrix4_col(mat,2)),
+	vec4_dot(vec, Matrix4_col(mat,3))
+	}
 end
 
 --[==[

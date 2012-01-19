@@ -5,7 +5,8 @@ require "cdluaim"
 --require "color"
 --require "Texture"
 --local Renderer = require "Renderer"
-require "Transformer"
+--require "Transformer"
+require "CDTransformer"
 
 local class = require "pl.class"
 
@@ -15,8 +16,6 @@ function IMRenderer:_init(awidth, aheight)
 	self.width = awidth;
 	self.height = aheight;
 
-	self.YScale = 1
-	self.Transformer = Transformer();
 
 	-- Create the basic image
 	self.Image = im.ImageCreate(awidth, aheight, im.RGB, im.BYTE)
@@ -27,6 +26,11 @@ function IMRenderer:_init(awidth, aheight)
 
 	-- Activate the canvas so we can draw into it
 	self.canvas:Activate();
+
+	self.YScale = 1
+	--self.Transformer = Transformer();
+	self.Transformer = CDTransformer(self.canvas);
+
 
 	local black = Color(0,0,0,255)
 	local white = Color(255, 255, 255, 255)
@@ -51,11 +55,9 @@ print(self.BackgroundColor)
 end
 
 function IMRenderer.get(self, x, y)
-	local row = self.height-1 - y
+	--local row = self.height-1 - y
+	local row = y
 	local col = x
-
-	if row < 0 or row > self.height-1 then return end
-	if col < 0 or col > self.width-1 then return end
 
 	local r = self.Image[0][row][col]
 	local g = self.Image[1][row][col]
@@ -67,8 +69,10 @@ end
 
 function IMRenderer.set(self, x, y, acolor)
 
-	local row = self.height-1 - y
+	--local row = self.height-1 - y
+	local row = y
 	local col = x
+
 
 	self.Image[0][row][col] = acolor.R
 	self.Image[1][row][col] = acolor.G
@@ -245,13 +249,13 @@ function IMRenderer.SetTextAlignment(self, alignment)
 end
 
 function IMRenderer.DrawText(self, x, y, txt)
-	--local row = self.height-1 - y
-	--local y = -y
+	self:PushMatrix()
+	self.Transformer:MakeIdentity()
+	y = (self.height-1) - y
 
-	--self.canvas:YAxisMode(0)	-- Normal y-axis
-	--self:Scale(1, -1)
 	self.canvas:Text(x, y, txt)
-	--self:Scale(1, -1)
+
+	self:PopMatrix()
 end
 
 function IMRenderer.MeasureString(self, txt)
@@ -265,83 +269,47 @@ end
 	TRANSFORMATION
 --]==============================]
 function IMRenderer.ResetTransform(self)
-	self.Transformer:Reset()
+	self.Transformer:Clear()
 	self.YScale = 1
 
-	local tfm = self.Transformer:Get2DMatrix()
-	self.canvas:Transform(tfm)
+	--local tfm = self.Transformer:Get2DMatrix()
+	--self.canvas:Transform(tfm)
 end
 
 function IMRenderer.FlipYAxis(self)
 	self.YScale = -self.YScale;
 
+	self.Transformer:Translate(0, self.height, 0)
 	self.Transformer:Scale(1, self.YScale, 1)
-	self.Transformer:Translate(0, self.height-1, 0)
 
-	local tfm = self.Transformer:Get2DMatrix()
-	self.canvas:Transform(tfm)
-
-	--self.canvas:TransformTranslate(0, self.height-1)
-	--self.canvas:TransformScale(1, -1)
+	--local tfm = self.Transformer:Get2DMatrix()
+	--self.canvas:Transform(tfm)
 end
 
-function IMRenderer.RestoreYAxis(self)
-	--self.YScale = 1
-	--self.canvas:TransformScale(sx, sy)
-end
 
-function IMRenderer.ApplyYScale(self)
-	--self:Scale(1, self.YScale, 1)
-end
 
 function IMRenderer.Translate(self, dx, dy, dz)
 	dz = dz or 0
-	dy = dy * self.YScale
+	dy = dy or 0
 
-	--self.canvas:TransformTranslate(dx, dy)
 	self.Transformer:Translate(dx, dy, dz)
-
-	local tfm = self.Transformer:Get2DMatrix()
-	self.canvas:Transform(tfm)
 end
 
-function IMRenderer.Rotate(self, ax,ay,az)
-	--self.canvas:TransformRotate(degrees(az))
-	self.Transformer:Rotate(ax, ay, az)
-
-	local tfm = self.Transformer:Get2DMatrix()
-	self.canvas:Transform(tfm)
+function IMRenderer.Rotate(self, rads)
+	self.Transformer:Rotate(rads)
 end
 
 function IMRenderer.Scale(self, sx, sy, sz)
-	--self.canvas:TransformScale(sx, sy)
 	self.Transformer:Scale(sx, sy, sz)
-
-	local tfm = self.Transformer:Get2DMatrix()
-	self.canvas:Transform(tfm)
 end
 
 function IMRenderer.PushMatrix(self)
 	self.Transformer:PushMatrix()
-
-	--local tfm = self.canvas:GetTransform()
-	--table.insert(self.TransformStack, tfm)
 end
 
 function IMRenderer.PopMatrix(self)
 	self.Transformer:PopMatrix()
-
-	local tfm = self.Transformer:Get2DMatrix()
-	self.canvas:Transform(tfm)
-
-	--if #self.TransformStack > 0 then
-	--	local tfm = table.remove(self.TransformStack)
-	--	self.canvas:Transform(tfm);
-	--end
 end
-
-
-
 
 
 return IMRenderer
