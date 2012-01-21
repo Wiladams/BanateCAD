@@ -4,7 +4,7 @@ function setup()
 	size(400,400)
 	background(230)
 
-	local txt = GText("Times", {50,50}, {FontName = "Times", FontSize=18, Alignment = cd.NORTH_WEST })
+	local txt = GText("Times", {50,50}, {FontName = "Times", FontSize=18, Alignment = cd.SOUTH_WEST })
 
 	stroke(black)
 	txt:render(Processing.Renderer)

@@ -27,8 +27,6 @@ function IMRenderer:_init(awidth, aheight)
 	-- Activate the canvas so we can draw into it
 	self.canvas:Activate();
 
-	self.YScale = 1
-	--self.Transformer = Transformer();
 	self.Transformer = CDTransformer(self.canvas);
 
 
@@ -52,6 +50,7 @@ print(self.BackgroundColor)
 	self:SetStrokeColor(self.StrokeColor)
 	self:SetFillColor(self.FillColor)
 	self:SetBackgroundColor(self.BackgroundColor)
+	--self:SetSmooth(Processing.Smooth)
 end
 
 function IMRenderer.get(self, x, y)
@@ -240,7 +239,8 @@ end
 --]]
 
 
-function IMRenderer.SetFont(self, fontname, style, points)
+function IMRenderer.SetFont(self, fontname)
+--print("IMRenderer.SetFont: ", fontname)
 	self.canvas:NativeFont(fontname)
 end
 
@@ -249,13 +249,17 @@ function IMRenderer.SetTextAlignment(self, alignment)
 end
 
 function IMRenderer.DrawText(self, x, y, txt)
-	self:PushMatrix()
-	self.Transformer:MakeIdentity()
-	y = (self.height-1) - y
+	-- To get text to display properly, we have to
+	-- go back to the CDs native orientation, or the
+	-- baseline is not always correct.
+	self.canvas:YAxisMode(0);
+	y = self.height - 1 - y
 
 	self.canvas:Text(x, y, txt)
 
-	self:PopMatrix()
+	-- Now go back to an inverted axis so the
+	-- rest of the system can render correctly
+	self.canvas:YAxisMode(1);
 end
 
 function IMRenderer.MeasureString(self, txt)
@@ -270,22 +274,20 @@ end
 --]==============================]
 function IMRenderer.ResetTransform(self)
 	self.Transformer:Clear()
-	self.YScale = 1
 
-	--local tfm = self.Transformer:Get2DMatrix()
-	--self.canvas:Transform(tfm)
+	-- invert the Y Axis
+	self.canvas:YAxisMode(1);
 end
 
+--[[
 function IMRenderer.FlipYAxis(self)
 	self.YScale = -self.YScale;
 
 	self.Transformer:Translate(0, self.height, 0)
 	self.Transformer:Scale(1, self.YScale, 1)
 
-	--local tfm = self.Transformer:Get2DMatrix()
-	--self.canvas:Transform(tfm)
 end
-
+--]]
 
 
 function IMRenderer.Translate(self, dx, dy, dz)

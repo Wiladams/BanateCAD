@@ -42,6 +42,7 @@ require "Math"
 require "glsl"	-- for 'mod'
 
 -- Objects used in UI
+require "GFont"
 require "GText"
 require "param_superellipse"
 require "Rectangle"
@@ -163,8 +164,11 @@ end
 --defaultrenderer = GLRenderer:new()
 --local canvas_width = 1920
 --local canvas_height = 1080
-local canvas_width = 1028
+local canvas_width = 1024
 local canvas_height = 768
+
+width = canvas_width
+height = canvas_height
 
 defaultrenderer = IMRenderer(canvas_width, canvas_height)
 
@@ -179,10 +183,6 @@ Processing = {
 	BackgroundColor = Color(127, 127, 127, 255),
 	FillColor = Color(255,255,255,255),
 	StrokeColor = Color(0,0,0,255),
-
-	StrokeWeight = 1,
-
-	Smooth = false,
 
 	Running = false,
 	FrameRate = 30,
@@ -199,20 +199,16 @@ Processing = {
 	Actors = {},
 }
 
-
-function Processing.SetColorMode(amode)
-	local oldMode = Processing.ColorMode
-	Processing.ColorMode = amode
-
-	return oldMode
+function Processing.ClearCanvas()
+	Processing.Renderer:Clear();
 end
 
-function Processing.SetSmooth(smoothing)
-	local graphics = defaultrenderer
-	Processing.Smooth = smoothing
+--function Processing.SetColorMode(amode)
+--	local oldMode = Processing.ColorMode
+--	Processing.ColorMode = amode
 
-	Processing.Renderer:SetAntiAlias(smoothing)
-end
+--	return oldMode
+--end
 
 function Processing.SetBackgroundColor(acolor)
 	Processing.Renderer:SetBackgroundColor(acolor)
@@ -220,40 +216,6 @@ function Processing.SetBackgroundColor(acolor)
 
 	return oldColor
 end
-
-function Processing.ClearCanvas()
-	Processing.Renderer:Clear();
-end
-
-function Processing.SetFillColor(acolor)
-	return Processing.Renderer:SetFillColor(acolor);
-end
-
-function Processing.SetStrokeColor(acolor)
-	return Processing.Renderer:SetStrokeColor(acolor);
-end
-
--- Drawing Primitives
-function Processing.SetPointSize(ptSize)
-
-	Processing.Renderer:SetPointSize(ptSize)
-end
-
-function Processing.SetLineCap(cap)
-	Processing.Renderer:SetLineCap(cap)
-end
-
-function Processing.SetLineJoin(join)
-	Processing.Renderer:SetLineJoin(join)
-end
-
-function Processing.SetStrokeWeight(weight)
-	Processing.StrokeWeight = weight
-
-	Processing.Renderer:SetLineWidth(weight)
-end
-
-
 
 function Processing.DrawImage(tex, offsetx, offsety, awidth, aheight)
 	offsetx = offsetx or 0
@@ -268,39 +230,11 @@ end
 
 
 --[==============================[
-	TRANSFORMATION
---]==============================]
---[[
-function Processing.Translate(x, y, z)
-	z = z or 0
-
-	local graphics = defaultrenderer
-	graphics:Translate({x,y,z})
-end
-
-function Processing.Rotate(x,y,z)
-	local graphics = defaultrenderer
-	graphics:Rotate({degrees(x),degrees(y),degrees(z)})
-
-	local canvas2D = defaultglcanvas.canvas2D
-	canvas2D:TransformRotate(degrees(z))
-end
-
-function Processing.PushMatrix()
-	--gl.PushMatrix();
-end
-
-function Processing.PopMatrix()
-	--gl.PopMatrix();
-end
---]]
---[==============================[
 	Compiling
 --]==============================]
 
 function Processing.ApplyState()
 	Processing.Renderer:ApplyAttributes();
-	Processing.SetSmooth(Processing.Smooth)
 end
 
 function Processing.ClearGlobalFunctions()
@@ -334,7 +268,6 @@ function Processing.Compile(inputtext)
 
 	Processing.ClearGlobalFunctions();
 	Processing.Renderer:ResetTransform();
-	--Processing.Renderer:FlipYAxis()
 	Processing.Renderer:Clear();
 
 	-- Compile the code
@@ -364,6 +297,7 @@ function Processing.StartAnimation()
 	local currentTime = startTime
 
 	Processing.Running = true;
+	Processing.TickCount = 0
 	frameCount = 0
 	repeat
 		-- update seconds per frame
@@ -386,8 +320,9 @@ function Processing.StartAnimation()
 			--if diff < tolerance then
 			--end
 		else
-			Processing.Tick()
+			Processing.TickCount = Processing.TickCount + 1
 			frameCount = frameCount + 1
+			Processing.Tick(Processing.TickCount)
 			nextTime = nextTime + secondsperframe
 
 			-- Update pixels and draw to screen
@@ -404,7 +339,7 @@ function Processing.StopAnimation()
 	Processing.Running = false
 end
 
-function Processing.Tick()
+function Processing.Tick(tickCount)
 	iup.GLMakeCurrent(defaultglcanvas);
 
 	-- Render the camera so we can
@@ -418,15 +353,17 @@ function Processing.Tick()
 		actor:Update(Processing.TickCount)
 	end
 
+	-- Draw the immediate graphics
+	if (_G.draw) ~= nil then
+		draw()
+	end
+
 	-- Draw all the retained graphics
 	for _,graphic in ipairs(Processing.Graphics) do
 		graphic:Render(Processing.Renderer)
 	end
 
-	-- Draw the immediate graphics
-	if (_G.draw) ~= nil then
-		draw()
-	end
+
 
 	-- Call to action directly
 	--defaultglcanvas:action()
@@ -462,8 +399,6 @@ end
 function Processing.SetCanvasSize(awidth, aheight, MODE)
 	width = awidth;
 	height = aheight;
-
-	--Processing.Camera:SetSize(awidth, aheight)
 end
 
 --[==============================[
@@ -490,11 +425,15 @@ end
 --]==============================]
 
 function Processing.MouseMove(x, y, status)
+	--x, y = Processing.Renderer.canvas:wWorld2Canvas(x, y)
+
 	mouseX = x
 	mouseY = y
 end
 
 function Processing.MouseDown(but, x, y, status)
+	--x, y = Processing.Renderer.canvas:wWorld2Canvas(x, y)
+
 	isMousePressed = true;
 	if (_G.mousePressed) ~= nil then
 		mousePressed()
@@ -505,76 +444,10 @@ function Processing.MouseUp(but, x, y, status)
 	isMousePressed = false;
 end
 
---[[
--- Setup Animation Timer
-function createTimer(frequency)
-	aTimer = iup.timer({time=1000/frequency})
-
-	return aTimer
-end
-
-defaultFrequency = 20
-defaultTimer = createTimer(defaultFrequency)
-function defaultTimer.action_cb(self)
-	Processing.Tick()
-end
---]]
 
 
 
 
 
-
---[==============================[
-	TRANSFORM
---]==============================]
-
--- Matrix Stack
-function popMatrix()
-	Processing.Renderer:PopMatrix();
-end
-
-
-function pushMatrix()
-	Processing.Renderer:PushMatrix();
-end
-
-function applyMatrix()
-end
-
-function resetMatrix()
-end
-
-function printMatrix()
-end
-
-
--- Simple transforms
-function translate(x, y, z)
-	Processing.Renderer:Translate(x, y, z)
-end
-
-function rotate(rads)
-	Processing.Renderer:Rotate(rads)
-end
-
-function rotateX(rad)
-end
-
-function rotateY(rad)
-end
-
-function rotateZ(rad)
-end
-
-function scale(sx, sy, sz)
-	Processing.Renderer:Scale(sx, sy, sz)
-end
-
-function shearX()
-end
-
-function shearY()
-end
 
 

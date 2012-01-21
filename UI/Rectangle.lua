@@ -3,61 +3,51 @@ local class = require "pl.class"
 class.Rectangle()
 
 function Rectangle:_init(...)
-	local x1 = 0
-	local y1 = 0
-	local x2 = 0
-	local y2 = 0
+--print("Rectangle:_init: ", arg.n)
 
-	if arg.n == 2 then
-		x1 = arg[1][1]
-		y1 = arg[1][2]
-		x2 = x1 + arg[2][1]
-		y2 = y1 + arg[2][2]
+	local dimension = {0,0}
+	local origin = {0,0}
+
+	if arg.n == 1 then
+		-- Copy constructor
+		origin = {unpack(arg[1].Origin)}
+		dimension = {unpack(arg[1].Dimension)}
+	elseif arg.n == 2 then
+		origin = arg[1]
+		dimension = arg[2]
 	elseif arg.n == 4 then
-		x1 = arg[1]
-		y1 = arg[2]
-		x2 = arg[3]
-		y2 = arg[4]
+		origin = {arg[1], arg[2]}
+		dimension = {arg[3], arg[4]}
 	end
 
-	self:SetRect(x1, y1, x2, y2);
+	self:SetRect(origin, dimension)
 end
 
+function Rectangle:SetRect(origin, dimension)
+	self.Origin = origin
+	self.Dimension = dimension
+
+	self.Width = self.Dimension[1]
+	self.Height = self.Dimension[2]
+
+	self.Left = self.Origin[1]
+	self.Top = self.Origin[2]
+	self.Right = self.Left + self.Width
+	self.Bottom = self.Top + self.Height
+
+end
 
 function Rectangle.IsEmpty(self)
-	return (self.Left == self.Right) and (self.Top == self.Bottom);
+	return self.Dimesion[1] == 0 or self.Dimension[2] == 0
 end
 
+function Rectangle.GetCenter(self)
+	local midx = self.Origin[1] + self.Dimension[1]/2
+	local midy = self.Origin[2] + self.Dimension[2]/2
 
-function Rectangle.SetRect(self, x1, y1, x2, y2)
-	self.Left = x1
-	self.Right = x2
-	self.Top = y1
-	self.Bottom = y2
-
-	self:Normalize();
-
-	self.Width = self.Right - self.Left;
-	self.Height = self.Bottom - self.Top;
+	return midx, midy
 end
 
-function Rectangle.Normalize(self)
-	local t=0;
-
-	if (self.Left > self.Right) then
-		t = self.Left;
-		self.Left = self.Right;
-		self.Right = t;
-	end
-
-	if (self.Top > self.Bottom) then
-		t = self.Top;
-		self.Top = self.Bottom;
-		self.Bottom = t;
-	end
-
-	return self;
-end
 
 function Rectangle.Clip(self, r)
 	if (self.Right > r.Right) then
@@ -111,11 +101,14 @@ function Rectangle.Inflate(self, ...)
 		dy = arg[1]
 	end
 
-	self:SetRect(self.Left - dx, self.Top - dy, self.Right + dx, self.Bottom + dy)
+	local origin = {self.Origin[1]-dx/2, self.Origin[2]-dy/2}
+	local dimension = {self.Dimension[1]+dx, self.Dimension[2]+dy}
+	self:SetRect(origin, dimension)
 end
 
 function Rectangle.Offset(self, x, y)
-	self:SetRect(self.Left + x, self.Top + y, self.Right + x, self.Bottom + y)
+	local origin = {self.Origin[1]+x, self.Origin[2]+y}
+	self:SetRect(origin, self.Dimension)
 end
 
 --[[
@@ -137,13 +130,20 @@ function Rectangle.Intersect(left, right)
 	return EmptyRect;
 end
 
-function Rectangle.Union(left, right)
-	local x1 = math.min(left.Left, right.Left);
-	local x2 = math.max(left.Right, right.Right);
-	local y1 = math.min(left.Bottom, right.Bottom);
-	local y2 = math.max(left.Top, right.Top);
+function Rectangle.Union(self, other)
+	local leftmost = math.min(self.Origin[1], other.Origin[1]);
+	local topmost = math.min(self.Origin[2], other.Origin[2]);
 
-	return Rectangle(x1, y1, x2, y2);
+	local rightmost = math.max(self.Right, other.Right);
+	local bottommost = math.max(self.Bottom, other.Bottom);
+
+
+	local widest = rightmost - leftmost;
+	local highest = bottommost - topmost;
+
+	local arect = Rectangle({leftmost, topmost}, {widest, highest})
+
+	return arect;
 end
 
 function Rectangle.__tostring(self)
@@ -154,13 +154,12 @@ Rectangle.Empty = Rectangle();
 
 
 --[[
-rec1 = Rectangle({10, 10}, {100, 100})
-rec2 = Rectangle({20, 20}, {100, 100})
-rec3 = rec1:Intersect(rec2)
+local rec = Rectangle({10,10}, {100, 100})
+local midx, midy = rec:GetCenter()
+print("Center: ", midx, midy)
 
-print(rec1)
-print(rec2)
-print(rec3)
+rec1 = Rectangle(10, 10, 100, 100)
+midx, midy = rec1:GetCenter()
+print("Center2: ", midx, midy);
 
-print(rec1.Left, rec1.Top, rec1.Width, rec1.Height)
 --]]

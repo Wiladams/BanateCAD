@@ -40,19 +40,20 @@ function colorMode(amode)
 	-- if it's not valid input, just return
 	if amode ~= RGB and amode ~= HSB then return end
 
-	return Processing.SetColorMode(amode)
+	--return Processing.SetColorMode(amode)
 end
 
 function fill(...)
 	-- See if we're being passed a 'Color'
 	-- type
 	if arg.n == 1 and type(arg[1]) == "table" then
-		return Processing.SetFillColor(arg[1])
+		return Processing.Renderer:SetFillColor(arg[1])
+		--return Processing.SetFillColor(arg[1])
 	end
 
 	local acolor = Color(unpack(arg))
 
-	return Processing.SetFillColor(acolor)
+	return Processing.Renderer:SetFillColor(acolor)
 end
 
 function noFill()
@@ -64,26 +65,28 @@ end
 function noStroke(...)
 	local acolor = Color(0,0)
 
-	return Processing.SetStrokeColor(acolor)
+	return Processing.Renderer:SetStrokeColor(acolor)
+
+	--return Processing.SetStrokeColor(acolor)
 end
 
 function stroke(...)
 	if arg.n == 1 and type(arg[1]) == "table" then
 		-- We already have a color structure
 		-- so just set it
-		return Processing.SetStrokeColor(arg[1])
+		return Processing.Renderer:SetStrokeColor(arg[1])
 	end
 
 	-- Otherwise, construct a new color object
 	-- and set it
 	local acolor = color(unpack(arg))
 
-	return Processing.SetStrokeColor(acolor)
+	return Processing.Renderer:SetStrokeColor(acolor)
 end
 
 
 function point(x,y,z)
-	y = Processing.Renderer.height - y
+	--y = Processing.Renderer.height - y
 
 	Processing.Renderer:DrawPoint(x,y)
 end
@@ -218,27 +221,27 @@ end
 
 -- ATTRIBUTES
 function smooth()
-	Processing.SetSmooth(true)
+	Processing.Renderer:SetAntiAlias(true)
 end
 
 function noSmooth()
-	Processing.SetSmooth(false)
+	Processing.Renderer:SetAntiAlias(false)
 end
 
 function pointSize(ptSize)
-	Processing.SetPointSize(ptSize)
+	Processing.Renderer:SetPointSize(ptSize)
 end
 
 function strokeCap(cap)
-	Processing.SetLineCap(cap);
+	Processing.Renderer:SetLineCap(cap);
 end
 
 function strokeJoin(join)
-	Processing.SetLineJoin(join)
+	Processing.Renderer:SetLineJoin(join)
 end
 
 function strokeWeight(weight)
-	Processing.SetStrokeWeight(weight)
+	Processing.Renderer:SetLineWidth(weight)
 end
 
 function size(awidth, aheight, MODE)
@@ -314,6 +317,59 @@ end
 
 
 
+
+
+--[==============================[
+	TRANSFORM
+--]==============================]
+
+-- Matrix Stack
+function popMatrix()
+	Processing.Renderer:PopMatrix();
+end
+
+
+function pushMatrix()
+	Processing.Renderer:PushMatrix();
+end
+
+function applyMatrix()
+end
+
+function resetMatrix()
+end
+
+function printMatrix()
+end
+
+
+-- Simple transforms
+function translate(x, y, z)
+	Processing.Renderer:Translate(x, y, z)
+end
+
+function rotate(rads)
+	Processing.Renderer:Rotate(rads)
+end
+
+function rotateX(rad)
+end
+
+function rotateY(rad)
+end
+
+function rotateZ(rad)
+end
+
+function scale(sx, sy, sz)
+	Processing.Renderer:Scale(sx, sy, sz)
+end
+
+function shearX()
+end
+
+function shearY()
+end
 
 
 

@@ -5,25 +5,24 @@
 require ("iuplua")
 require ("lfs")
 
-FileManager = {}
-function FileManager:new(o)
-	o = o or {}		-- create object if user does not provide one
-	setmetatable(o, self)
-	self.__index = self
+local class = require "pl.class"
 
-	o.NAME = "NewModel.fab"
-	o.fileopener = iup.filedlg{
+class.FileManager()
+
+function FileManager:_init(o)
+
+	self.NAME = "NewModel.lua"
+	self.fileopener = iup.filedlg{
 		DIALOGTYPE="OPEN",
 		EXTFILTER="Lua Files|*.lua|",
-		TITLE="Processing Files",
+		TITLE="HeadsUp Files",
 		}
-	o.filesaver = iup.filedlg{
+	self.filesaver = iup.filedlg{
 		DIALOGTYPE="SAVE",
 		EXTFILTER="Lua Files|*.lua|",
-		TITLE="Processing Files",
+		TITLE="HeadsUp Files",
 		}
 
-	return o
 end
 
 function FileManager.GetOpenFileName(self)
@@ -35,7 +34,7 @@ function FileManager.GetOpenFileName(self)
 		self.NAME = self.fileopener.VALUE
 			-- Set the current directory to that of the file
 		local success = lfs.chdir(self.fileopener.DIRECTORY)
-print("do_file_open, success: ", success)
+--print("do_file_open, success: ", success)
 
 	end
 
@@ -53,5 +52,5 @@ function FileManager.SetFileName(self, aname)
 	self.NAME = aname;
 end
 
-defaultfilemanager = FileManager:new();
+defaultfilemanager = FileManager();
 

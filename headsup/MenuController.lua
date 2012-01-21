@@ -8,6 +8,7 @@
 require ("iuplua")
 
 local class = require "pl.class"
+local pather = require "pl.path"
 
 class.MenuController()
 
@@ -41,8 +42,14 @@ function MenuController.do_file_open(self)
 		return iup.DEFAULT
 	end
 
+
 	-- empty out the current view
 	intext.value = ''
+
+	-- Add the script's path to the require list
+	-- so that other files can be included from there
+	local pathpart, filepart = pather.splitpath(filename);
+	add_require_path(pathpart)
 
 --print(filename, err)
 
@@ -136,14 +143,9 @@ function MenuController.do_start_animation(self)
 	local inputtext = intext.value
 
 	Processing.Compile(inputtext)
-
-	-- Then turn on the timer, so the
-	-- draw function is called repeatedly
-	--defaultTimer.run = "YES"
 end
 
 function MenuController.do_stop_animation(self)
-	--defaultTimer.run = "NO"
 	Processing.StopAnimation()
 end
 
@@ -158,9 +160,6 @@ end
 --==============================================
 --	VIEW POSITION
 --==============================================
-
-
-
 
 function MenuController.do_view_back(self)
 	defaultviewer:SetViewBack();

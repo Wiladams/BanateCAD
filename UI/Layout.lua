@@ -10,16 +10,11 @@ Alignment =
 }
 
 --
--- The Position enum is meant to give relative position
--- between two graphics.  The numbers are derived by the
--- layout of keys on a numeric keypad
---
---		7  8  9
---		4  5  6
---		1  2  3
+-- The Position enum is a combination of the alignments
 --
 Position =
 {
+--[[
 	TopLeft 	= 0x07,
 	Top 		= 0x08,
 	TopRight 	= 0x09,
@@ -29,6 +24,18 @@ Position =
 	BottomLeft 	= 0x01,
 	Bottom 		= 0x02,
 	BottomRight = 0x03,
+--]]
+	TopLeft = Alignment.Top + Alignment.Left,
+	Top = Alignment.Top + Alignment.Center,
+	TopRight = Alignment.Top + Alignment.Right,
+
+	Left = Alignment.Left + Alignment.Middle,
+	Center = Alignment.Center + Alignment.Middle,
+	Right = Alignment.Right + Alignment.Middle,
+
+	BottomLeft = Alignment.Bottom + Alignment.Left,
+	Bottom = Alignment.Bottom + Alignment.Center,
+	BottomRight = Alignment.Bottom + Alignment.Right,
 }
 
 
