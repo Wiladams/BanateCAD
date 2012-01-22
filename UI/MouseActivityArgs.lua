@@ -56,6 +56,20 @@ iup.isalt(status)
 iup.issys(status)
 --]]
 
+MouseButton =
+{
+	None		= 0,
+
+	Left		= 1,
+	Middle		= 2,
+	Right		= 3,
+
+	Button4		= 4,
+	Button5		= 5,
+
+	Wheel		= 6,
+}
+
 MouseButtonActivity =
 {
 	None                = 0,
@@ -78,20 +92,6 @@ MouseButtonActivity =
 	MouseWheel          = 11,	-- Wheel
 }
 
---[[
-        public IntPtr WindowHandle { get; private set; }
-        public MouseDevice Device { get; private set; }
-        public MouseActivityType ActivityType { get; private set; }
-        public MouseButtonActivity ButtonActivity { get; private set; }
-        public MouseCoordinateSpace CoordinateSpace { get; private set; }
-        public MouseMovementType MovementType { get; private set; }
-
-        public int Clicks { get; private set; }
-        public int X { get; private set; }
-        public int Y { get; private set; }
-        public short Delta { get; private set; }
-        public int KeyFlags { get; private set; }
---]]
 
 class.MouseActivityArgs()
 
@@ -116,10 +116,11 @@ function MouseActivityArgs:_init(params)
 	self.Device = params.Device ;
 	self.ActivityType = params.ActivityType;
 	self.ButtonActivity = params.ButtonActivity;
-	self.CoordinateSpace = params.Space;
+	self.CoordinateSpace = params.CoordinateSpaceSpace;
 	self.MovementType = params.MovementType;
 	self.Window = params.Window;
 
+	self.Button = params.Button;
 	self.Clicks = params.Clicks;
 	self.X = params.X;
 	self.Y = params.Y;
@@ -166,16 +167,11 @@ end
 
 
 
-function MouseActivityArgs.__tostring()
---[[
-            return "<MouseActivity X='" + X.ToString() +
-                "' Y='" + Y.ToString() +
-                "' Delta = '" + Delta.ToString() +
-                "' Clicks = '" + Clicks.ToString() +
-                "' Button = '" + ButtonActivity.ToString() +
-                "'" +
-                " />";
---]]
+function MouseActivityArgs.__tostring(self)
+	--return string.format("<MouseActivity X='%s', Y='%s'/>",tostring(self.X), tostring(self.Y));
+
+	return string.format("<MouseActivity \n  X='%s', Y='%s', \n  Delta='%s', \n  Clicks='%s', \n  Button='%s'/>",
+		tostring(self.X), tostring(self.Y), tostring(self.Delta), tostring(self.Clicks), tostring(self.Button));
 end
 
 --[[

@@ -39,19 +39,6 @@ function Point3D.clone(self)
 	return new_inst
 end
 
---[[
-function Point3D.x(self)
-	return self[1]
-end
-
-function Point3D.y(self)
-	return self[2]
-end
-
-function Point3D.z(self)
-	return self[3]
-end
---]]
 
 -- Arithmetic overloads
 function Point3D.__add(a, b)

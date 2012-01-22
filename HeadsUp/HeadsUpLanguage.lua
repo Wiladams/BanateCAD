@@ -43,9 +43,11 @@ require "glsl"	-- for 'mod'
 
 -- Objects used in UI
 require "GFont"
+require "GRoundedRectangle"
 require "GText"
 require "param_superellipse"
 require "Rectangle"
+require "ShapeBuilder"
 
 
 
@@ -140,25 +142,81 @@ end
 
 -- Mouse Activity
 function defaultglcanvas.motion_cb(self, x, y, status)
-	Processing.MouseMove(x, y, status);
+	local ma = MouseActivityArgs({
+		Device = nil ;
+		ActivityType = MouseActivityType.MouseMove;
+		ButtonActivity = MouseButtonActivity.None;
+		CoordinateSpace = MouseCoordinateSpace.Window;
+		MovementType = MouseMovementType.Absolute;
+		Window = self;
+
+		Button = MouseButton.None;
+		Clicks = 0;
+		X = x;
+		Y = y;
+		Delta = 0;
+		KeyFlags = status;
+	})
+
+	Processing.MouseActivity(ma)
 end
 
 -- Indicates mouse button activity, either pressed or released
 function defaultglcanvas.button_cb(self, but, pressed, x, y, status)
+	local mat = MouseActivityType.MouseDown
+	local clicks = 1;
+	local bactive = MouseButtonActivity.None
+
 	if pressed == 1 then
-		Processing:MouseDown(but, x, y, status);
-	else
-		Processing:MouseUp(but, x, y, status);
+		mat = MouseActivityType.MouseDown
+		if iup.isdouble(status) then
+			clicks = 2
+		end
+	elseif pressed == 0 then
+		mat = MouseActivityType.MouseUp
 	end
+
+	local ma = MouseActivityArgs({
+		Device = nil ;
+		ActivityType = mat;
+		ButtonActivity = MouseButtonActivity.None;
+		CoordinateSpace = MouseCoordinateSpace.Window;
+		MovementType = MouseMovementType.Absolute;
+		Window = self;
+
+		Button = but;
+		Clicks = clicks;
+		X = x;
+		Y = y;
+		Delta = 0;
+		KeyFlags = status;
+	})
+
+	Processing.MouseActivity(ma)
 end
 
---[[
 
 function defaultglcanvas.wheel_cb(self, delta, x, y, status)
-	defaultviewer:Wheel(delta, x, y, status)
+	local ma = MouseActivityArgs({
+		Device = nil ;
+		ActivityType = MouseActivityType.MouseWheel;
+		ButtonActivity = MouseButtonActivity.MouseWheel;
+		CoordinateSpace = MouseCoordinateSpace.Window;
+		MovementType = MouseMovementType.Absolute;
+		Window = self;
+
+		Button = MouseButtonActivity.None;
+		Clicks = 0;
+		X = x;
+		Y = y;
+		Delta = delta;
+		KeyFlags = status;
+	})
+
+	Processing.MouseActivity(ma)
 end
 
---]]
+
 
 
 --defaultrenderer = GLRenderer:new()
@@ -424,6 +482,21 @@ end
 	MOUSE ACTIVITY
 --]==============================]
 
+function Processing.MouseActivity(ma)
+--print("Processing.MouseActivity: ")
+--print(ma)
+
+	if ma.ActivityType == MouseActivityType.MouseDown then
+		Processing.MouseDown(ma.Button, ma.X, ma.Y, ma.KeyFlags)
+	elseif ma.ActivityType == MouseActivityType.MouseUp then
+		Processing.MouseUp(ma.Button, ma.X, ma.Y, ma.KeyFlags)
+	elseif ma.ActivityType == MouseActivityType.Move then
+		Processing.MouseMove(ma.X, ma.Y, ma.KeyFlags)
+	elseif ma.ActivityType == MouseActivityType.Wheel then
+		Processing.MouseWheel(ma.Delta, ma.X, ma.Y, ma.KeyFlags)
+	end
+end
+
 function Processing.MouseMove(x, y, status)
 	--x, y = Processing.Renderer.canvas:wWorld2Canvas(x, y)
 
@@ -442,6 +515,9 @@ end
 
 function Processing.MouseUp(but, x, y, status)
 	isMousePressed = false;
+end
+
+function Processing.MouseWheel(delta, x, y, status)
 end
 
 

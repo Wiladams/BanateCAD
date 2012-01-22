@@ -186,6 +186,38 @@ function IMRenderer.DrawLine(self, x1, y1, x2, y2)
 	self.canvas:Line(x1, y1, x2, y2)
 end
 
+function IMRenderer.DrawBezier(self, p1, p2, p3, p4)
+	local pts = {p1, p2, p3, p4}
+	local curveSteps = 30;
+
+	local cv4 = cubic_vec3_to_cubic_vec4(pts);
+
+	local lastPoint = bezier_eval(0, cv4);
+	for i=1, curveSteps do
+		local u = i/curveSteps;
+		local cpt = bezier_eval(u, cv4);
+
+		self:DrawLine(lastPoint[1], lastPoint[2], cpt[1], cpt[2])
+		lastPoint = cpt;
+	end
+end
+
+function IMRenderer.DrawCurve(self, p1, p2, p3, p4)
+	local pts = {p1, p2, p3, p4}
+	local curveSteps = 30;
+
+	local cv4 = cubic_vec3_to_cubic_vec4(pts);
+
+	local lastPoint = catmull_eval(0, 1/2, cv4);
+	for i=1, curveSteps do
+		local u = i/curveSteps;
+		local cpt = catmull_eval(u, 1/2, cv4);
+
+		line(lastPoint[1], lastPoint[2], cpt[1], cpt[2])
+		lastPoint = cpt;
+	end
+end
+
 function IMRenderer.DrawPolygon(self, pts)
 	local canvas2D = self.canvas
 
