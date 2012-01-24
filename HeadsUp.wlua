@@ -8,7 +8,7 @@
 require ("BAppContext")
 
 -- Create the main window we will be using
-local AppName = "Banate Heads Up";
+local AppName = "Heads Up";
 
 -- Construct the application object
 local appctx = BAppContext({

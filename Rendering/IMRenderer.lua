@@ -54,8 +54,8 @@ print(self.BackgroundColor)
 end
 
 function IMRenderer.get(self, x, y)
-	--local row = self.height-1 - y
-	local row = y
+	local row = self.height-1 - y
+	--local row = y
 	local col = x
 
 	local r = self.Image[0][row][col]
@@ -68,8 +68,8 @@ end
 
 function IMRenderer.set(self, x, y, acolor)
 
-	--local row = self.height-1 - y
-	local row = y
+	local row = self.height-1 - y
+	--local row = y
 	local col = x
 
 

@@ -28,7 +28,7 @@ function Point3D:_init(...)
 		-- Single argument that is a table
 		self[1] = arg[1][1];
 		self[2] = arg[1][2];
-		self[3] = arg[1][3];
+		self[3] = arg[1][3] or 1;
 		self[4] = 1
 	end
 end

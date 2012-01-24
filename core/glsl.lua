@@ -6,7 +6,7 @@
 -- Implement a language skin that makes
 -- gives a GLSL feel to the coding
 --=====================================
---require ("LinearAlgebra")
+require ("LinearAlgebra")
 
 pi = math.pi;
 
@@ -600,7 +600,7 @@ function vec4(x,y,z,w)
 	return vec.new({x, y, z, w})
 end
 
---[[
+---[[
 v1 = vec.new{1, 0, 1, 0}
 v2 = vec3(1, 1, 1)
 v3 = vec3(0, 0, 0)
