@@ -25,7 +25,7 @@ end
 
 function Triangle.AreColinear(p,q,r)
 	local cr = cross((q - p),(r - p))
-print(cr[1], cr[2], cr[3])
+--print(cr[1], cr[2], cr[3])
 	return not any(cr)
 end
 
@@ -48,7 +48,7 @@ function Triangle.Contains(q, p1,p2,p3)
 	return (l+m)/dv < 1
 end
 
----[[
+--[[
 	local col1 = Triangle.AreColinear(vec3(0,0,0), vec3(10,0,0), vec3(20,0,0))
 	print(col1);
 
