@@ -36,19 +36,15 @@ function IMRenderer:_init(awidth, aheight)
 	self:SetBackgroundColor(gray)
 end
 
-function IMRenderer.ApplyAttributes(self)
 --[[
-print("IMRenderer.ApplyAttributes - BEGIN")
-print(self.StrokeColor)
-print(self.FillColor)
-print(self.BackgroundColor)
---]]
+function IMRenderer.ApplyAttributes(self)
 	-- Apply attributes before any drawing occurs
 	self:SetStrokeColor(self.StrokeColor)
 	self:SetFillColor(self.FillColor)
 	self:SetBackgroundColor(self.BackgroundColor)
 	--self:SetSmooth(Processing.Smooth)
 end
+--]]
 
 function IMRenderer.get(self, x, y)
 	local row = self.height-1 - y
@@ -76,8 +72,10 @@ function IMRenderer.set(self, x, y, acolor)
 	self.Image[3][row][col] = acolor.A
 end
 
+--[[
 function IMRenderer.loadPixels(self)
 end
+--]]
 
 function IMRenderer.CreateTexture(self)
 	-- Copy the data to the actual texture object

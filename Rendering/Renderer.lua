@@ -2,8 +2,7 @@ require "imlua"
 require "cdlua"
 require "cdluaim"
 
---require "color"
---require "Texture"
+require "CDTransformer"
 
 local class = require "pl.class"
 
@@ -13,15 +12,15 @@ function Renderer:_init(awidth, aheight)
 	self.width = awidth;
 	self.height = aheight;
 
+
 	-- Create the basic image
 	self.Image = im.ImageCreate(awidth, aheight, im.RGB, im.BYTE)
 	self.Image:AddAlpha();
 
-	-- Copy the data to the actual texture object
-	--self:CreateTexture()
 
 	-- Create canvas for drawing commands
 	self.canvas = self.Image:cdCreateCanvas()  -- Creates a CD_IMAGERGB canvas
+	self.Transformer = CDTransformer(self.canvas);
 
 	-- Activate the canvas so we can draw into it
 	self.canvas:Activate();
@@ -37,39 +36,37 @@ function Renderer:_init(awidth, aheight)
 end
 
 function Renderer.ApplyAttributes(self)
---[[
-print("Renderer.ApplyAttributes - BEGIN")
-print(self.StrokeColor)
-print(self.FillColor)
-print(self.BackgroundColor)
---]]
 	-- Apply attributes before any drawing occurs
 	self:SetStrokeColor(self.StrokeColor)
 	self:SetFillColor(self.FillColor)
 	self:SetBackgroundColor(self.BackgroundColor)
+	--self:SetSmooth(Processing.Smooth)
 end
 
 
 --[==========[
 	Rendering
 --]==========]
+function Renderer.loadPixels(self)
+end
 
 --[[
 	ATTRIBUTES
 --]]
 function Renderer.SetPointSize(self, asize)
+	self.PointSize = asize;
 end
 
 function Renderer.SetLineCap(self, cap)
-	self.LineCap = cap
+	self.LineCap = cap;
 end
 
 function Renderer.SetLineJoin(self, join)
-	self.LineJoin = join
+	self.LineJoin = join;
 end
 
 function Renderer.SetLineWidth(self, lwidth)
-	self.LineWidth = lwidth
+	self.LineWidth = lwidth;
 end
 
 function Renderer.SetStrokeColor(self, acolor)
@@ -85,6 +82,7 @@ function Renderer.SetBackgroundColor(self, acolor)
 end
 
 function Renderer.SetAntiAlias(self, smoothing)
+	self.AntiAlias = smoothing
 end
 
 function Renderer.Clear(self)
@@ -107,7 +105,6 @@ end
 function Renderer.DrawLine(self, x1, y1, x2, y2)
 	-- Implement a Bresenham algorithm to draw
 	-- a line from points
-
 end
 
 function Renderer.DrawBezier(self, p1, p2, p3, p4)
@@ -179,6 +176,36 @@ function Renderer.SetTextAlignment(self, alignment)
 end
 
 function Renderer.DrawText(self, x, y, txt)
+end
+
+--[==============================[
+	TRANSFORMATION
+--]==============================]
+function Renderer.ResetTransform(self)
+	self.Transformer:Clear()
+end
+
+function Renderer.Translate(self, dx, dy, dz)
+	dz = dz or 0
+	dy = dy or 0
+
+	self.Transformer:Translate(dx, dy, dz)
+end
+
+function Renderer.Rotate(self, rads)
+	self.Transformer:Rotate(rads)
+end
+
+function Renderer.Scale(self, sx, sy, sz)
+	self.Transformer:Scale(sx, sy, sz)
+end
+
+function Renderer.PushMatrix(self)
+	self.Transformer:PushMatrix()
+end
+
+function Renderer.PopMatrix(self)
+	self.Transformer:PopMatrix()
 end
 
 return Renderer

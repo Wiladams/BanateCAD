@@ -222,7 +222,7 @@ function defaultglcanvas.motion_cb(self, x, y, status)
 		Delta = 0;
 		KeyFlags = status;
 	})
-
+--print("defaultglcanvas.motion_cb: ", ma)
 	Processing.MouseActivity(ma)
 end
 
@@ -511,7 +511,7 @@ function Processing.ReSize(awidth, aheight)
 end
 
 function Processing.SetCanvasSize(awidth, aheight, MODE)
-print("Processing.SetCanvasSize: ", awidth, aheight)
+--print("Processing.SetCanvasSize: ", awidth, aheight)
 	width = awidth;
 	height = aheight;
 end
@@ -547,16 +547,16 @@ function Processing.MouseActivity(ma)
 		Processing.MouseDown(ma.Button, ma.X, ma.Y, ma.KeyFlags)
 	elseif ma.ActivityType == MouseActivityType.MouseUp then
 		Processing.MouseUp(ma.Button, ma.X, ma.Y, ma.KeyFlags)
-	elseif ma.ActivityType == MouseActivityType.Move then
+	elseif ma.ActivityType == MouseActivityType.MouseMove then
 		Processing.MouseMove(ma.X, ma.Y, ma.KeyFlags)
-	elseif ma.ActivityType == MouseActivityType.Wheel then
+	elseif ma.ActivityType == MouseActivityType.MouseWheel then
 		Processing.MouseWheel(ma.Delta, ma.X, ma.Y, ma.KeyFlags)
 	end
 end
 
 function Processing.MouseMove(x, y, status)
 	--x, y = Processing.Renderer.canvas:wWorld2Canvas(x, y)
-
+--print("Processing.MouseMove: ", x, y, status)
 	mouseX = x
 	mouseY = y
 end

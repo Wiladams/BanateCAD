@@ -27,17 +27,18 @@ MouseMovementType =
 
 MouseActivityType =
 {
-	MouseDown,
-	MouseUp,
-	MouseMove,
+	None = 0,       -- No activity
 
-	MouseEnter,
-	MouseLeave,
-	MouseHover,
+	MouseDown = 1,
+	MouseUp = 2,
+	MouseMove = 3,
 
-	MouseWheel,
+	MouseEnter = 4,
+	MouseLeave = 5,
+	MouseHover = 6,
 
-	None,       -- No activity
+	MouseWheel = 7,
+
 }
 
 --===================================================
@@ -116,7 +117,7 @@ function MouseActivityArgs:_init(params)
 	self.Device = params.Device ;
 	self.ActivityType = params.ActivityType;
 	self.ButtonActivity = params.ButtonActivity;
-	self.CoordinateSpace = params.CoordinateSpaceSpace;
+	self.CoordinateSpace = params.CoordinateSpace;
 	self.MovementType = params.MovementType;
 	self.Window = params.Window;
 
@@ -170,8 +171,8 @@ end
 function MouseActivityArgs.__tostring(self)
 	--return string.format("<MouseActivity X='%s', Y='%s'/>",tostring(self.X), tostring(self.Y));
 
-	return string.format("<MouseActivity \n  X='%s', Y='%s', \n  Delta='%s', \n  Clicks='%s', \n  Button='%s'/>",
-		tostring(self.X), tostring(self.Y), tostring(self.Delta), tostring(self.Clicks), tostring(self.Button));
+	return string.format("<MouseActivity \n  Type='%s',\n X='%s', Y='%s', \n  Delta='%s', \n  Clicks='%s', \n  Button='%s'/>",
+		tostring(self.ActivityType), tostring(self.X), tostring(self.Y), tostring(self.Delta), tostring(self.Clicks), tostring(self.Button));
 end
 
 --[[
