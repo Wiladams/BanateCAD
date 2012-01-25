@@ -16,7 +16,6 @@ local appctx = BAppContext({
 			"HeadsUp",
 			"UI",
 			"Rendering",
-			"geometry",
 			"core",
 		}
 	})

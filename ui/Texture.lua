@@ -156,14 +156,14 @@ function Texture.Render(self, x, y, awidth, aheight)
 	gl.Disable('TEXTURE_2D')
 end
 
-function create2DPixelArray(width, height, depth, pixels1D)
+function create2DPixelArray(w, h, depth, pixels1D)
 	-- create 2D pixel array
 	local pixels2D = {}
 	local offset = 1
-	for row=1,height do
+	for row=1,h do
 		local rowarray = {}
 		-- A single row
-		for col=1, width do
+		for col=1, w do
 			-- A single pixel
 			for comp=1,depth do
 				table.insert(rowarray, pixels1D[offset])

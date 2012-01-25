@@ -81,6 +81,40 @@ MODEL = 1
 SCREEN = 2
 SHAPE = 3
 
+--defaultrenderer = GLRenderer:new()
+--local canvas_width = 1920
+--local canvas_height = 1080
+local canvas_width = 1024
+local canvas_height = 768
+
+width = 1024
+height = 768
+
+focused = false
+frameCount = 0
+--frameRate = 0
+online = false
+screen = nil
+width = 1024
+height = 768
+
+-- Mouse State information
+-- These are changed live
+mouseButton = false
+isMousePressed = false
+
+-- Mouse position during current frame
+mouseX = 0
+mouseY = 0
+
+-- Mouse position from previous frame
+pmouseX = 0
+pmouseY = 0
+
+
+key = 0
+keyCode = 0
+
 
 defaultguistyle = GUIStyle();
 
@@ -126,10 +160,10 @@ function defaultglcanvas.map_cb(self)
 	canvas2D:YAxisMode(0)	-- Invert the y-axis
 end
 
-function defaultglcanvas.resize_cb(self, width, height)
+function defaultglcanvas.resize_cb(self, w, h)
 	iup.GLMakeCurrent(self)
 
-	Processing.ReSize(width, height)
+	Processing.ReSize(w, h)
 end
 
 
@@ -250,14 +284,6 @@ end
 
 
 
---defaultrenderer = GLRenderer:new()
---local canvas_width = 1920
---local canvas_height = 1080
-local canvas_width = 1024
-local canvas_height = 768
-
-width = canvas_width
-height = canvas_height
 
 defaultrenderer = IMRenderer(canvas_width, canvas_height)
 
@@ -274,7 +300,7 @@ Processing = {
 	StrokeColor = Color(0,0,0,255),
 
 	Running = false,
-	FrameRate = 60,
+	FrameRate = 30,
 
 	-- Typography
 	TextSize = 12,
@@ -346,7 +372,11 @@ end
 function Processing.Compile(inputtext)
 	iup.GLMakeCurrent(defaultglcanvas);
 
-	Processing.Renderer:loadPixels()
+	-- Create a new renderer
+	defaultrenderer = IMRenderer(canvas_width, canvas_height)
+	Processing.Renderer = defaultrenderer;
+
+	Processing.Renderer:loadPixels();
 
 	-- Apply State before compiling
 	-- new code
@@ -414,10 +444,6 @@ function Processing.StartAnimation()
 			Processing.Tick(Processing.TickCount)
 			nextTime = nextTime + secondsperframe
 
-			-- Update pixels and draw to screen
-			-- Draw the pixels to the screen
-			Processing.Renderer:updatePixels()
-			Processing.Renderer:Render(0,0)
 		end
 	until status == iup.CLOSE
 
@@ -452,12 +478,6 @@ function Processing.Tick(tickCount)
 		graphic:Render(Processing.Renderer)
 	end
 
-
-
-	-- Call to action directly
-	--defaultglcanvas:action()
-
-	--iup.Update(defaultglcanvas);	-- will cause action() to be called
 	gl.Flush();
 	gl.Finish();
 
@@ -466,6 +486,11 @@ function Processing.Tick(tickCount)
 	--iup.GLSwapBuffers(self);
 	pmouseX = mouseX
 	pmouseY = mouseY
+
+	-- Update pixels and draw to screen
+	-- Draw the pixels to the screen
+	Processing.Renderer:updatePixels()
+	Processing.Renderer:Render(0,0)
 end
 
 function Processing.ReSize(awidth, aheight)
@@ -486,6 +511,7 @@ function Processing.ReSize(awidth, aheight)
 end
 
 function Processing.SetCanvasSize(awidth, aheight, MODE)
+print("Processing.SetCanvasSize: ", awidth, aheight)
 	width = awidth;
 	height = aheight;
 end
@@ -560,27 +586,23 @@ end
 --[==================================================[
 		LANGUAGE COMMANDS
 --]==================================================]
---[[
+
 function blue(c)
-	local b = band(c, 0xff)
-	return b
+	return c.B
 end
 
 function green(c)
-	local g = band(rshift(c, 8), 0xff)
-	return g
+	return c.G
 end
 
 function red(c)
-	local r = band(rshift(c, 16), 0xff)
-	return r
+	return c.R
 end
 
 function alpha(c)
-	local a = band(rshift(c, 24), 0xff)
-	return a
+	return c.A
 end
---]]
+
 
 function color(...)
 	return Color(unpack(arg))
@@ -619,7 +641,7 @@ end
 function noFill()
 	local acolor = Color(0,0)
 
-	return Processing.SetFillColor(acolor)
+	return Processing.Renderer:SetFillColor(acolor)
 end
 
 function noStroke(...)
@@ -988,13 +1010,6 @@ end
 --[==============================[
 	ENVIRONMENT
 --]==============================]
-focused = false
-frameCount = 0
---frameRate = 0
-online = false
-screen = nil
-width = 0
-height = 0
 
 function cursor()
 end
@@ -1005,24 +1020,6 @@ end
 function frameRate(rate)
 	Processing.FrameRate = rate
 end
-
-
--- Mouse State information
--- These are changed live
-mouseButton = false
-isMousePressed = false
-
--- Mouse position during current frame
-mouseX = 0
-mouseY = 0
-
--- Mouse position from previous frame
-pmouseX = 0
-pmouseY = 0
-
-
-key = 0
-keyCode = 0
 
 
 
@@ -1089,5 +1086,6 @@ end
 function updatePixels()
 	Processing.Renderer:updatePixels();
 end
+
 
 
