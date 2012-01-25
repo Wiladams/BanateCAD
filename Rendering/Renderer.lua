@@ -110,26 +110,63 @@ function Renderer.DrawLine(self, x1, y1, x2, y2)
 
 end
 
+function Renderer.DrawBezier(self, p1, p2, p3, p4)
+	local pts = {p1, p2, p3, p4}
+	local curveSteps = 30;
+
+	local cv4 = cubic_vec3_to_cubic_vec4(pts);
+
+	local lastPoint = bezier_eval(0, cv4);
+	for i=1, curveSteps do
+		local u = i/curveSteps;
+		local cpt = bezier_eval(u, cv4);
+
+		self:DrawLine(lastPoint[1], lastPoint[2], cpt[1], cpt[2])
+		lastPoint = cpt;
+	end
+end
+
+function Renderer.DrawCurve(self, p1, p2, p3, p4)
+	local pts = {p1, p2, p3, p4}
+	local curveSteps = 30;
+
+	local cv4 = cubic_vec3_to_cubic_vec4(pts);
+
+	local lastPoint = catmull_eval(0, 1/2, cv4);
+	for i=1, curveSteps do
+		local u = i/curveSteps;
+		local cpt = catmull_eval(u, 1/2, cv4);
+
+		self:DrawLine(lastPoint[1], lastPoint[2], cpt[1], cpt[2])
+		lastPoint = cpt;
+	end
+end
+
 function Renderer.DrawPolygon(self, pts)
 	-- Raster Scan a polygon
 end
 
 function Renderer.DrawRect(self, x, y, w, h)
 	local pts = {
-		Vector3D.new{x, y, 0},
-		Vector3D.new{x, y+h, 0},
-		Vector3D.new{x+w, y+h, 0},
-		Vector3D.new{x+w, y, 0},
+		Point3D(x, y, 0),
+		Point3D(x, y+h, 0),
+		Point3D(x+w, y+h, 0),
+		Point3D(x+w, y, 0),
 	}
 
 	self:DrawPolygon(pts)
 end
 
-function Renderer.DrawTriangle(self, pt1, pt2, pt3)
-	local pts = {pt1, pt2, pt3}
+function Renderer.DrawTriangle(self, x1, y1, x2, y2, x3, y3)
+	local pts = {
+		Point3D(x1, y1, 0),
+		Point3D(x3, y3, 0),
+		Point3D(x2, y2, 0),
+	}
 
 	self:DrawPolygon(pts)
 end
+
 
 --[[
 	TYPOGRAPHY

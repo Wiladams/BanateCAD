@@ -2,10 +2,7 @@ require "imlua"
 require "cdlua"
 require "cdluaim"
 
---require "color"
---require "Texture"
---local Renderer = require "Renderer"
---require "Transformer"
+require "Renderer"
 require "CDTransformer"
 
 local class = require "pl.class"
@@ -177,15 +174,17 @@ end
 --[[
 	PRIMITIVES
 --]]
+--[[
 function IMRenderer.DrawPoint(self, x, y)
 	self:set(x,y,self.StrokeColor);
 end
-
+--]]
 function IMRenderer.DrawLine(self, x1, y1, x2, y2)
 	self.canvas:SetForeground(self.EStrokeColor)
 	self.canvas:Line(x1, y1, x2, y2)
 end
 
+--[[
 function IMRenderer.DrawBezier(self, p1, p2, p3, p4)
 	local pts = {p1, p2, p3, p4}
 	local curveSteps = 30;
@@ -202,6 +201,7 @@ function IMRenderer.DrawBezier(self, p1, p2, p3, p4)
 	end
 end
 
+
 function IMRenderer.DrawCurve(self, p1, p2, p3, p4)
 	local pts = {p1, p2, p3, p4}
 	local curveSteps = 30;
@@ -213,10 +213,11 @@ function IMRenderer.DrawCurve(self, p1, p2, p3, p4)
 		local u = i/curveSteps;
 		local cpt = catmull_eval(u, 1/2, cv4);
 
-		line(lastPoint[1], lastPoint[2], cpt[1], cpt[2])
+		self:DrawLine(lastPoint[1], lastPoint[2], cpt[1], cpt[2])
 		lastPoint = cpt;
 	end
 end
+--]]
 
 function IMRenderer.DrawPolygon(self, pts)
 	local canvas2D = self.canvas
@@ -243,7 +244,7 @@ function IMRenderer.DrawPolygon(self, pts)
 	end
 end
 
-
+--[[
 function IMRenderer.DrawRect(self, x, y, w, h)
 	local pts = {
 		Point3D(x, y, 0),
@@ -264,7 +265,7 @@ function IMRenderer.DrawTriangle(self, x1, y1, x2, y2, x3, y3)
 
 	self:DrawPolygon(pts)
 end
-
+--]]
 
 --[[
 	TYPOGRAPHY
