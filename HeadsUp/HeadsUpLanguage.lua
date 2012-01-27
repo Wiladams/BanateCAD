@@ -36,6 +36,7 @@ require "Texture"
 require "PImage"
 
 -- Objects used in UI
+require "Layout"
 require "GBracket"
 require "GFont"
 require "GRoundedRectangle"
@@ -300,7 +301,7 @@ Processing = {
 	StrokeColor = Color(0,0,0,255),
 
 	Running = false,
-	FrameRate = 30,
+	FrameRate = 5,
 
 	-- Typography
 	TextSize = 12,

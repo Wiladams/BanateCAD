@@ -3,8 +3,6 @@ local class = require "pl.class"
 class.Rectangle()
 
 function Rectangle:_init(...)
---print("Rectangle:_init: ", arg.n)
-
 	local dimension = {0,0}
 	local origin = {0,0}
 
@@ -74,7 +72,15 @@ function Rectangle.IsValid(self)
 end
 
 function Rectangle.Contains(self, x, y)
-	return ((x >= self.Left) and (x <= self.Right) and (y >= self.Bottom) and (y <= self.Top));
+	if x < self.Origin[1] or y < self.Origin[2] then
+		return false
+	end
+
+	if x > (self.Origin[1] + self.Dimension[1]) or y > (self.Origin[2] + self.Dimension[2]) then
+		return false
+	end
+
+	return true
 end
 
 -- Change the shape of this rectangle by intersecting
@@ -101,13 +107,15 @@ function Rectangle.Inflate(self, ...)
 		dy = arg[1]
 	end
 
-	local origin = {self.Origin[1]-dx/2, self.Origin[2]-dy/2}
+	local origin = {self.Origin[1]-(dx/2), self.Origin[2]-(dy/2)}
 	local dimension = {self.Dimension[1]+dx, self.Dimension[2]+dy}
+
 	self:SetRect(origin, dimension)
 end
 
-function Rectangle.Offset(self, x, y)
-	local origin = {self.Origin[1]+x, self.Origin[2]+y}
+function Rectangle.Offset(self, dx, dy)
+	local origin = {self.Origin[1]+dx, self.Origin[2]+dy}
+
 	self:SetRect(origin, self.Dimension)
 end
 
@@ -147,7 +155,9 @@ function Rectangle.Union(self, other)
 end
 
 function Rectangle.__tostring(self)
-	return '{'..self.Left..','..self.Top..','..self.Right..','..self.Bottom..'}';
+	return string.format("{%d,%d},{%d,%d}",
+		self.Origin[1], self.Origin[2],
+		self.Dimension[1], self.Dimension[2]);
 end
 
 Rectangle.Empty = Rectangle();

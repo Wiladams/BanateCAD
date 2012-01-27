@@ -15,6 +15,7 @@ local appctx = BAppContext({
 		Modules={
 			"HeadsUp",
 			"UI",
+			"Graphics",
 			"Rendering",
 			"core",
 		}

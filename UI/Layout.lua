@@ -52,3 +52,8 @@ Orientation =
 	Vertical = 1,
 	Horizontal = 2,
 }
+
+
+---[[
+print(Alignment.Left, Alignment.Center, Alignment.Right)
+--]]

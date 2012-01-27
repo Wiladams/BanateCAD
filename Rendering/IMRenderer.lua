@@ -223,7 +223,7 @@ function IMRenderer.DrawPolygon(self, pts)
 	-- First do the solid portion using
 	-- the fill color
 	if self.FillColor.A ~= 0 then
-		canvas2D:Foreground(self.EFillColor)
+		canvas2D:SetForeground(self.EFillColor)
 		canvas2D:Begin(cd.FILL)
 		for _,pt in ipairs(pts) do
 			canvas2D:Vertex(pt[1], pt[2])
@@ -233,7 +233,7 @@ function IMRenderer.DrawPolygon(self, pts)
 
 	-- Then do it again with the stroke Color
 	if self.StrokeColor.A ~= 0 then
-		canvas2D:Foreground(self.EStrokeColor)
+		canvas2D:SetForeground(self.EStrokeColor)
 		canvas2D:Begin(cd.CLOSED_LINES)
 		for _,pt in ipairs(pts) do
 			canvas2D:Vertex(pt[1], pt[2])
@@ -286,11 +286,16 @@ function IMRenderer.DrawText(self, x, y, txt)
 	self.canvas:YAxisMode(0);
 	y = self.height - 1 - y
 
+	self.canvas:SetForeground(self.EStrokeColor)
 	self.canvas:Text(x, y, txt)
 
 	-- Now go back to an inverted axis so the
 	-- rest of the system can render correctly
 	self.canvas:YAxisMode(1);
+end
+
+function IMRenderer.GetFontDimension(self)
+	return self.canvas:GetFontDim()
 end
 
 function IMRenderer.MeasureString(self, txt)

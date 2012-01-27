@@ -593,10 +593,12 @@ function vec2(x, y)
 end
 
 function vec3(x, y, z)
+	z = z or 0
 	return vec.new({x, y, z})
 end
 
 function vec4(x,y,z,w)
+	w = w or 0
 	return vec.new({x, y, z, w})
 end
 
