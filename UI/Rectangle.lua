@@ -155,9 +155,9 @@ function Rectangle.Union(self, other)
 	local widest = rightmost - leftmost;
 	local highest = bottommost - topmost;
 
-	local arect = Rectangle({leftmost, topmost}, {widest, highest})
+	self:SetRect({leftmost, topmost}, {widest, highest})
 
-	return arect;
+	return self;
 end
 
 function Rectangle.__tostring(self)

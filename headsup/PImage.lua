@@ -2,60 +2,62 @@
 require("luagl")
 require("imlua")
 local class = require "pl.class"
+require "Actor"
 
-class.PImage()
+class.PImage(Actor)
 
 function PImage.loadBitmapFile(self, filename)
-	-- load the bitmap
-	bm = im.FileImageLoadBitmap(filename)
+	--local image = im.FileImageLoadBitmap(filename)
+	local image = im.FileImageLoad(filename) -- directly load the image at index 0. it will open and close the file
 
-	if bm == nil then
+	if image == nil then
 		print("File: ", filename, "Not Loaded")
 		return nil
 	end
 
-	--self.Bitmap = bm
-	self.width = bm:Width()
-	self.height = bm:Height()
-	--self.depth = bm:Depth()
-
-	-- Copy the data to the actual texture object
-	local gldata, glformat = bm:GetOpenGLData()
-
-	self.glformat = glformat;
-
-	-- Initial copy to texture using the userdata
-	self.Texture = Texture(self.width, self.height, glformat, gldata)
-
-	bm:Destroy()
+	self.Image = image;
+	self.Extent = {image:Width(), image:Height()}
 end
 
 -- Either
 -- PImage(filename)
 -- PImage(width, height, dtype)
 --
-function PImage:_init(...)
-	self.width = 0;
-	self.height = 0;
-	--self.depth = 0;
+function PImage:_init(params)
+	params = params or {}
+	local origin = {0,0}
+	local extent = {0,0}
+	local filename = params.Filename
 
-	local bm = nil;
+	if filename then
+		local image = im.FileImageLoad(filename) -- directly load the image at index 0. it will open and close the file
+		if image == nil then
+			print("File: ", filename, "Not Loaded")
+			return nil
+		end
 
-	if arg.n == 1 and type(arg[1]) == 'string' then
-		local filename = arg[1]
-
-		self:loadBitmapFile(filename);
+		self.Image = image;
+		extent = {image:Width(), image:Height()}
 	elseif arg.n >= 2 then
 		self.width = arg[1]
 		self.height = arg[2]
 
-		parray = PixelArray(self.width, self.height, color(0,255))
-		self.Texture = Texture(parray)
+		--parray = PixelArray(self.width, self.height, color(0,255))
+		--self.Texture = Texture(parray)
 	end
 
-	return self
+	params.Extent = extent
+
+	self:super(params)
 end
 
+function PImage:Render(graphPort)
+	graphPort:DrawImage(self.Image,
+		self.Origin[1], self.Origin[2],
+		self.Extent[1], self.Extent[2])
+end
+
+--[[
 function PImage.Render(self, x, y, awidth, aheight)
 
   gl.PixelStore(gl.UNPACK_ALIGNMENT, 1)
@@ -86,6 +88,7 @@ function PImage.Render(self, x, y, awidth, aheight)
   gl.Disable('TEXTURE_2D')
 end
 
+
 function create2DPixelArray(width, height, depth, pixels1D)
 	-- create 2D pixel array
 	local pixels2D = {}
@@ -109,7 +112,7 @@ end
 function PImage.loadPixels(self)
 	self.pixels = self.Texture:CreatePixelArray()
 
---[[
+
 	-- get a copy of the texture data into an array
 	gl.Enable('TEXTURE_2D')            -- Enable Texture Mapping ( NEW )
 
@@ -122,8 +125,8 @@ function PImage.loadPixels(self)
 	self.pixels = create2DPixelArray(self.width, self.height, self.GLPixelSize, pixels1D)
 
 	gl.Disable('TEXTURE_2D')            -- Enable Texture Mapping ( NEW )
---]]
 end
+
 
 function PImage.updatePixels(self)
 	-- If we don't have any pixels (loadPixels not called)
@@ -141,6 +144,7 @@ function PImage.updatePixels(self)
 	gl.Finish()
 	--gl.Disable('TEXTURE_2D')            -- Enable Texture Mapping ( NEW )
 end
+--]]
 
 function PImage.get(self, x, y)
 	if self.pixels == nil then
@@ -175,7 +179,7 @@ function PImage.set(self, x, y, acolor)
 end
 
 --[[
-print("Texture.lua - TEST")
+print("PImage.lua - TEST")
 
 function print_texture(tex)
 	print("Dimension: ", tex.width, tex.height);

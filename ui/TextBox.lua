@@ -1,8 +1,10 @@
 require "glsl"
 require "Layout"
+require "Actor"
+
 local class = require "pl.class"
 
-class.TextBox()
+class.TextBox(Actor)
 
 --[[
 {
@@ -17,29 +19,46 @@ class.TextBox()
 }
 --]]
 function TextBox:_init(params)
-	self.Name = "TextBox";
-	local frame = params.Frame or {{0,0}, {100,20}}
-	self.Frame = Rectangle(frame[1][1], frame[1][2], frame[2][1], frame[2][2]);
+	params = params or {
+		Origin = {0,0},
+		Extent = {100,24},
+		Text = "Text",
+		Font = GFont("Times", " ", 12),
+		HAlignment = Alignment.Left,
+		VAlignment = Alignment.Middle,
+		TextColor = Color(0),
+		BackColor = Color(0,0),
+		BackgroundGraphic = nil,
+	}
 
+	params.Origin = params.Origin or {0,0}
+	params.Extent = params.Extent or {80,20}
+
+	self.Name = params.Name or "TextBox";
 	self.BackgroundGraphic = params.BackgroundGraphic;
-	self.Text = params.Text;
-	self.Font = params.Font;
-	self.HAlignment = params.HAlignment;
-	self.VAlignment = params.VAlignment;
+	self.Text = params.Text or "Text";
+	self.Font = params.Font or GFont("Times", " ", 12)
+	self.HAlignment = params.HAlignment or Alignment.Left;
+	self.VAlignment = params.VAlignment or Alignment.Middle;
 
 	self.TextColor = params.TextColor or Color(0);
 	self.BackColor = params.BackColor or Color(0,0);
+	self.TextAlignment = cd.CENTER
+
+
+	self:super(params)
+
 
 	self.TextOrigin = {self.Frame.Origin[1], self.Frame.Origin[2]}
-	self.TextAlignment = cd.CENTER
 
 	self:CalculateTextOrigin();
 end
 
 function TextBox:CalculateTextOrigin()
 	local stringSize = self.Font:MeasureString(self.Text);
-	local xCenter = self.Frame.Origin[1] + self.Frame.Extent[1] / 2;
-	local yCenter = self.Frame.Origin[2] + self.Frame.Extent[2] / 2;
+	--local xCenter = self.Frame.Origin[1] + self.Frame.Extent[1] / 2;
+	--local yCenter = self.Frame.Origin[2] + self.Frame.Extent[2] / 2;
+	local xCenter, yCenter = self.Frame:GetCenter();
 
 	if self.HAlignment == Alignment.Left then
 		self.TextOrigin[1] = self.Frame.Origin[1];
@@ -57,6 +76,17 @@ function TextBox:CalculateTextOrigin()
 		self.TextOrigin[2] = self.Frame.Origin[2] + self.Frame.Extent[2] - stringSize[2]/2;
 	end
 end
+
+-- Sizing
+function TextBox:OnTopologyChanged()
+	self:CalculateTextOrigin();
+end
+
+--function TextBox:Offset(dx, dy)
+--	self.Frame:Offset(dx, dy);
+--
+--	self:CalculateTextOrigin();
+--end
 
 -- Graphic Overrides
 function TextBox:RenderBackground(graphPort)

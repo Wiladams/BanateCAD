@@ -13,7 +13,7 @@ function Ensemble:_init(params)
 	end
 end
 
-function Ensember:AddMembers(members)
+function Ensemble:AddMembers(members)
 	for _,member in ipairs(members) do
 		self:AddMember(member);
 	end
@@ -24,10 +24,10 @@ function Ensemble:AddMember(member)
 		-- Assume the new member has dimensions specified relative
 		-- to our frame.  So, offset their boundary by our WorldFrame
 		-- origin
-		member.WorldFrame:Offset(self.Frame.Origin[1], self.Frame.Origin[2])
+		member.Frame:Offset(self.Frame.Origin[1], self.Frame.Origin[2])
 
 		-- Expand our world frame to recognize the new member
-		self.WorldFrame = self.WorldFrame:Union(member.WorldFrame);
+		self.Frame = self.Frame:Union(member.Frame);
 
 		-- Expand bouding frame
 

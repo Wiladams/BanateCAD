@@ -2,6 +2,9 @@ require "imlua"
 require "cdlua"
 require "cdluaim"
 
+require"iuplua"
+require"iupluacd"
+
 require "Renderer"
 require "CDTransformer"
 
@@ -72,10 +75,7 @@ function IMRenderer.set(self, x, y, acolor)
 	self.Image[3][row][col] = acolor.A
 end
 
---[[
-function IMRenderer.loadPixels(self)
-end
---]]
+
 
 function IMRenderer.CreateTexture(self)
 	-- Copy the data to the actual texture object
@@ -172,50 +172,11 @@ end
 --[[
 	PRIMITIVES
 --]]
---[[
-function IMRenderer.DrawPoint(self, x, y)
-	self:set(x,y,self.StrokeColor);
-end
---]]
+
 function IMRenderer.DrawLine(self, x1, y1, x2, y2)
 	self.canvas:SetForeground(self.EStrokeColor)
 	self.canvas:Line(x1, y1, x2, y2)
 end
-
---[[
-function IMRenderer.DrawBezier(self, p1, p2, p3, p4)
-	local pts = {p1, p2, p3, p4}
-	local curveSteps = 30;
-
-	local cv4 = cubic_vec3_to_cubic_vec4(pts);
-
-	local lastPoint = bezier_eval(0, cv4);
-	for i=1, curveSteps do
-		local u = i/curveSteps;
-		local cpt = bezier_eval(u, cv4);
-
-		self:DrawLine(lastPoint[1], lastPoint[2], cpt[1], cpt[2])
-		lastPoint = cpt;
-	end
-end
-
-
-function IMRenderer.DrawCurve(self, p1, p2, p3, p4)
-	local pts = {p1, p2, p3, p4}
-	local curveSteps = 30;
-
-	local cv4 = cubic_vec3_to_cubic_vec4(pts);
-
-	local lastPoint = catmull_eval(0, 1/2, cv4);
-	for i=1, curveSteps do
-		local u = i/curveSteps;
-		local cpt = catmull_eval(u, 1/2, cv4);
-
-		self:DrawLine(lastPoint[1], lastPoint[2], cpt[1], cpt[2])
-		lastPoint = cpt;
-	end
-end
---]]
 
 function IMRenderer.DrawPolygon(self, pts)
 	local canvas2D = self.canvas
@@ -242,28 +203,17 @@ function IMRenderer.DrawPolygon(self, pts)
 	end
 end
 
---[[
-function IMRenderer.DrawRect(self, x, y, w, h)
-	local pts = {
-		Point3D(x, y, 0),
-		Point3D(x, y+h, 0),
-		Point3D(x+w, y+h, 0),
-		Point3D(x+w, y, 0),
-	}
 
-	self:DrawPolygon(pts)
+function IMRenderer.DrawImage(self, img, x,y, w,h)
+	local posx = x;
+	local posy = y + img.Extent[2]
+
+	--self.canvas:PutImageRectRGB(img, x, y, w, h,
+	--	0, 0, 0, 0)
+
+	-- use default values
+	img.Image:cdCanvasPutImageRect(self.canvas, posx, posy, w, h, 0, 0, 0, 0)
 end
-
-function IMRenderer.DrawTriangle(self, x1, y1, x2, y2, x3, y3)
-	local pts = {
-		Point3D(x1, y1, 0),
-		Point3D(x3, y3, 0),
-		Point3D(x2, y2, 0),
-	}
-
-	self:DrawPolygon(pts)
-end
---]]
 
 --[[
 	TYPOGRAPHY
