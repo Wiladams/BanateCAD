@@ -8,7 +8,7 @@ class.DrawEvent()
 
 function DrawEvent:_init(renderer, clipRect)
 	self.ClipRect = clipRect;
-	self.Renderer = renderer;
+	self.GraphPort = renderer;
 end
 
 return DrawEvent

@@ -301,7 +301,7 @@ Processing = {
 	StrokeColor = Color(0,0,0,255),
 
 	Running = false,
-	FrameRate = 5,
+	FrameRate = 15,
 
 	-- Typography
 	TextSize = 12,
@@ -313,6 +313,9 @@ Processing = {
 
 	Graphics = {},
 	Actors = {},
+	Interactors = {},
+	MouseInteractors = {},
+	KeyboardInteractors = {},
 }
 
 function Processing.ClearCanvas()
@@ -356,6 +359,9 @@ end
 function Processing.ClearGlobalFunctions()
 	Processing.Actors = {}
 	Processing.Graphics = {}
+	Processing.Interactors = {}
+	Processing.MouseInteractors = {}
+	Processing.KeyboardInteractors = {}
 
 	-- Clear out the global routines
 	-- That the user may have supplied
@@ -533,6 +539,10 @@ function Processing.KeyActivity(ke)
 	if (_G.keyPressed) ~= nil then
 		keyPressed(ke)
 	end
+
+	for _,kinteractor in ipairs(Processing.KeyboardInteractors) do
+		kinteractor:KeyboardActivity(ke)
+	end
 end
 
 
@@ -552,6 +562,10 @@ function Processing.MouseActivity(ma)
 		Processing.MouseMove(ma.X, ma.Y, ma.KeyFlags)
 	elseif ma.ActivityType == MouseActivityType.MouseWheel then
 		Processing.MouseWheel(ma.Delta, ma.X, ma.Y, ma.KeyFlags)
+	end
+
+	for _,minteractor in ipairs(Processing.MouseInteractors) do
+		minteractor:MouseActivity(ma);
 	end
 end
 
@@ -936,16 +950,33 @@ end
 function addactor(actor)
 	if not actor then return end
 
-	table.insert(Processing.Actors, actor)
+	if actor.Update then
+		table.insert(Processing.Actors, actor)
+	end
+
 	if actor.Render then
 		addgraphic(actor)
 	end
+
+	addinteractor(actor)
 end
 
 function addgraphic(agraphic)
 	if not agraphic then return end
 
 	table.insert(Processing.Graphics, agraphic)
+end
+
+function addinteractor(interactor)
+	if not interactor then return end
+
+	if interactor.MouseActivity then
+		table.insert(Processing.MouseInteractors, interactor)
+	end
+
+	if interactor.KeyboardActivity then
+		table.insert(Processing.KeyboardInteractors, interactor)
+	end
 end
 
 

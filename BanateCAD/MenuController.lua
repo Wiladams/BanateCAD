@@ -10,8 +10,8 @@ require ("iuplua")
 require ("CADVM")
 
 require ("FileManager")
-require ("test_lpeg")
---require ("SceneBuilder")
+--require ("test_lpeg")
+require "STLCodec"
 
 local class = require "pl.class"
 
@@ -78,7 +78,7 @@ function MenuController.do_import_stl(self)
 		-- open up the file
 	local filehandle = io.open(filename, 'r')
 
-	local reader = STLASCIIReader:new({file = filehandle});
+	local reader = STLASCIIReader({file = filehandle});
 	local tmesh = reader:Read();
 
 	-- close the file
@@ -92,7 +92,7 @@ function MenuController.do_import_stl(self)
 end
 
 --	filehandle = io.open(filename, "w+")
---    writer = STLASCIIWriter:new({file = filehandle})
+--    writer = STLASCIIWriter({file = filehandle})
 --    writer.WriteMesh(trimesh)
 function MenuController.do_export_stl(self)
 	-- get a filename
@@ -110,7 +110,7 @@ function MenuController.do_export_stl(self)
 
 print(f)
 
-	local writer = STLASCIIWriter.new({file = f})
+	local writer = STLASCIIWriter({file = f})
 
 	-- Roll through the scene
 	-- write out any meshes found in there

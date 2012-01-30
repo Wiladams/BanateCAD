@@ -7,22 +7,19 @@
 --
 
 require ("test_lpeg")
+local class = require "pl.class"
 
 --
 -- Construct like this
 --	filehandle = io.open(filename, "w+")
 --    writer = STLASCIIWriter:new({file = filehandle})
 --    writer.WriteMesh(trimesh, solidname)
-STLASCIIWriter = inheritsFrom(nil);
-function STLASCIIWriter.new(params)
+class.STLASCIIWriter()
+
+function STLASCIIWriter:_init(params)
 	params = params or {}		-- create object if user does not provide one
 
-	local new_inst = STLASCIIWriter.create()
-
-	--new_inst:Init(params)
-	new_inst.file = params.file
-
-	return new_inst
+	self.file = params.file
 end
 
 
@@ -72,13 +69,11 @@ end
 --	filehandle = io.open(filename, "r")
 --    reader = STLASCIIReader:new({file = filehandle})
 --    trimesh = reader.Read()
-STLASCIIReader={}
-function STLASCIIReader:new(o)
-	o = o or {}		-- create object if user does not provide one
-	setmetatable(o, self)
-	self.__index = self
+class.STLASCIIReader()
+function STLASCIIReader:_init(params)
+	params = params or {}		-- create object if user does not provide one
 
-	return o
+	self.file = params.file
 end
 
 

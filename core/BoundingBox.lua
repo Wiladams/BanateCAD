@@ -5,7 +5,8 @@
 -- Copyright (c) 2011  William Adams
 --
 
---require ("Class")
+local class = require "pl.class"
+
 --require ("Shape")
 
 
@@ -24,20 +25,16 @@
 -- class.  At that point we have an empty subclass, that
 -- inherits all the methods of the base class.
 
-BoundingBox = inheritsFrom(nil)
---BoundingBox = {}
+class.BoundingBox()
+
 -- Now we construct our own 'new' function so that we can
 -- do whatever special setup we want to do on our own.
 -- If we're setting any instance variables, we use 'self.'
 -- At the end we return 'self' to retain the metatable
 -- That was set when we subclassed Shape.
 
-function BoundingBox.new()
-	local self = BoundingBox.create()
-
+function BoundingBox:_init(params)
 	self:SetBounds(vec3(0,0,0), vec3(0,0,0))
-
-	return self
 end
 
 function BoundingBox.SetBounds(self, v1, v2)
@@ -58,5 +55,7 @@ function BoundingBox.Union(self, pt)
 	self:SetBounds(newlow, newhigh)
 end
 
-
+--[[
+print("BoundingBox.lua - TEST");
 local bbox1 = BoundingBox.new()
+--]]

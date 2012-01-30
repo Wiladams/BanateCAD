@@ -143,6 +143,16 @@ function Renderer.DrawPolygon(self, pts)
 	-- Raster Scan a polygon
 end
 
+function Renderer.DrawTriangle(self, x1, y1, x2, y2, x3, y3)
+	local pts = {
+		Point3D(x1, y1, 0),
+		Point3D(x3, y3, 0),
+		Point3D(x2, y2, 0),
+	}
+
+	self:DrawPolygon(pts)
+end
+
 function Renderer.DrawRect(self, x, y, w, h)
 	local pts = {
 		Point3D(x, y, 0),
@@ -154,15 +164,23 @@ function Renderer.DrawRect(self, x, y, w, h)
 	self:DrawPolygon(pts)
 end
 
-function Renderer.DrawTriangle(self, x1, y1, x2, y2, x3, y3)
-	local pts = {
-		Point3D(x1, y1, 0),
-		Point3D(x3, y3, 0),
-		Point3D(x2, y2, 0),
-	}
+function Renderer.DrawEllipse(self, centerx, centery, awidth, aheight)
+	local steps = 30
+	local pts = {}
+
+	for i = 0, steps do
+		local u = i/steps
+		local angle = u * 2*PI
+		local x = awidth/2 * cos(angle)
+		local y = aheight/2 * sin(angle)
+		local pt = Point3D(x+centerx, y+centery, 0)
+		table.insert(pts, pt)
+	end
 
 	self:DrawPolygon(pts)
 end
+
+
 
 
 --[[

@@ -3,45 +3,47 @@ local class = require "pl.class"
 class.Rectangle()
 
 function Rectangle:_init(...)
-	local dimension = {0,0}
+	local extent = {0,0}
 	local origin = {0,0}
 
-	if arg.n == 1 then
+	if arg.n == 0 then
+		self.IsEmpty = true
+	elseif arg.n == 1 then
 		-- Copy constructor
 		origin = {unpack(arg[1].Origin)}
-		dimension = {unpack(arg[1].Dimension)}
+		extent = {unpack(arg[1].Extent)}
 	elseif arg.n == 2 then
 		origin = arg[1]
-		dimension = arg[2]
+		extent = arg[2]
 	elseif arg.n == 4 then
 		origin = {arg[1], arg[2]}
-		dimension = {arg[3], arg[4]}
+		extent = {arg[3], arg[4]}
 	end
 
-	self:SetRect(origin, dimension)
+	self:SetRect(origin, extent)
 end
 
-function Rectangle:SetRect(origin, dimension)
+function Rectangle:SetRect(origin, extent)
 	self.Origin = origin
-	self.Dimension = dimension
+	self.Extent = extent
 
-	self.Width = self.Dimension[1]
-	self.Height = self.Dimension[2]
+	self.Width = self.Extent[1]
+	self.Height = self.Extent[2]
 
 	self.Left = self.Origin[1]
 	self.Top = self.Origin[2]
 	self.Right = self.Left + self.Width
 	self.Bottom = self.Top + self.Height
 
+	if self.Width > 0 and self.Height > 0 then
+		self.IsEmpty = false
+	end
 end
 
-function Rectangle.IsEmpty(self)
-	return self.Dimesion[1] == 0 or self.Dimension[2] == 0
-end
 
 function Rectangle.GetCenter(self)
-	local midx = self.Origin[1] + self.Dimension[1]/2
-	local midy = self.Origin[2] + self.Dimension[2]/2
+	local midx = self.Origin[1] + self.Extent[1]/2
+	local midy = self.Origin[2] + self.Extent[2]/2
 
 	return midx, midy
 end
@@ -76,7 +78,7 @@ function Rectangle.Contains(self, x, y)
 		return false
 	end
 
-	if x > (self.Origin[1] + self.Dimension[1]) or y > (self.Origin[2] + self.Dimension[2]) then
+	if x > (self.Origin[1] + self.Extent[1]) or y > (self.Origin[2] + self.Extent[2]) then
 		return false
 	end
 
@@ -108,15 +110,15 @@ function Rectangle.Inflate(self, ...)
 	end
 
 	local origin = {self.Origin[1]-(dx/2), self.Origin[2]-(dy/2)}
-	local dimension = {self.Dimension[1]+dx, self.Dimension[2]+dy}
+	local extent = {self.Extent[1]+dx, self.Extent[2]+dy}
 
-	self:SetRect(origin, dimension)
+	self:SetRect(origin, extent)
 end
 
 function Rectangle.Offset(self, dx, dy)
 	local origin = {self.Origin[1]+dx, self.Origin[2]+dy}
 
-	self:SetRect(origin, self.Dimension)
+	self:SetRect(origin, self.Extent)
 end
 
 --[[
@@ -139,6 +141,10 @@ function Rectangle.Intersect(left, right)
 end
 
 function Rectangle.Union(self, other)
+	if self.IsEmpty then
+		return Rectangle(other.Origin, other.Extent)
+	end
+
 	local leftmost = math.min(self.Origin[1], other.Origin[1]);
 	local topmost = math.min(self.Origin[2], other.Origin[2]);
 
@@ -157,7 +163,7 @@ end
 function Rectangle.__tostring(self)
 	return string.format("{%d,%d},{%d,%d}",
 		self.Origin[1], self.Origin[2],
-		self.Dimension[1], self.Dimension[2]);
+		self.Extent[1], self.Extent[2]);
 end
 
 Rectangle.Empty = Rectangle();
