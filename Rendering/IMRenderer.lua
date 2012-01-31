@@ -106,7 +106,15 @@ function IMRenderer.updatePixels(self)
 	end
 end
 
-function IMRenderer.Render(self, x, y, awidth, aheight)
+function IMRenderer.Render(self, acanvas, x, y, awidth, aheight)
+	local posx = x or 0
+	y = y or 0
+	local posy = y + self.height
+	local w = awidth or 0
+	local h = aheight or 0
+
+--	self.Image:cdCanvasPutImageRect(acanvas, posx, posy, w, h, 0, 0, 0, 0)
+
 	local tx = self:GetTexture()
 	if tx ~= nil then
 		tx:Render(x, y, awidth, aheight)
@@ -206,9 +214,9 @@ end
 
 function IMRenderer.DrawImage(self, img, x,y, w,h)
 	local posx = x;
-	local posy = y + img.Extent[2]
+	local posy = y + img.Frame.Height
 
-	--self.canvas:PutImageRectRGB(img, x, y, w, h,
+	--self.canvas:PutImageRectRGB(img.Image, x, y, w, h,
 	--	0, 0, 0, 0)
 
 	-- use default values

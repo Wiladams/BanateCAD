@@ -119,172 +119,9 @@ keyCode = 0
 
 defaultguistyle = GUIStyle();
 
+require "defaultglcanvas"
 
---
--- Construct the default GL Canvas
-
-defaultglcanvas = iup.glcanvas({
-		BUFFER = "SINGLE",
-		EXPAND = "YES",
-		--RASTERSIZE = "1024x768",
-		--DEPTH_SIZE = "16"
-		});
-
-
-
-function defaultglcanvas.action(self)
-	iup.GLMakeCurrent(self);
-
-	if (_G.draw) ~= nil then
-		draw()
-	end
-
-	gl.Flush();
-end
-
-
-function defaultglcanvas.map_cb(self)
-	iup.GLMakeCurrent(self);
-
-	-- Set it up the way we want it
-	-- We must do this here, or we don't get
-	-- alpha transparency
-	gl.Enable(gl.BLEND);
-	gl.BlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-	gl.Disable(gl.DEPTH_TEST);            -- Disables Depth Testing
-
-
-	local canvas2D = cd.CreateCanvas(cd.IUP, self)
---assert(canvas2D ~= nil, "defaultcanvas.map_cb - cd canvas is nil")
-	self.canvas2D = canvas2D
-	canvas2D:Activate()
-	canvas2D:YAxisMode(0)	-- Invert the y-axis
-end
-
-function defaultglcanvas.resize_cb(self, w, h)
-	iup.GLMakeCurrent(self)
-
-	Processing.ReSize(w, h)
-end
-
-
--- Keyboard Activity
---[[
-function KeyboardActivityArgs:_init(params)
-
-	self.Keyboard = params.Keyboard;
-	self.Window = params.Window;
-	self.EventType = params.EventType;
-	self.VirtualKeyCode = params.KeyCode;
-	self.KeyMasks = params.KeyMasks;
-	self.KeyChar = params.KeyChar;
-
-	self.RepeatCount = params.RepeatCount or 0;
-	self.OEMScanCode = params.OEMScanCode;
-	self.IsExtended = params.Extended;
---]]
-function defaultglcanvas:keypress_cb(c, press)
-	print("Processing.lua.keypress_cb: ", c, press);
-	local et = KeyActivityType.KeyDown
-	if press == 0 then
-		et = KeyActivityType.KeyUp
-	end
-
-	local ke = KeyboardActivityArgs{
-		EventType = et,
-		KeyChar = c,
-	}
-
-	Processing.KeyActivity(ke)
-
-	return iup.DEFAULT
-end
-
-function defaultglcanvas:k_any(c)
-	print("Processing.lua.key_any: ", c);
-
-	return iup.CONTINUE
-end
-
--- Mouse Activity
-function defaultglcanvas.motion_cb(self, x, y, status)
-	local ma = MouseActivityArgs({
-		Device = nil ;
-		ActivityType = MouseActivityType.MouseMove;
-		ButtonActivity = MouseButtonActivity.None;
-		CoordinateSpace = MouseCoordinateSpace.Window;
-		MovementType = MouseMovementType.Absolute;
-		Window = self;
-
-		Button = MouseButton.None;
-		Clicks = 0;
-		X = x;
-		Y = y;
-		Delta = 0;
-		KeyFlags = status;
-	})
---print("defaultglcanvas.motion_cb: ", ma)
-	Processing.MouseActivity(ma)
-end
-
--- Indicates mouse button activity, either pressed or released
-function defaultglcanvas.button_cb(self, but, pressed, x, y, status)
-	local mat = MouseActivityType.MouseDown
-	local clicks = 1;
-	local bactive = MouseButtonActivity.None
-
-	if pressed == 1 then
-		mat = MouseActivityType.MouseDown
-		if iup.isdouble(status) then
-			clicks = 2
-		end
-	elseif pressed == 0 then
-		mat = MouseActivityType.MouseUp
-	end
-
-	local ma = MouseActivityArgs({
-		Device = nil ;
-		ActivityType = mat;
-		ButtonActivity = MouseButtonActivity.None;
-		CoordinateSpace = MouseCoordinateSpace.Window;
-		MovementType = MouseMovementType.Absolute;
-		Window = self;
-
-		Button = but;
-		Clicks = clicks;
-		X = x;
-		Y = y;
-		Delta = 0;
-		KeyFlags = status;
-	})
-
-	Processing.MouseActivity(ma)
-end
-
-
-function defaultglcanvas.wheel_cb(self, delta, x, y, status)
-	local ma = MouseActivityArgs({
-		Device = nil ;
-		ActivityType = MouseActivityType.MouseWheel;
-		ButtonActivity = MouseButtonActivity.MouseWheel;
-		CoordinateSpace = MouseCoordinateSpace.Window;
-		MovementType = MouseMovementType.Absolute;
-		Window = self;
-
-		Button = MouseButtonActivity.None;
-		Clicks = 0;
-		X = x;
-		Y = y;
-		Delta = delta;
-		KeyFlags = status;
-	})
-
-	Processing.MouseActivity(ma)
-end
-
-
-
-
+defaultcanvas = defaultglcanvas;
 
 defaultrenderer = IMRenderer(canvas_width, canvas_height)
 
@@ -301,7 +138,7 @@ Processing = {
 	StrokeColor = Color(0,0,0,255),
 
 	Running = false,
-	FrameRate = 15,
+	FrameRate = 20,
 
 	-- Typography
 	TextSize = 12,
@@ -336,6 +173,7 @@ function Processing.SetBackgroundColor(acolor)
 	return oldColor
 end
 
+--[[
 function Processing.DrawImage(tex, offsetx, offsety, awidth, aheight)
 	offsetx = offsetx or 0
 	offsety = offsety or 0
@@ -346,7 +184,7 @@ function Processing.DrawImage(tex, offsetx, offsety, awidth, aheight)
 	-- Render the quad
 	tex:Render(offsetx, offsety, awidth, aheight)
 end
-
+--]]
 
 --[==============================[
 	Compiling
@@ -371,8 +209,8 @@ function Processing.ClearGlobalFunctions()
 	_G.mousePressed = nil
 
 	-- Reset Transformation matrices
-	local canvas2D = defaultglcanvas.canvas2D
-	canvas2D:Transform(nil)
+	--local canvas2D = defaultglcanvas.canvas2D
+	--canvas2D:Transform(nil)
 
 end
 
@@ -380,6 +218,9 @@ function Processing.Compile(inputtext)
 	iup.GLMakeCurrent(defaultglcanvas);
 
 	-- Create a new renderer
+	-- destroy old renderer explicitly
+
+	-- create new renderer
 	defaultrenderer = IMRenderer(canvas_width, canvas_height)
 	Processing.Renderer = defaultrenderer;
 
@@ -407,7 +248,7 @@ function Processing.Compile(inputtext)
 
 	-- Update pixels and draw to screen
 	Processing.Renderer:updatePixels()
-	Processing.Renderer:Render(0,0)
+	Processing.Renderer:Render(defaultcanvas, 0,0)
 
 	-- Run animation loop
 	Processing.StartAnimation()
@@ -421,9 +262,12 @@ function Processing.StartAnimation()
 	local nextTime = startTime + secondsperframe
 	local tolerance = 0.001
 	local currentTime = startTime
+	local ellapsedTime = 0;
 
 	Processing.Running = true;
 	Processing.TickCount = 0
+	Processing.FramesPerSecond = 0
+
 	frameCount = 0
 	repeat
 		-- update seconds per frame
@@ -440,6 +284,7 @@ function Processing.StartAnimation()
 		end
 
 		currentTime = socket.gettime()
+		ellapsedTime = currentTime - startTime
 		if currentTime < nextTime then
 			-- do nothing but perhaps wait
 			--local diff = nextTime - currentTime
@@ -448,6 +293,7 @@ function Processing.StartAnimation()
 		else
 			Processing.TickCount = Processing.TickCount + 1
 			frameCount = frameCount + 1
+			Processing.FramesPerSecond = Processing.TickCount / ellapsedTime
 			Processing.Tick(Processing.TickCount)
 			nextTime = nextTime + secondsperframe
 
@@ -470,23 +316,22 @@ function Processing.Tick(tickCount)
 	-- want to change the camera position for 3D
 	Processing.Camera:Render()
 
+	-- Draw the immediate graphics
+	if (_G.draw) ~= nil then
+		draw()
+	end
+
 	-- Update all the actors
 	for _,actor in ipairs(Processing.Actors) do
 		actor:Update(Processing.TickCount)
 	end
 
-	-- Draw the immediate graphics
-	if (_G.draw) ~= nil then
-		draw()
-	end
 
 	-- Draw all the retained graphics
 	for _,graphic in ipairs(Processing.Graphics) do
 		graphic:Render(Processing.Renderer)
 	end
 
-	gl.Flush();
-	gl.Finish();
 
 	-- if double buffered
 	-- swap buffers in the end
@@ -497,7 +342,10 @@ function Processing.Tick(tickCount)
 	-- Update pixels and draw to screen
 	-- Draw the pixels to the screen
 	Processing.Renderer:updatePixels()
-	Processing.Renderer:Render(0,0)
+	Processing.Renderer:Render(defaultglcanvas, 0,0)
+
+	gl.Flush();
+	gl.Finish();
 end
 
 function Processing.ReSize(awidth, aheight)
@@ -1068,15 +916,17 @@ end
 --(img, offsetx, offsety, awidth, aheight)
 function image(img, x, y, awidth, aheight)
 	if img == nil then return end
+	awidth = awidth or 0
+	aheight = aheight or 0
 
-	Processing.DrawImage(img, x, y, awidth, aheight)
+	Processing.Renderer:DrawImage(img, x, y, awidth, aheight)
 end
 
 function imageMode()
 end
 
 function loadImage(filename)
-	local pm = PImage(filename)
+	local pm = PImage({Filename = filename})
 
 	return pm
 end

@@ -29,7 +29,7 @@ intext = iup.text({
 	})
 
 viewinsplit = iup.split({
-	defaultglcanvas,
+	defaultcanvas,
 	intext;
 	orientation = "HORIZONTAL",
 	showgrip = "FALSE",
@@ -70,9 +70,6 @@ function ProcessingWindow.SetFilename(self,filename)
 	self.Window.TITLE = self.Name..' - '..name;
 end
 
---function defaultglcanvas.map_cb(self)
-	-- Do whatever we want once
-	-- we are actually mapped to a real window
---end
+
 
 return ProcessingWindow

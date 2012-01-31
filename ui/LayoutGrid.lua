@@ -7,7 +7,7 @@ class.LayoutGrid()
 
 -- Origin
 -- CellSize
--- CellsWide
+-- Columns
 
 function LayoutGrid:_init(params)
 	params = params or {

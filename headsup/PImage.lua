@@ -6,28 +6,14 @@ require "Actor"
 
 class.PImage(Actor)
 
-function PImage.loadBitmapFile(self, filename)
-	--local image = im.FileImageLoadBitmap(filename)
-	local image = im.FileImageLoad(filename) -- directly load the image at index 0. it will open and close the file
 
-	if image == nil then
-		print("File: ", filename, "Not Loaded")
-		return nil
-	end
-
-	self.Image = image;
-	self.Extent = {image:Width(), image:Height()}
-end
-
--- Either
--- PImage(filename)
--- PImage(width, height, dtype)
---
 function PImage:_init(params)
 	params = params or {}
-	local origin = {0,0}
-	local extent = {0,0}
+
+	params.Origin = params.Origin or {0,0}
+	params.Extent = params.Extent or {0,0}
 	local filename = params.Filename
+
 
 	if filename then
 		local image = im.FileImageLoad(filename) -- directly load the image at index 0. it will open and close the file
@@ -37,16 +23,11 @@ function PImage:_init(params)
 		end
 
 		self.Image = image;
-		extent = {image:Width(), image:Height()}
-	elseif arg.n >= 2 then
-		self.width = arg[1]
-		self.height = arg[2]
-
-		--parray = PixelArray(self.width, self.height, color(0,255))
-		--self.Texture = Texture(parray)
+		params.Extent = {image:Width(), image:Height()}
+	else
+		--self.Image = im.CreateImage(params.Width, params.Height);
 	end
 
-	params.Extent = extent
 
 	self:super(params)
 end
@@ -58,36 +39,6 @@ function PImage:Render(graphPort)
 end
 
 --[[
-function PImage.Render(self, x, y, awidth, aheight)
-
-  gl.PixelStore(gl.UNPACK_ALIGNMENT, 1)
-
-  gl.Enable('TEXTURE_2D')            -- Enable Texture Mapping ( NEW )
-
-	self.Texture:MakeCurrent()
-
-
-  gl.Begin('QUADS')
-    gl.Normal( 0, 0, 1)                      -- Normal Pointing Towards Viewer
-
-	gl.TexCoord(0, 0)
-	gl.Vertex(x, y+aheight,  0)  -- Point 1 (Front)
-
-	gl.TexCoord(1, 0)
-	gl.Vertex( x+awidth, y+aheight,  0)  -- Point 2 (Front)
-
-	gl.TexCoord(1, 1)
-	gl.Vertex( x+awidth,  y,  0)  -- Point 3 (Front)
-
-	gl.TexCoord(0, 1)
-	gl.Vertex(x,  y,  0)  -- Point 4 (Front)
-
-  gl.End()
-
-  -- Disable Texture Mapping
-  gl.Disable('TEXTURE_2D')
-end
-
 
 function create2DPixelArray(width, height, depth, pixels1D)
 	-- create 2D pixel array
@@ -107,42 +58,6 @@ function create2DPixelArray(width, height, depth, pixels1D)
 	end
 
 	return pixels2D
-end
-
-function PImage.loadPixels(self)
-	self.pixels = self.Texture:CreatePixelArray()
-
-
-	-- get a copy of the texture data into an array
-	gl.Enable('TEXTURE_2D')            -- Enable Texture Mapping ( NEW )
-
-	self.Texture:MakeCurrent()
-	gl.PixelStore(gl.PACK_ALIGNMENT, 1)
-
-	-- Get the pixel array
-	local pixels1D = gl.GetTexImage('TEXTURE_2D', 0, 'RGBA')
-	-- Convert to 2D array, or we can't feed it back to TexSubImage()
-	self.pixels = create2DPixelArray(self.width, self.height, self.GLPixelSize, pixels1D)
-
-	gl.Disable('TEXTURE_2D')            -- Enable Texture Mapping ( NEW )
-end
-
-
-function PImage.updatePixels(self)
-	-- If we don't have any pixels (loadPixels not called)
-	-- then we have nothing to copy, so return
-	if self.pixels == nil then return end
-
-
-	gl.Enable('TEXTURE_2D')            -- Enable Texture Mapping ( NEW )
-	self.Texture:MakeCurrent()
-
-	gl.PixelStore(gl.UNPACK_ALIGNMENT, 1)
-
-	-- Copy the pixel data into the texture object
-	gl.TexSubImage(0, 'RGBA', self.pixels, 0)
-	gl.Finish()
-	--gl.Disable('TEXTURE_2D')            -- Enable Texture Mapping ( NEW )
 end
 --]]
 

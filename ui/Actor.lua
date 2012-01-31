@@ -12,6 +12,9 @@ class.Actor()
 
 function Actor:_init(params)
 	params = params or {}
+
+	self.Name = params.Name;
+
 	if params.Origin and params.Extent then
 		self.Frame = Rectangle(params.Origin, params.Extent)
 	elseif params.Frame then
