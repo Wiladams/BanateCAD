@@ -2,7 +2,6 @@
 
 require "GShape"
 
-class.GAVPause(GShape)
 
 --[============================[
 		PLAY
@@ -11,6 +10,7 @@ class.GAVPlay(GShape)
 
 function GAVPlay:_init(params)
 	params = params or {}
+
 	self:super(params)
 
 	local w = self.Frame.Width;

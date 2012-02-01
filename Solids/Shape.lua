@@ -4,6 +4,13 @@ local class = require "pl.class"
 -- Create a base class, Shape
 class.Shape()
 
+function Shape:_init(params)
+	params = params or {}
+
+	self.Material = params.Material
+	self.Transform = params.Transform
+end
+
 -- The primary function of a shape
 function Shape.RenderBegin(self, graphPort)
 	if self.Transform ~= nil then
@@ -23,10 +30,10 @@ function Shape.RenderBegin(self, graphPort)
 	end
 end
 
-function Shape.RenderSelf(self, renderer)
+function Shape.RenderSelf(self, graphPort)
 end
 
-function Shape.Render(self, renderer)
+function Shape.Render(self, graphPort)
 	-- From Actor
 	--self:RenderBackground(graphPort)
 	--self:RenderMembers(graphPort)

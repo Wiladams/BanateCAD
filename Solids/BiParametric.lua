@@ -1,6 +1,8 @@
 
 local class = require "pl.class"
-class.BiParametric()
+require "Shape"
+
+class.BiParametric(Shape)
 
 -- Every BiParametric needs:
 --	USteps
@@ -9,6 +11,9 @@ class.BiParametric()
 --	ParamFunction
 function BiParametric:_init(params)
 	params = params or {}		-- create object if user does not provide one
+
+	Shape._init(self, params);
+
 
 	self.USteps = params.USteps or 10
 	self.WSteps = params.WSteps or 10
@@ -220,6 +225,7 @@ function BiParametric.GetMesh(self)
 	return amesh
 end
 
+--[[
 function BiParametric.RenderBegin(self, graphPort)
 	if self.Transform ~= nil then
 		graphPort:SaveTransform()
@@ -238,6 +244,12 @@ function BiParametric.RenderBegin(self, graphPort)
 	end
 end
 
+function BiParametric.RenderEnd(self, graphPort)
+	if self.Transform ~= nil then
+		graphPort:RestoreTransform()
+	end
+end
+--]]
 function BiParametric.RenderSelf(self, graphPort)
 	if self.ShapeMesh == nil then
 		self.ShapeMesh = self:GetMesh()
@@ -245,12 +257,7 @@ function BiParametric.RenderSelf(self, graphPort)
 
 	graphPort:DisplayMesh(self.ShapeMesh);
 end
-
-function BiParametric.RenderEnd(self, graphPort)
-	if self.Transform ~= nil then
-		graphPort:RestoreTransform()
-	end
-end
+--[[
 
 function BiParametric.Render(self, graphPort)
 	-- From Actor
@@ -267,5 +274,6 @@ end
 function BiParametric.SetTransform(self, atrans)
 	self.Transform = atrans
 end
+--]]
 
 return BiParametric

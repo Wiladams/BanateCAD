@@ -4,7 +4,6 @@
 
 local class = require "pl.class"
 require "TextBox"
-require "Ensemble"
 
 --[[
 {
@@ -39,7 +38,7 @@ params = params or {
 	self.TabHeight = params.TabHeight;
 	self.TabLabels = params.TabLabels;
 	self.ActiveTab = params.ActiveTab;
-	self.Margin = params.Margin;
+	self.Margin = params.Margin or 8;
 	self.ShowHighlight = params.ShowHighlight or false
 
 	-- Create the labels
@@ -53,9 +52,11 @@ params = params or {
 		local tabtext = label.Name
 		textsize = self.Font:MeasureString(tabtext)
 		local tabwidth = textsize[1] + 2*self.Margin
-		local tabFrame = {{textx, self.Baseline-self.TabHeight}, {tabwidth,self.TabHeight}}
+		local origin = {textx, self.Baseline-self.TabHeight}
+		local extent = {tabwidth,self.TabHeight}
 		local tbox = TextBox({
-			Frame = {{textx, self.Baseline-self.TabHeight},{tabwidth,self.TabHeight}},
+			Origin = origin,
+			Extent = extent,
 			Text = tabtext,
 			Font = self.Font,
 			HAlignment = Alignment.Center,
