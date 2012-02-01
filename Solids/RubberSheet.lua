@@ -18,6 +18,7 @@ local class = require "pl.class"
 class.RubberSheet(BiParametric)
 function RubberSheet:_init(params)
 	params = params or {}
+
 	self:super(params)
 
 	self.Thickness = params.Thickness

@@ -26,20 +26,19 @@ local class = require "pl.class"
 -- Schlafli representation for the platonic solids
 -- Given this representation, we have enough information
 -- to derive a number of other attributes of the solids
-schlafli={}
-function schlafli:new(o)
-	o = o or {}		-- create object if user does not provide one
-	setmetatable(o, self)
-	self.__index = self
+class.schlafli()
+function schlafli:_init(params)
+	params = params or {}		-- create object if user does not provide one
 
-	return o
+	self.p = params.p
+	self.q = params.q
 end
 
-tetra_sch = schlafli:new({p=3,q=3});
-hexa_sch = schlafli:new({p=4,q=3});
-octa_sch = schlafli:new({p=3,q=4});
-dodeca_sch = schlafli:new({p=5,q=3});
-icosa_sch = schlafli:new({p=3,q=5});
+tetra_sch = schlafli({p=3,q=3});
+hexa_sch = schlafli({p=4,q=3});
+octa_sch = schlafli({p=3,q=4});
+dodeca_sch = schlafli({p=5,q=3});
+icosa_sch = schlafli({p=3,q=5});
 
 --[[
 -- Given the schlafli representation, calculate
@@ -91,7 +90,7 @@ end
 
 --[[
 shape_platonic = {}
-function shape_platonic:new(o)
+function shape_platonic:_init(o)
 	o = o or {}		-- create object if user does not provide one
 	setmetatable(o, self)
 	self.__index = self
@@ -100,7 +99,7 @@ function shape_platonic:new(o)
 end
 
 function shape_tetrahedron.GetMesh(self)
-	local mesh = trimesh:new({name="tetrahedron"})
+	local mesh = trimesh({name="tetrahedron"})
 
 	for i,v in ipairs(tetra_cart) do
 		mesh:addvertex(v);
@@ -160,7 +159,7 @@ function shape_tetrahedron:_init(o)
 end
 
 function shape_tetrahedron.GetMesh(self)
-	local mesh = trimesh:new({name="tetrahedron"})
+	local mesh = trimesh({name="tetrahedron"})
 
 	if self.radius ~= nil then
 		verts = tetra_unit(self.radius)
@@ -257,7 +256,7 @@ function shape_hexahedron:_init(o)
 end
 
 function shape_hexahedron.GetMesh(self)
-	local mesh = trimesh:new({name="hexahedron"})
+	local mesh = trimesh({name="hexahedron"})
 
 	if self.radius ~= nil then
 		verts = hexa_unit(self.radius)
@@ -343,7 +342,7 @@ function shape_octahedron.GetMesh(self)
 		verts = octa_unit(self.radius)
 	end
 
-	local mesh = trimesh:new({name="octahedron"})
+	local mesh = trimesh({name="octahedron"})
 
 	for i,v in ipairs(verts) do
 		mesh:addvertex(v);
@@ -552,7 +551,7 @@ function shape_dodecahedron.GetMesh(self)
 		verts = dodeca_unit(self.radius)
 	end
 
-	local mesh = trimesh:new({name="dodecahedron"})
+	local mesh = trimesh({name="dodecahedron"})
 
 	for i,v in ipairs(verts) do
 		mesh:addvertex(v);
@@ -699,7 +698,7 @@ function shape_icosahedron.GetMesh(self)
 		verts = icosa_cart
 	end
 
-	local mesh = trimesh:new({name="icosahedron"})
+	local mesh = trimesh({name="icosahedron"})
 
 	for i,v in ipairs(verts) do
 		mesh:addvertex(v);

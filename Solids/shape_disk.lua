@@ -66,7 +66,7 @@ function shape_disk.GetVertices(self)
 end
 
 function shape_disk.GetMesh(self)
-	local mesh = trimesh:new({name='disk'})
+	local mesh = trimesh({name='disk'})
 
 	local verts = self:GetVertices()
 	for _,v in ipairs(verts) do

@@ -5,10 +5,10 @@ local class = require "pl.class"
 class.Scene()
 
 
-function Scene:_init(o)
-	o = o or {}		-- create object if user does not provide one
+function Scene:_init(params)
+	params = params or {}		-- create object if user does not provide one
 
-	self.commands = o.commands or {}
+	self.commands = params.commands or {}
 end
 
 
@@ -30,12 +30,12 @@ end
 	iterating through the list of shapes, calling their
 	Update methods.
 --]]
-function Scene.Update(self, count)
+function Scene.Update(self, tickCount)
 	-- Now tell all the objects to update themselves
 	for i, cmd in ipairs(self.commands) do
 		if cmd.command == CADVM.SHAPE then
 			if (cmd.value.Update ~= nil) then
-				cmd.value:Update(count);
+				cmd.value:Update(tickCount);
 --print("Scene.Update")
 			end
 		end

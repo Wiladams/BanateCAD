@@ -4,7 +4,7 @@
 -- Copyright (c) 2011  William Adams
 --
 
---require "BiParametric"
+require "BiParametric"
 
 local class = require "pl.class"
 class.shape_ellipsoid(BiParametric)

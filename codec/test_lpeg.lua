@@ -40,7 +40,7 @@ local ENDSOLID = OPT_WS * P"endsolid"
 
 
 function parsestl(filehandle)
-	local mesh = trimesh:new({name="stlmesh"})
+	local mesh = trimesh({name="stlmesh"})
 
 	local line = filehandle:read()
 	local pos = 1

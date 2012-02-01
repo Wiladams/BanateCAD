@@ -5,21 +5,21 @@ local class = require "pl.class"
 class.Shape()
 
 -- The primary function of a shape
-function Shape.RenderBegin(self, renderer)
+function Shape.RenderBegin(self, graphPort)
 	if self.Transform ~= nil then
-		renderer:SaveTransform()
+		graphPort:SaveTransform()
 
 		if self.Transform.Translation ~= nil then
-			renderer:Translate(self.Transform.Translation)
+			graphPort:Translate(self.Transform.Translation)
 		end
 
 		if self.Transform.Scale ~= nil then
-			renderer:Scale(self.Transform.Scale)
+			graphPort:Scale(self.Transform.Scale)
 		end
 	end
 
 	if self.Material ~= nil then
-		renderer:ApplyMaterial(self.Material)
+		graphPort:ApplyMaterial(self.Material)
 	end
 end
 
@@ -27,11 +27,13 @@ function Shape.RenderSelf(self, renderer)
 end
 
 function Shape.Render(self, renderer)
+	-- From Actor
+	--self:RenderBackground(graphPort)
+	--self:RenderMembers(graphPort)
+	--self:RenderForeground(graphPort)
+
 	self:RenderBegin(renderer)
-
-
 	self:RenderSelf(renderer)
-
 	self:RenderEnd(renderer)
 end
 

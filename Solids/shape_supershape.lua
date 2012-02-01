@@ -130,7 +130,7 @@ function shape_supershape.GetMesh(self)
 
 -- Create the mesh we're going to stuff with
 -- vertices and faces
-	local mesh = trimesh:new({name=self.name})
+	local mesh = trimesh({name=self.name})
 
 	-- First calculate all the vertices
 	for j = 0, self.phisteps do

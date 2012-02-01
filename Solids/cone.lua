@@ -18,7 +18,7 @@ function shape_cone:_init(o)
 	self.stacksteps = o.stacksteps
 	self.baseradius = o.baseradius
 	self.topradius = o.topradius
-	self.heigh = o.height
+	self.height = o.height
 
 end
 
@@ -62,7 +62,7 @@ function shape_cone.GetMesh(self)
 	local lp1 = {self.baseradius,0, 0}
 	local lp2 = {self.topradius, 0, self.height}
 
-	local mesh = trimesh:new({name=self.name})
+	local mesh = trimesh({name=self.name})
 	local stepangle = 2*math.pi/self.anglesteps;
 
 	for stack = 0, self.stacksteps do

@@ -1,7 +1,4 @@
 require("gd")
---require ("openscad_print")
---require ("Class")
---require ("maths")
 
 local class = require "pl.class"
 

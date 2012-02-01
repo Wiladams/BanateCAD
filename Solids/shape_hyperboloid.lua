@@ -13,7 +13,7 @@ local class = require "pl.class"
 
 class.shape_hyperboloid(BiParametric)
 
-function shape_hyperboloid.new(params)
+function shape_hyperboloid:_init(params)
 	params = params or {}
 
 	self:super(params)

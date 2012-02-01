@@ -5,23 +5,22 @@
 -- Copyright (c) 2011  William Adams
 --
 
-trimesh = {
-	name='trimesh'
-	}
+local class = require "pl.class"
 
-function trimesh:new(o)
-	o = o or {}		-- create object if user does not provide one
-	setmetatable(o, self)
-	self.__index = self
+class.trimesh()
 
-	return o
+
+function trimesh:_init(params)
+	params = params or {}		-- create object if user does not provide one
+
+	self.name='trimesh'
+	self.vertices = {}
 end
 
 
 -- Add a vertex to the mesh
 function trimesh:addvertex(v)
 	if self.vertices == nil then
-		self.vertices = {}
 	end
 
 	table.insert(self.vertices, v)

@@ -8,17 +8,25 @@ class.LayoutGrid()
 -- Origin
 -- CellSize
 -- Columns
+-- Gap
+-- Margin
 
 function LayoutGrid:_init(params)
 	params = params or {
 		Origin = {0,0},
 		CellSize = {20,20},
 		Columns = 4,
+		Gap = 0,
+		Margin = 0,
 		}
+
 
 	self.Origin = params.Origin or {0,0};
 	self.CellSize = params.CellSize or {20,20};
 	self.Columns = params.Columns or 4;
+
+	self.Gap = params.Gap or 0
+	self.Margin = params.Margin or 0
 end
 
 function LayoutGrid:Layout(members)
@@ -39,8 +47,8 @@ function LayoutGrid:Layout(members)
 end
 
 function LayoutGrid:GetCellPosition(col, row)
-	local posx = self.Origin[1] + ((col-1) * self.CellSize[1])
-	local posy = self.Origin[1] + ((row-1) * self.CellSize[2])
+	local posx = self.Origin[1] + ((col-1) * (self.CellSize[1]+self.Gap))
+	local posy = self.Origin[2] + ((row-1) * (self.CellSize[2]+self.Gap))
 
 	local origin = {posx, posy}
 	local extent = {self.CellSize[1], self.CellSize[2]}

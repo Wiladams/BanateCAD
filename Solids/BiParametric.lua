@@ -1,6 +1,6 @@
 
 local class = require "pl.class"
-class.BiParametric(Shape)
+class.BiParametric()
 
 -- Every BiParametric needs:
 --	USteps
@@ -204,7 +204,7 @@ function BiParametric.GetVertices(self)
 end
 
 function BiParametric.GetMesh(self)
-	local amesh = trimesh:new();
+	local amesh = trimesh();
 
 	self.Vertices, self.Normals = self:GetVertices()
 
@@ -220,12 +220,52 @@ function BiParametric.GetMesh(self)
 	return amesh
 end
 
-function BiParametric.RenderSelf(self, renderer)
+function BiParametric.RenderBegin(self, graphPort)
+	if self.Transform ~= nil then
+		graphPort:SaveTransform()
+
+		if self.Transform.Translation ~= nil then
+			graphPort:Translate(self.Transform.Translation)
+		end
+
+		if self.Transform.Scale ~= nil then
+			graphPort:Scale(self.Transform.Scale)
+		end
+	end
+
+	if self.Material ~= nil then
+		graphPort:ApplyMaterial(self.Material)
+	end
+end
+
+function BiParametric.RenderSelf(self, graphPort)
 	if self.ShapeMesh == nil then
 		self.ShapeMesh = self:GetMesh()
 	end
 
-	renderer:DisplayMesh(self.ShapeMesh);
+	graphPort:DisplayMesh(self.ShapeMesh);
+end
+
+function BiParametric.RenderEnd(self, graphPort)
+	if self.Transform ~= nil then
+		graphPort:RestoreTransform()
+	end
+end
+
+function BiParametric.Render(self, graphPort)
+	-- From Actor
+	--self:RenderBackground(graphPort)
+	--self:RenderMembers(graphPort)
+	--self:RenderForeground(graphPort)
+
+	self:RenderBegin(graphPort)
+	self:RenderSelf(graphPort)
+	self:RenderEnd(graphPort)
+end
+
+
+function BiParametric.SetTransform(self, atrans)
+	self.Transform = atrans
 end
 
 return BiParametric

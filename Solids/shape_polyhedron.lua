@@ -15,10 +15,12 @@ class.shape_polyhedron()
 function shape_polyhedron:_init(params)
 	params = params or {}
 
+	self.vertices = params.vertices or {}
+	self.faces = params.faces or {}
 end
 
 function shape_polyhedron.GetMesh(self)
-	local mesh = trimesh:new({name="polyhedron"})
+	local mesh = trimesh({name="polyhedron"})
 
 	for i,v in ipairs(self.vertices) do
 		mesh:addvertex(v);
