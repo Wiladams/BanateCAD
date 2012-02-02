@@ -82,11 +82,6 @@ function TextBox:OnTopologyChanged()
 	self:CalculateTextOrigin();
 end
 
---function TextBox:Offset(dx, dy)
---	self.Frame:Offset(dx, dy);
---
---	self:CalculateTextOrigin();
---end
 
 -- Graphic Overrides
 function TextBox:RenderBackground(graphPort)
@@ -102,13 +97,15 @@ function TextBox:RenderBackground(graphPort)
 end
 
 function TextBox:Render(graphPort)
+--print("TextBox:Render - ", self.TextColor);
+--print("Frame: ", self.Frame)
+
 	self:RenderBackground(graphPort);
 
 	graphPort:SetFillColor(self.BackColor);
 	self.Font:Render(graphPort);
 	graphPort:SetTextAlignment(cd.WEST)
 	graphPort:SetStrokeColor(self.TextColor);
---print(self.TextColor);
 	graphPort:DrawText(self.TextOrigin[1], self.TextOrigin[2], self.Text);
 end
 

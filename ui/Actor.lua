@@ -6,7 +6,8 @@ class.Actor()
 
 --[[
 {
-	Frame = {0,0,0},
+	Origin = {0,0},
+	Extent = {0,0},
 }
 --]]
 
@@ -90,7 +91,7 @@ function Actor:RenderMembers(graphPort)
 	end
 end
 
-function Actor:RenderForeground(graphPort)
+function Actor:RenderSelf(graphPort)
 end
 
 function Actor:Render(graphPort)
@@ -98,7 +99,7 @@ function Actor:Render(graphPort)
 
 	self:RenderBackground(graphPort)
 	self:RenderMembers(graphPort)
-	self:RenderForeground(graphPort)
+	self:RenderSelf(graphPort)
 end
 
 -- To Act
