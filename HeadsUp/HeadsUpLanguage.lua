@@ -24,7 +24,6 @@ require "Color"
 require "Point3D"
 require "Vector3D"
 
-require "HeadsUpMath"
 
 require "GUIStyle"
 require "IMRenderer"

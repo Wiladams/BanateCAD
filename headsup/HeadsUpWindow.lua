@@ -15,8 +15,8 @@ require "luagl"
 require "luaglu"
 
 require "MenuManager"
-require "MenuController"
 require "FileManager"
+require "HeadsUpMenuControl"
 require "HeadsUpLanguage"
 
 intext = iup.text({
@@ -38,8 +38,8 @@ viewinsplit = iup.split({
 
 local class = require "pl.class"
 
-class.ProcessingWindow()
-function ProcessingWindow:_init(o)
+class.HeadsUpWindow()
+function HeadsUpWindow:_init(o)
 	o = o or {}		-- create object if user does not provide one
 
 
@@ -55,16 +55,16 @@ function ProcessingWindow:_init(o)
 			SHRINK= "YES",
 		})
 
-	self.menucontrol = MenuController({Window=self.Window})
+	self.menucontrol = HeadsUpMenuControl({Window=self.Window})
 	self.Window.MENU = self.menuman:GetMainMenu(self.menucontrol)
 
 end
 
-function ProcessingWindow.Show(self)
+function HeadsUpWindow.Show(self)
 	self.Window:show();
 end
 
-function ProcessingWindow.SetFilename(self,filename)
+function HeadsUpWindow.SetFilename(self,filename)
 	local name = filename or "File"
 
 	self.Window.TITLE = self.Name..' - '..name;
@@ -72,4 +72,4 @@ end
 
 
 
-return ProcessingWindow
+return HeadsUpWindow

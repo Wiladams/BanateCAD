@@ -159,7 +159,7 @@ function GTabShelf:RenderBackground(graphPort)
 	sb:Render(graphPort)
 end
 
-function GTabShelf:RenderForeground(graphPort)
+function GTabShelf:RenderSelf(graphPort)
 	self.Font:Render(graphPort)
 	graphPort:SetTextAlignment(cd.BASE_CENTER);
 	for i,tab in ipairs(self.Tabs) do

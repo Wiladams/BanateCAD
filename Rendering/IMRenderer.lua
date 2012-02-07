@@ -13,8 +13,8 @@ local class = require "pl.class"
 class.IMRenderer(Renderer)
 
 function IMRenderer:_init(awidth, aheight)
-	self.width = awidth;
-	self.height = aheight;
+--	self.width = awidth;
+--	self.height = aheight;
 
 
 	-- Create the basic image
@@ -30,24 +30,17 @@ function IMRenderer:_init(awidth, aheight)
 	self.Transformer = CDTransformer(self.canvas);
 
 
+	Renderer._init(self, awidth, aheight, self)
+
 	local black = Color(0,0,0,255)
 	local white = Color(255, 255, 255, 255)
 	local gray = Color(53, 53, 53, 255)
 
-	self:SetStrokeColor(black)
-	self:SetFillColor(white)
-	self:SetBackgroundColor(gray)
+	self:SetStrokeColor(Colors.Black)
+	self:SetFillColor(Colors.White)
+	self:SetBackgroundColor(Colors.DarkGray)
 end
 
---[[
-function IMRenderer.ApplyAttributes(self)
-	-- Apply attributes before any drawing occurs
-	self:SetStrokeColor(self.StrokeColor)
-	self:SetFillColor(self.FillColor)
-	self:SetBackgroundColor(self.BackgroundColor)
-	--self:SetSmooth(Processing.Smooth)
-end
---]]
 
 function IMRenderer.get(self, x, y)
 	local row = self.height-1 - y
@@ -63,11 +56,9 @@ function IMRenderer.get(self, x, y)
 end
 
 function IMRenderer.set(self, x, y, acolor)
-
 	local row = self.height-1 - y
 	--local row = y
 	local col = x
-
 
 	self.Image[0][row][col] = acolor.R
 	self.Image[1][row][col] = acolor.G

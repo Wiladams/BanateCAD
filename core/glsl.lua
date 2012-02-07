@@ -17,172 +17,199 @@ pi = math.pi;
 --=====================================
 --	Angle and Trigonometry Functions (5.1)
 --=====================================
-function radians(degrees)
-	if type(degrees) == 'number' then
-		return  math.rad(degrees)
+
+function radians(degs)
+	if type(degs) == 'number' then
+		return  math.pi/180 * degs
 	end
 
 	local res={}
-	for i=1,#degrees do
-		table.insert(res, math.rad(degrees[i]))
+	for i=1,#degs do
+		table.insert(res, math.pi/180 * degs*degs[i])
 	end
 
 	return res
 end
 
-function degrees(radians)
-	if type(radians) == 'number' then
-		return  math.deg(radians)
+function degrees(rads)
+	if type(rads) == 'number' then
+		return  math.deg(rads)
 	end
 
 	local res={}
-	for i=1,#radians do
-		table.insert(res, math.deg(radians[i]))
+	for i=1,#rads do
+		table.insert(res, math.deg(rads[i]))
 	end
 
 	return res
 end
 
-function sin(radians)
-	if type(radians) == 'number' then
-		return  math.sin(radians)
+function sin(rads)
+	if type(rads) == 'number' then
+		return  math.sin(rads)
 	end
 
 	local res={}
-	for i=1,#radians do
-		table.insert(res, math.sin(radians[i]))
+	for i=1,#rads do
+		table.insert(res, math.sin(rads[i]))
 	end
 
 	return res
 end
 
-function cos(radians)
-	if type(radians) == 'number' then
-		return  math.cos(radians)
+function cos(rads)
+	if type(rads) == 'number' then
+		return  math.cos(rads)
 	end
 
 	local res={}
-	for i=1,#radians do
-		table.insert(res, math.cos(radians[i]))
+	for i=1,#rads do
+		table.insert(res, math.cos(rads[i]))
 	end
 
 	return res
 end
 
-function asin(radians)
-	if type(radians) == 'number' then
-		return  math.asin(radians)
+function tan(rads)
+	if type(rads) == 'number' then
+		return  math.tan(rads)
 	end
 
 	local res={}
-	for i=1,#radians do
-		table.insert(res, math.asin(radians[i]))
+	for i=1,#rads do
+		table.insert(res, math.tan(rads[i]))
 	end
 
 	return res
 end
 
-function acos(radians)
-	if type(radians) == 'number' then
-		return  math.acos(radians)
+function asin(rads)
+	if type(rads) == 'number' then
+		return  math.asin(rads)
 	end
 
 	local res={}
-	for i=1,#radians do
-		table.insert(res, math.acos(radians[i]))
+	for i=1,#rads do
+		table.insert(res, math.asin(rads[i]))
 	end
 
 	return res
 end
 
-function atan(radians)
-	if type(radians) == 'number' then
-		return  math.atan(radians)
+function acos(rads)
+	if type(rads) == 'number' then
+		return  math.acos(rads)
 	end
 
 	local res={}
-	for i=1,#radians do
-		table.insert(res, math.atan(radians[i]))
+	for i=1,#rads do
+		table.insert(res, math.acos(rads[i]))
 	end
 
 	return res
 end
 
-function sinh(radians)
-	if type(radians) == 'number' then
-		return  math.sinh(radians)
+function atan(rads)
+	if type(rads) == 'number' then
+		return  math.atan(rads)
 	end
 
 	local res={}
-	for i=1,#radians do
-		table.insert(res, math.sinh(radians[i]))
+	for i=1,#rads do
+		table.insert(res, math.atan(rads[i]))
 	end
 
 	return res
 end
 
-function cosh(radians)
-	if type(radians) == 'number' then
-		return  math.cosh(radians)
+function atan2(x, y)
+	if type(x) == 'number' then
+		return  math.atan(x/y)
 	end
 
 	local res={}
-	for i=1,#radians do
-		table.insert(res, math.cosh(radians[i]))
+	for i=1,#x do
+		table.insert(res, math.atan(x[i]/y[i]))
+	end
+
+	return res
+end
+
+function sinh(rads)
+	if type(rads) == 'number' then
+		return  math.sinh(rads)
+	end
+
+	local res={}
+	for i=1,#rads do
+		table.insert(res, math.sinh(rads[i]))
+	end
+
+	return res
+end
+
+function cosh(rads)
+	if type(rads) == 'number' then
+		return  math.cosh(rads)
+	end
+
+	local res={}
+	for i=1,#rads do
+		table.insert(res, math.cosh(rads[i]))
 	end
 
 	return res
 end
 
 
-function tanh(radians)
-	if type(radians) == 'number' then
-		return  math.tanh(radians)
+function tanh(rads)
+	if type(rads) == 'number' then
+		return  math.tanh(rads)
 	end
 
 	local res={}
-	for i=1,#radians do
-		table.insert(res, math.tanh(radians[i]))
+	for i=1,#rads do
+		table.insert(res, math.tanh(rads[i]))
 	end
 
 	return res
 end
 
 
-function asinh(radians)
-	if type(radians) == 'number' then
-		return  math.asinh(radians)
+function asinh(rads)
+	if type(rads) == 'number' then
+		return  math.asinh(rads)
 	end
 
 	local res={}
-	for i=1,#radians do
-		table.insert(res, math.asinh(radians[i]))
+	for i=1,#rads do
+		table.insert(res, math.asinh(rads[i]))
 	end
 
 	return res
 end
 
-function acosh(radians)
-	if type(radians) == 'number' then
-		return  math.acosh(radians)
+function acosh(rads)
+	if type(rads) == 'number' then
+		return  math.acosh(rads)
 	end
 
 	local res={}
-	for i=1,#radians do
-		table.insert(res, math.acosh(radians[i]))
+	for i=1,#rads do
+		table.insert(res, math.acosh(rads[i]))
 	end
 
 	return res
 end
 
-function atanh(radians)
-	if type(radians) == 'number' then
-		return  math.atanh(radians)
+function atanh(rads)
+	if type(rads) == 'number' then
+		return  math.atanh(rads)
 	end
 
 	local res={}
-	for i=1,#radians do
-		table.insert(res, math.atanh(radians[i]))
+	for i=1,#rads do
+		table.insert(res, math.atanh(rads[i]))
 	end
 
 	return res
@@ -330,7 +357,7 @@ function mod(x,y)
 	return res
 end
 
-function min(x,y)
+function min2(x,y)
 	if type(x) == 'number' then
 		local f = math.min(x, y)
 		return f
@@ -344,7 +371,27 @@ function min(x,y)
 	return res
 end
 
-function max(x,y)
+function min(...)
+	if arg.n == 2 then
+		return min2(arg[1], arg[2])
+	elseif arg.n == 3 then
+		return math.min(math.min(arg[1], arg[2]), arg[3])
+	end
+
+	if type(arg[1]) == "table" then
+		local lowest = math.huge
+		for i=1,#arg[1] do
+			lowest = math.min(lowest, arg[1][i])
+		end
+
+		return lowest
+	end
+
+	-- If we got to here, then it was invalid input
+	return nil
+end
+
+function max2(x,y)
 	if type(x) == 'number' then
 		local f = math.max(x, y)
 		return f
@@ -357,6 +404,29 @@ function max(x,y)
 
 	return res
 end
+
+
+function max(...)
+	if arg.n == 2 then
+		return max2(arg[1], arg[2])
+	elseif arg.n == 3 then
+		return math.max(math.max(arg[1], arg[2]), arg[3])
+	end
+
+	if type(arg[1]) == "table" then
+		local highest = -math.huge
+		for i=1,#arg[1] do
+			highest = math.max(highest, arg[1][i])
+		end
+
+		return highest
+	end
+
+	-- If we got to here, then it was invalid input
+	return nil
+end
+
+
 
 
 function clampfunc(x, minVal, maxVal)

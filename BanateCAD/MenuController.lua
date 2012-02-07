@@ -5,12 +5,11 @@
 -- Menu commands for BanateCAD
 --
 
-require ("iuplua")
+require "iuplua"
 
-require ("CADVM")
+require "CADVM"
 
-require ("FileManager")
---require ("test_lpeg")
+require "FileManager"
 require "STLCodec"
 
 local class = require "pl.class"
@@ -322,7 +321,7 @@ local menudef = {
     },
 	"Help",{
         "About",self.do_About,
-        "FabuCAD Home Page",self.default,
+        "BanateCAD Home Page",self.default,
     },
 }
 	return menudef;

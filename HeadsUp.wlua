@@ -1,8 +1,8 @@
 --
--- BanateProcessing.wlua
+-- HeadsUp.wlua
 --
 -- The main interface file
--- Copyright (c) 2011  Microsoft
+-- Copyright (c) 2012  Microsoft
 --
 
 require ("BAppContext")
@@ -22,10 +22,10 @@ local appctx = BAppContext({
 	})
 
 require "BApplication"
-require "ProcessingWindow"
+require "HeadsUpWindow"
 
 
-local pWindow = ProcessingWindow({Name=AppName})
+local pWindow = HeadsUpWindow({Name=AppName})
 
 function pWindow.Window.keypress_cb(c, press)
 --print("ProcessingWindow.keypress_cb: ", c, press)

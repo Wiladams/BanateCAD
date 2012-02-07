@@ -25,7 +25,7 @@ function GShape:_init(params)
 
 	--self.Frame = Rectangle(params.Origin, params.Extent)
 
-print("GShape:_init Frame: ", self.Frame)
+--print("GShape:_init Frame: ", self.Frame)
 
 	self.BackgroundFill = params.BackgroundFill or Color(0,0)
 	self.BackgroundStroke = params.BackgroundStroke or Color(0)

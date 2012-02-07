@@ -8,31 +8,31 @@ local class = require "pl.class"
 
 class.Renderer()
 
-function Renderer:_init(awidth, aheight)
+function Renderer:_init(awidth, aheight, framebuffer)
 	self.width = awidth;
 	self.height = aheight;
-
+	self.FrameBuffer = framebuffer;
 
 	-- Create the basic image
-	self.Image = im.ImageCreate(awidth, aheight, im.RGB, im.BYTE)
-	self.Image:AddAlpha();
+	--self.Image = im.ImageCreate(awidth, aheight, im.RGB, im.BYTE)
+	--self.Image:AddAlpha();
 
 
 	-- Create canvas for drawing commands
-	self.canvas = self.Image:cdCreateCanvas()  -- Creates a CD_IMAGERGB canvas
-	self.Transformer = CDTransformer(self.canvas);
+	--self.canvas = self.Image:cdCreateCanvas()  -- Creates a CD_IMAGERGB canvas
+	--self.Transformer = CDTransformer(self.canvas);
 
 	-- Activate the canvas so we can draw into it
-	self.canvas:Activate();
-	self.canvas:YAxisMode(1)	-- Invert the y-axis
+	--self.canvas:Activate();
+	--self.canvas:YAxisMode(1)	-- Invert the y-axis
 
-	local black = Color(0,0,0,255)
-	local white = Color(255, 255, 255, 255)
-	local gray = Color(53, 53, 53, 255)
+	--local black = Color(0,0,0,255)
+	--local white = Color(255, 255, 255, 255)
+	--local gray = Color(53, 53, 53, 255)
 
-	self:SetStrokeColor(black)
-	self:SetFillColor(white)
-	self:SetBackgroundColor(gray)
+	--self:SetStrokeColor(black)
+	--self:SetFillColor(white)
+	--self:SetBackgroundColor(gray)
 end
 
 function Renderer.ApplyAttributes(self)
@@ -92,10 +92,17 @@ end
 	PRIMITIVES
 --]]
 function Renderer.get(self, x, y)
+	if self.FrameBuffer then
+		return self.FrameBuffer:get(x,y)
+	end
+
 	return Color(0,0,0,0)
 end
 
 function Renderer.set(self, x, y, acolor)
+	if self.FrameBuffer then
+		self.FrameBuffer:set(x,y,acolor)
+	end
 end
 
 function Renderer.DrawPoint(self, x, y)
