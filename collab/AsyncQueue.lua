@@ -1,16 +1,14 @@
---require("Class")
---require("Collections")
+require "Collections"
 
-AsyncQueue = inheritsFrom(nil)
+local class = require "pl.class"
 
-function AsyncQueue.new(watcher)
-	new_inst = AsyncQueue.create()
 
-	new_inst.Queue = queue.new()
-	new_inst.QueueWatcher = watcher
-	new_inst.Coroutine = coroutine.create(new_inst.Execute)
+class.AsyncQueue(nil)
 
-	return new_inst
+function AsyncQueue:_init(watcher)
+	self.MyQueue = Queue()
+	self.QueueWatcher = watcher
+	self.Coroutine = coroutine.create(self.Execute)
 end
 
 function AsyncQueue.Execute(self, ...)
@@ -24,7 +22,7 @@ end
 
 function AsyncQueue.Enqueue(self, value)
 	-- Put the value into the queue
-	self.Queue:enqueue(value)
+	self.MyQueue:Enqueue(value)
 
 	-- Then resume the coroutine so the Watcher
 	-- can do its thing
@@ -33,10 +31,10 @@ end
 
 function AsyncQueue.Dequeue(self)
 	-- Pull an item out of the queue
-	return self.Queue:dequeue()
+	return self.MyQueue:Dequeue()
 end
 
 function AsyncQueue.Length(self)
 	-- Return the length of the queue
-	return self.Queue:len()
+	return self.MyQueue:Len()
 end

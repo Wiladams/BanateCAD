@@ -1,6 +1,8 @@
 --
 -- Construct the default GL Canvas
 
+require "AsyncQueue"
+
 defaultglcanvas = iup.glcanvas({
 		BUFFER = "SINGLE",
 		EXPAND = "YES",
@@ -12,10 +14,6 @@ defaultglcanvas = iup.glcanvas({
 
 function defaultglcanvas.action(self)
 	iup.GLMakeCurrent(self);
-
---	if (_G.draw) ~= nil then
---		draw()
---	end
 
 	gl.Flush();
 end
@@ -32,11 +30,13 @@ function defaultglcanvas.map_cb(self)
 	gl.Disable(gl.DEPTH_TEST);            -- Disables Depth Testing
 
 
+--[[
 	local canvas2D = cd.CreateCanvas(cd.IUP, self)
 --assert(canvas2D ~= nil, "defaultcanvas.map_cb - cd canvas is nil")
 	self.canvas2D = canvas2D
 	canvas2D:Activate()
 	canvas2D:YAxisMode(0)	-- Invert the y-axis
+--]]
 end
 
 function defaultglcanvas.resize_cb(self, w, h)
@@ -73,7 +73,8 @@ function defaultglcanvas:keypress_cb(c, press)
 		KeyChar = c,
 	}
 
-	Processing.KeyActivity(ke)
+	defaultuiqueue:Enqueue(ke)
+	--Processing.KeyActivity(ke)
 
 	return iup.DEFAULT
 end
@@ -83,6 +84,14 @@ function defaultglcanvas:k_any(c)
 
 	return iup.CONTINUE
 end
+
+-- Need to map from IUP button descriptors to
+-- our own
+local mouseButtonMap = {
+	[iup.BUTTON1] = MouseButton.Left,
+	[iup.BUTTON2] = MouseButton.Middle,
+	[iup.BUTTON3] = MouseButton.Right,
+	}
 
 -- Mouse Activity
 function defaultglcanvas.motion_cb(self, x, y, status)
@@ -102,10 +111,12 @@ function defaultglcanvas.motion_cb(self, x, y, status)
 		KeyFlags = status;
 	})
 --print("defaultglcanvas.motion_cb: ", ma)
-	Processing.MouseActivity(ma)
+	--Processing.MouseActivity(ma)
+	defaultuiqueue:Enqueue(ma)
 end
 
 -- Indicates mouse button activity, either pressed or released
+
 function defaultglcanvas.button_cb(self, but, pressed, x, y, status)
 	local mat = MouseActivityType.MouseDown
 	local clicks = 1;
@@ -128,7 +139,7 @@ function defaultglcanvas.button_cb(self, but, pressed, x, y, status)
 		MovementType = MouseMovementType.Absolute;
 		Window = self;
 
-		Button = but;
+		Button = mouseButtonMap[but] or MouseButton.None;
 		Clicks = clicks;
 		X = x;
 		Y = y;
@@ -136,9 +147,9 @@ function defaultglcanvas.button_cb(self, but, pressed, x, y, status)
 		KeyFlags = status;
 	})
 
-	Processing.MouseActivity(ma)
+	defaultuiqueue:Enqueue(ma)
+	--Processing.MouseActivity(ma)
 end
-
 
 function defaultglcanvas.wheel_cb(self, delta, x, y, status)
 	local ma = MouseActivityArgs({
@@ -149,7 +160,7 @@ function defaultglcanvas.wheel_cb(self, delta, x, y, status)
 		MovementType = MouseMovementType.Absolute;
 		Window = self;
 
-		Button = MouseButtonActivity.None;
+		Button = MouseButton.Wheel;
 		Clicks = 0;
 		X = x;
 		Y = y;
@@ -157,5 +168,6 @@ function defaultglcanvas.wheel_cb(self, delta, x, y, status)
 		KeyFlags = status;
 	})
 
-	Processing.MouseActivity(ma)
+	defaultuiqueue:Enqueue(ma)
+	--Processing.MouseActivity(ma)
 end

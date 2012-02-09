@@ -22,8 +22,16 @@ function ShapeBuilder:_init(figType)
 	self.FigureType = figType or ShapeBuilder.CLOSE;
 end
 
+function ShapeBuilder.Clear(self)
+	self.Vertices = {}
+end
+
 function ShapeBuilder.Close(self, figType)
 	self.FigureType = figType
+end
+
+function ShapeBuilder.RemoveVertex(self, idx)
+	table.remove(self.Vertices, idx);
 end
 
 function ShapeBuilder.AddVertex(self, vtx)

@@ -118,6 +118,12 @@ keyCode = 0
 
 defaultguistyle = GUIStyle();
 
+
+
+-- Create the default message queue
+defaultuiqueue = AsyncQueue()
+
+
 require "defaultglcanvas"
 
 defaultcanvas = defaultglcanvas;
@@ -158,13 +164,6 @@ function Processing.ClearCanvas()
 	Processing.Renderer:Clear();
 end
 
---function Processing.SetColorMode(amode)
---	local oldMode = Processing.ColorMode
---	Processing.ColorMode = amode
-
---	return oldMode
---end
-
 function Processing.SetBackgroundColor(acolor)
 	Processing.Renderer:SetBackgroundColor(acolor)
 	Processing.Renderer:Clear();
@@ -172,18 +171,6 @@ function Processing.SetBackgroundColor(acolor)
 	return oldColor
 end
 
---[[
-function Processing.DrawImage(tex, offsetx, offsety, awidth, aheight)
-	offsetx = offsetx or 0
-	offsety = offsety or 0
-	awidth = awidth or tex.width
-	aheight = aheight or tex.height
-
-	-- Ideally, make it a texture map, and put it on a quad
-	-- Render the quad
-	tex:Render(offsetx, offsety, awidth, aheight)
-end
---]]
 
 --[==============================[
 	Compiling
@@ -206,11 +193,6 @@ function Processing.ClearGlobalFunctions()
 	_G.draw = nil
 	_G.keyPressed = nil
 	_G.mousePressed = nil
-
-	-- Reset Transformation matrices
-	--local canvas2D = defaultglcanvas.canvas2D
-	--canvas2D:Transform(nil)
-
 end
 
 function Processing.Compile(inputtext)
@@ -241,7 +223,6 @@ function Processing.Compile(inputtext)
 	f()
 
 	if _G.setup ~= nil then
-		--print("User Defined setup()")
 		_G.setup()
 	end
 
@@ -335,6 +316,8 @@ function Processing.Tick(tickCount)
 	-- if double buffered
 	-- swap buffers in the end
 	--iup.GLSwapBuffers(self);
+
+	-- Track current mouse position
 	pmouseX = mouseX
 	pmouseY = mouseY
 
@@ -348,16 +331,18 @@ function Processing.Tick(tickCount)
 end
 
 function Processing.ReSize(awidth, aheight)
-	if aheight == 0 then           -- Calculate The Aspect Ratio Of The Window
+	if aheight == 0 then
 		aheight = 1
 	end
 
 	gl.Viewport(0, 0, awidth, aheight)
 
+--[[
 	local canvas2D = defaultglcanvas.canvas2D
 	if canvas2D ~= nil then
 		canvas2D:Activate()
 	end
+--]]
 
 	Processing.Camera:SetSize(awidth, aheight)
 
@@ -398,9 +383,6 @@ end
 --]==============================]
 
 function Processing.MouseActivity(ma)
---print("Processing.MouseActivity: ")
---print(ma)
-
 	if ma.ActivityType == MouseActivityType.MouseDown then
 		Processing.MouseDown(ma.Button, ma.X, ma.Y, ma.KeyFlags)
 	elseif ma.ActivityType == MouseActivityType.MouseUp then

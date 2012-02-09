@@ -1,18 +1,14 @@
---require ("Class")
+-- Collections.lua
 
--- The basic list time
--- This will be used to implement queues
+local class = require "pl.class"
 
-List = inheritsFrom(nil)
-function List.new ()
-	local new_inst = List.create()
-	new_inst.first = 0
-	new_inst.last = -1
 
-	return new_inst
-end
+-- The basic list type
+-- This will be used to implement queues and other things
 
-function List.init(self)
+class.List()
+
+function List:_init(params)
 	self.first = 0
 	self.last = -1
 end
@@ -54,23 +50,20 @@ end
 
 
 
-queue = inheritsFrom(nil)
-function queue.new()
-	local new_inst = queue.create()
-
-	new_inst.MyList = List.new()
-	return new_inst
+class.Queue()
+function Queue:_init(params)
+	self.MyList = List()
 end
 
-function queue.enqueue(self, value)
+function Queue.Enqueue(self, value)
 	self.MyList:pushright(value)
 end
 
-function queue.dequeue(self, value)
+function Queue.Dequeue(self, value)
 	return self.MyList:popleft()
 end
 
-function queue.len(self)
+function Queue.Len(self)
 	return self.MyList.last - self.MyList.first+1
 end
 

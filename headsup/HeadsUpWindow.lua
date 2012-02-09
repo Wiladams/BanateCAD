@@ -39,6 +39,7 @@ viewinsplit = iup.split({
 local class = require "pl.class"
 
 class.HeadsUpWindow()
+
 function HeadsUpWindow:_init(o)
 	o = o or {}		-- create object if user does not provide one
 
@@ -57,7 +58,6 @@ function HeadsUpWindow:_init(o)
 
 	self.menucontrol = HeadsUpMenuControl({Window=self.Window})
 	self.Window.MENU = self.menuman:GetMainMenu(self.menucontrol)
-
 end
 
 function HeadsUpWindow.Show(self)
@@ -69,7 +69,6 @@ function HeadsUpWindow.SetFilename(self,filename)
 
 	self.Window.TITLE = self.Name..' - '..name;
 end
-
 
 
 return HeadsUpWindow
