@@ -13,222 +13,176 @@ pi = math.pi;
 
 
 
+function apply(f, v)
+	if type(v) == "number" then
+		return f(v)
+	end
+	if type(v) == "table" then
+		local res = {}
+		for i=1,#v do
+			res[i] = f(v[i])
+		end
+		return res
+	end
+
+	return nil
+end
+
+function apply2(f, v1, v2)
+	if type(v1) == "number" then
+		return f(v1, v2)
+	end
+	if type(v1) == "table" then
+		local res = {}
+		if type(v2)=="number" then
+            for i=1,#v1 do
+				res[i] = f(v1[i],v2)
+			end
+		else
+			for i=1,#v1 do
+				res[i] = f(v1[i], v2[i])
+			end
+		end
+		return res
+	end
+	return nil
+end
+
+function add(x,y)
+	return apply2(function(x,y) return x + y end,x,y)
+end
+
+function sub(x,y)
+	return apply2(function(x,y) return x - y end,x,y)
+end
+
+function mul(x,y)
+	if type(x)=="number" then -- swap params, just in case y is a vector
+		return apply2(function(x,y) return x * y end,y,x)
+	else
+ 		return apply2(function(x,y) return x * y end,x,y)
+	end
+end
+
+function div(x,y)
+	return apply2(function(x,y) return x / y end,x,y)
+end
+
+-- improved equality test with tolerance
+function equal(v1,v2,tol)
+	assert(type(v1)==type(v2),"equal("..type(v1)..","..type(v2)..") : incompatible types")
+	if not tol then tol=1E-12 end
+	return apply(function(x) return x<=tol end,abs(sub(v1,v2)))
+end
+
+function notEqual(v1,v2,tol)
+	assert(type(v1)==type(v2),"equal("..type(v1)..","..type(v2)..") : incompatible types")
+	if not tol then tol=1E-12 end
+	return apply(function(x) return x>tol end,abs(sub(v1,v2)))
+end
 
 --=====================================
 --	Angle and Trigonometry Functions (5.1)
 --=====================================
 
 function radians(degs)
-	if type(degs) == 'number' then
-		return  math.pi/180 * degs
-	end
-
-	local res={}
-	for i=1,#degs do
-		table.insert(res, math.pi/180 * degs*degs[i])
-	end
-
-	return res
+	return apply(math.rad, degs)
 end
 
 function degrees(rads)
-	if type(rads) == 'number' then
-		return  math.deg(rads)
-	end
-
-	local res={}
-	for i=1,#rads do
-		table.insert(res, math.deg(rads[i]))
-	end
-
-	return res
+	return apply(math.deg, rads)
 end
 
 function sin(rads)
-	if type(rads) == 'number' then
-		return  math.sin(rads)
-	end
-
-	local res={}
-	for i=1,#rads do
-		table.insert(res, math.sin(rads[i]))
-	end
-
-	return res
+	return apply(math.sin, rads)
 end
 
 function cos(rads)
-	if type(rads) == 'number' then
-		return  math.cos(rads)
-	end
-
-	local res={}
-	for i=1,#rads do
-		table.insert(res, math.cos(rads[i]))
-	end
-
-	return res
+	return apply(math.cos, rads)
 end
 
 function tan(rads)
-	if type(rads) == 'number' then
-		return  math.tan(rads)
-	end
-
-	local res={}
-	for i=1,#rads do
-		table.insert(res, math.tan(rads[i]))
-	end
-
-	return res
+	return apply(math.tan, rads)
 end
 
 function asin(rads)
-	if type(rads) == 'number' then
-		return  math.asin(rads)
-	end
-
-	local res={}
-	for i=1,#rads do
-		table.insert(res, math.asin(rads[i]))
-	end
-
-	return res
+	return apply(math.asin, rads)
 end
 
 function acos(rads)
-	if type(rads) == 'number' then
-		return  math.acos(rads)
-	end
+	return apply(math.acos, rads)
 
-	local res={}
-	for i=1,#rads do
-		table.insert(res, math.acos(rads[i]))
-	end
-
-	return res
 end
+
+
 
 function atan(rads)
-	if type(rads) == 'number' then
-		return  math.atan(rads)
-	end
-
-	local res={}
-	for i=1,#rads do
-		table.insert(res, math.atan(rads[i]))
-	end
-
-	return res
+	return apply(math.atan, rads)
 end
 
-function atan2(x, y)
-	if type(x) == 'number' then
-		return  math.atan(x/y)
-	end
-
-	local res={}
-	for i=1,#x do
-		table.insert(res, math.atan(x[i]/y[i]))
-	end
-
-	return res
+function atan2(y,x)
+	return apply2(math.atan2,y,x)
 end
 
 function sinh(rads)
-	if type(rads) == 'number' then
-		return  math.sinh(rads)
-	end
-
-	local res={}
-	for i=1,#rads do
-		table.insert(res, math.sinh(rads[i]))
-	end
-
-	return res
+	return apply(math.sinh, rads)
 end
 
 function cosh(rads)
-	if type(rads) == 'number' then
-		return  math.cosh(rads)
-	end
-
-	local res={}
-	for i=1,#rads do
-		table.insert(res, math.cosh(rads[i]))
-	end
-
-	return res
+	return apply(math.cosh, rads)
 end
 
 
 function tanh(rads)
-	if type(rads) == 'number' then
-		return  math.tanh(rads)
-	end
-
-	local res={}
-	for i=1,#rads do
-		table.insert(res, math.tanh(rads[i]))
-	end
-
-	return res
+	return apply(math.tanh, rads)
 end
 
-
+--[[
 function asinh(rads)
-	if type(rads) == 'number' then
-		return  math.asinh(rads)
-	end
-
-	local res={}
-	for i=1,#rads do
-		table.insert(res, math.asinh(rads[i]))
-	end
-
-	return res
+	return apply(math.asinh, rads)
 end
 
 function acosh(rads)
-	if type(rads) == 'number' then
-		return  math.acosh(rads)
-	end
-
-	local res={}
-	for i=1,#rads do
-		table.insert(res, math.acosh(rads[i]))
-	end
-
-	return res
+	return apply(math.acosh, rads)
 end
 
 function atanh(rads)
-	if type(rads) == 'number' then
-		return  math.atanh(rads)
-	end
+	return apply(math.atanh, rads)
+end
+--]]
 
-	local res={}
-	for i=1,#rads do
-		table.insert(res, math.atanh(rads[i]))
-	end
+--=====================================
+--	Exponential Functions (5.2)
+--=====================================
+function pow(x,y)
+	return apply2(math.pow,x,y)
+end
 
-	return res
+function exp2(x)
+	return apply2(math.pow,2,x)
+end
+
+function log2(x)
+	return apply(math.log,x)/math.log(2)
+end
+
+function sqrt(x)
+	return apply(math.sqrt,x)
+end
+
+local function inv(x)
+	return apply(function(x) return 1/x end,x)
+end
+
+function invsqrt(x)
+	return inv(sqrt(x))
 end
 
 --=====================================
 --	Common Functions (5.3)
 --=====================================
 function abs(x)
-	if type(x) == 'number' then
-		return  math.abs(x)
-	end
-
-	local res={}
-	for i=1,#x do
-		table.insert(res, math.abs(x[i]))
-	end
-
-	return res
+	return apply(math.abs, x)
 end
 
 function signfunc(x)
@@ -242,29 +196,11 @@ function signfunc(x)
 end
 
 function sign(x)
-	if type(x) == 'number' then
-		return signfunc(x)
-	end
-
-	local res={}
-	for i=1,#x do
-		table.insert(res, signfunc(x[i]))
-	end
-
-	return res
+	return apply(signfunc, x)
 end
 
 function floor(x)
-	if type(x) == 'number' then
-		return  math.floor(x)
-	end
-
-	local res={}
-	for i=1,#x do
-		table.insert(res, math.floor(x[i]))
-	end
-
-	return res
+	return apply(math.floor, x)
 end
 
 function trucfunc(x)
@@ -275,16 +211,7 @@ function trucfunc(x)
 end
 
 function trunc(x)
-	if type(x) == 'number' then
-		return  truncfunc(x)
-	end
-
-	local res={}
-	for i=1,#x do
-		table.insert(res, truncfunc(x[i]))
-	end
-
-	return res
+	return apply(truncfunc, x)
 end
 
 function roundfunc(x)
@@ -295,30 +222,12 @@ function roundfunc(x)
 end
 
 function round(x)
-	if type(x) == 'number' then
-		return  roundfunc(x)
-	end
-
-	local res={}
-	for i=1,#x do
-		table.insert(res, roundfunc(x[i]))
-	end
-
-	return res
+	return apply(roundfunc, x)
 end
 
 
 function ceil(x)
-	if type(x) == 'number' then
-		return  math.ceil(x)
-	end
-
-	local res={}
-	for i=1,#x do
-		table.insert(res, math.ceil(x[i]))
-	end
-
-	return res
+	return apply(math.ceil, x)
 end
 
 function fractfunc(x)
@@ -326,17 +235,7 @@ function fractfunc(x)
 end
 
 function fract(x)
-	if type(x) == 'number' then
-		local f = fractfunc(x)
-		return f
-	end
-
-	local res={}
-	for i=1,#x do
-		table.insert(res, fractfunc(x[i]))
-	end
-
-	return res
+	return apply(fractfunc, x)
 end
 
 function modfunc(x,y)
@@ -344,31 +243,11 @@ function modfunc(x,y)
 end
 
 function mod(x,y)
-	if type(x) == 'number' then
-		local f = modfunc(x, y)
-		return f
-	end
-
-	local res={}
-	for i=1,#x do
-		table.insert(res, modfunc(x[i], y[i]))
-	end
-
-	return res
+	return apply2(modfunc, x, y)
 end
 
 function min2(x,y)
-	if type(x) == 'number' then
-		local f = math.min(x, y)
-		return f
-	end
-
-	local res={}
-	for i=1,#x do
-		table.insert(res, math.min(x[i], y[i]))
-	end
-
-	return res
+	return apply2(math.min, x, y)
 end
 
 function min(...)
@@ -392,17 +271,7 @@ function min(...)
 end
 
 function max2(x,y)
-	if type(x) == 'number' then
-		local f = math.max(x, y)
-		return f
-	end
-
-	local res={}
-	for i=1,#x do
-		table.insert(res, math.max(x[i], y[i]))
-	end
-
-	return res
+	return apply2(math.max, x, y)
 end
 
 
@@ -429,22 +298,9 @@ end
 
 
 
-function clampfunc(x, minVal, maxVal)
-	return math.min(math.max(x, minVal), maxVal)
-end
 
 function clamp(x, minVal, maxVal)
-	if type(x) == 'number' then
-		local f = clampfunc(x, minVal, maxVal)
-		return f
-	end
-
-	local res={}
-	for i=1,#x do
-		table.insert(res, clampfunc(x[i], minVal[i], maxVal[i]))
-	end
-
-	return res
+	return min(max(x,minVal),maxVal)
 end
 
 
@@ -452,18 +308,12 @@ function mixfunc(x, y, a)
 	return x*(1.0 - a) + y * a
 end
 
+-- x*(1.0 - a) + y * a
+-- same as...
+-- x + s(y-x)
+-- Essentially lerp
 function mix(x, y, a)
-	if type(x) == 'number' then
-		local f = mixfunc(x, y, a)
-		return f
-	end
-
-	local res={}
-	for i=1,#x do
-		table.insert(res, mixfunc(x[i], y[i], a[i]))
-	end
-
-	return res
+	return add(x,mul(sub(y,x),a))
 end
 
 
@@ -475,18 +325,8 @@ function stepfunc(edge, x)
 	end
 end
 
-function step(edge, x, a)
-	if type(x) == 'number' then
-		local f = stepfunc(x, y, a)
-		return f
-	end
-
-	local res={}
-	for i=1,#x do
-		table.insert(res, stepfunc(edge[i], x[i], a))
-	end
-
-	return res
+function step(edge, x)
+	return apply2(stepfunc, edge, x)
 end
 
 -- Hermite smoothing between two points
@@ -562,51 +402,36 @@ end
 --=====================================
 --	Geometric Functions (5.4)
 --=====================================
-function lengthfunc(x)
-	local sum = 0
-	for i=1,#x do
-		sum = sum + (x[i]*x[i])
-	end
-
-	local f = sqrt(sum)
-	return f
-end
-
-function length(x)
-	if type(x) == 'number' then
-		return x
-	end
-
-	local res= lengthfunc(x)
-
-	return res
-end
-
-
-function distance(p0, p1)
-	if type(p0) == 'number' then
-		local f = p0-p1
-		return f
-	end
-
-	local res = lengthfunc(p0-p1)
-
-	return res
-end
-
-
 function dot(v1,v2)
-	if type(p0) == 'number' then
-		local f = v1*v2
-		return f
+	if type(v1) == 'number' then
+		return v1*v2
 	end
 
-	local sum=0
-	for i=1,#v1 do
-		sum = sum + (v1[i]*v2[i])
+	if (type(v1) == 'table') then
+		-- if v1 is a table
+		-- it could be vector.vector
+		-- or matrix.vector
+		if type(v1[1] == "number") then
+			local sum=0
+			for i=1,#v1 do
+				sum = sum + (v1[i]*v2[i])
+			end
+			return sum;
+		else -- matrix.vector
+			local res={}
+			for i,x in ipairs(v1) do
+				res[i] = dot(x,v2) end
+			return res
+		end
 	end
+end
 
-	return sum;
+function length(v)
+	return math.sqrt(dot(v,v))
+end
+
+function distance(v1,v2)
+	return length(sub(v1,v2))
 end
 
 function cross(v1, v2)
@@ -621,13 +446,17 @@ function cross(v1, v2)
 	}
 end
 
-function normalize(x)
-	if type(x) == 'number' then
-		local f = x
-		return f
-	end
+function normalize(v1)
+	return div(v1,length(v1))
 end
 
+function faceforward(n,i,nref)
+	if dot(n,i)<0 then return n else return -n end
+end
+
+function reflect(i,n)
+	return sub(i,mul(mul(2,dot(n,i)),n))
+end
 
 --=====================================
 --	Vector Relational (5.4)
@@ -654,6 +483,14 @@ function all(x)
 	return true
 end
 
+-- angle (in radians) between u and v vectors
+function angle(u, v)
+	if dot(u, v) < 0 then
+		return math.pi - 2*asin(length(add(u,v))/2)
+	else
+		return 2*asin(distance(v,u)/2)
+	end
+end
 
 --=====================================
 --	Vector Constructors
@@ -673,6 +510,12 @@ function vec4(x,y,z,w)
 end
 
 --[[
+print("glsl.lua - TEST")
+
+for angle = 0,math.pi, math.pi/8  do
+	print(sin(angle))
+end
+
 v1 = vec.new{1, 0, 1, 0}
 v2 = vec3(1, 1, 1)
 v3 = vec3(0, 0, 0)
