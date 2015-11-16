@@ -1,7 +1,7 @@
 local class = require "pl.class"
 require "IMRenderer"
 
-FontWeight =
+local FontWeight =
 {
     DontCare = 0,
     THIN = 100,
@@ -19,7 +19,7 @@ FontWeight =
     HEAVY = 900,
 }
 
-FontStyle =
+local FontStyle =
 {
     Regular = 0,
     Bold = 1,
