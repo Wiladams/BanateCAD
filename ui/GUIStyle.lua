@@ -1,4 +1,3 @@
---local Colorrefs = require "Colorrefs"
 local Colors = require "Colors"
 local ColorUtils = require "ColorUtils"
 
@@ -40,7 +39,7 @@ local ColorUtils = require "ColorUtils"
 
 local class = require "pl.class"
 
-FrameStyle = {
+local FrameStyle = {
 	Sunken = 0x01,
 	Raised = 0x02
 }

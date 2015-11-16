@@ -1,6 +1,5 @@
 local class = require "pl.class"
---require "GeometricObject"
---require "ShadeRec"
+local GeometricObject = require "GeometricObject"
 
 class.Plane(GeometricObject)
 

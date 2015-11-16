@@ -10,4 +10,4 @@ function GeometricObject.hit(self, ray, tmin, sr)
 end
 
 
-
+return GeometricObject

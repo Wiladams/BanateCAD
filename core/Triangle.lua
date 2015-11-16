@@ -1,7 +1,7 @@
 local class = require "pl.class"
 
-require "GeometricObject"
-require "glsl"
+local GeometricObject = require("GeometricObject")
+local glsl = require("glsl")
 
 class.Triangle(GeometricObject)
 
